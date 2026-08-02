@@ -1,6 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const baseURL = process.env.BASE_URL ?? 'http://127.0.0.1:4173/studio-aura/'
+/** Dedicated local e2e preview port — distinct from `npm run preview` (4173). */
+export const E2E_PREVIEW_PORT = 4175
+export const LOCAL_E2E_BASE_URL = `http://127.0.0.1:${E2E_PREVIEW_PORT}/studio-aura/`
+
+const baseURL = process.env.BASE_URL ?? LOCAL_E2E_BASE_URL
 const isExternal = Boolean(process.env.BASE_URL)
 
 export default defineConfig({
@@ -37,9 +41,10 @@ export default defineConfig({
   webServer: isExternal
     ? undefined
     : {
-        command: 'npm run preview -- --host 127.0.0.1 --port 4173',
+        // Own an isolated preview from this checkout; never reuse another worktree's server.
+        command: `npx vite preview --host 127.0.0.1 --port ${E2E_PREVIEW_PORT}`,
         url: baseURL,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
         timeout: 120_000,
       },
 })
