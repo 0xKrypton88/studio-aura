@@ -699,6 +699,19 @@ h3 {
   grid-row: span 2;
 }
 
+/* Booking program (local prototype CTA) */
+.section--booking {
+  background:
+    radial-gradient(900px 420px at 8% 0%, rgba(183, 165, 117, 0.14), transparent 55%),
+    linear-gradient(180deg, var(--ivory-soft), var(--ivory));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.section--booking .lede {
+  margin-bottom: 1.75rem;
+}
+
 /* Contact */
 .contact-grid {
   display: grid;

@@ -1,0 +1,1907 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#F7F3EB" />
+  <title>Studio Aura – Bokningskalender</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --page: #f7f3eb;
+      --surface: #fbf8f2;
+      --surface-2: #f7f3eb;
+      --sidebar: #faf7f2;
+      --ink: #1c1a16;
+      --muted: #6a6256;
+      --soft: #8a8074;
+      --line: rgba(28, 26, 22, 0.12);
+      --line-strong: rgba(28, 26, 22, 0.18);
+      --accent: #8f7c4e;
+      --accent-dark: #6a5a35;
+      --accent-soft: #b7a575;
+      --accent-pale: rgba(143, 124, 78, 0.14);
+      --sand: #f3e8d4;
+      --closed: #efeae3;
+      --success: #71816f;
+      --danger: #a75d5d;
+      --shadow: 0 22px 55px rgba(48, 40, 24, .10), 0 3px 12px rgba(48, 40, 24, .05);
+      --shadow-soft: 0 10px 28px rgba(48, 40, 24, .06);
+      --radius-xl: 22px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+      --font-body: 'Figtree', 'Segoe UI', sans-serif;
+      --serif: var(--font-display);
+      --sans: var(--font-body);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(183, 165, 117, .16), transparent 32%),
+        radial-gradient(circle at 90% 92%, rgba(235, 227, 212, .55), transparent 36%),
+        var(--page);
+      overflow-x: clip;
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { color: inherit; }
+    [hidden] { display: none !important; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    button:focus:not(:focus-visible),
+    a:focus:not(:focus-visible) { outline: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    .app-shell {
+      position: relative;
+      display: grid;
+      grid-template-columns: 312px minmax(0, 1fr);
+      width: calc(100vw - 30px);
+      height: calc(100vh - 30px);
+      margin: 15px;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid rgba(210, 198, 188, .62);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar {
+      position: relative;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: 24px 18px 20px;
+      overflow: auto;
+      background:
+        radial-gradient(circle at 78% 4%, rgba(183, 165, 117, .18), transparent 22%),
+        linear-gradient(180deg, #fdfbf8 0%, #f7f3eb 100%);
+      border-right: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-height: 92px;
+      padding: 2px 8px 20px;
+      border-bottom: 1px solid rgba(229, 220, 212, .68);
+    }
+    .brand-logo-wrap {
+      display: grid;
+      flex: 0 0 72px;
+      width: 72px;
+      height: 72px;
+      place-items: center;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid rgba(192, 174, 159, .52);
+      border-radius: 50%;
+      box-shadow: 0 8px 22px rgba(85, 61, 47, .09);
+    }
+    .brand-logo {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      transform: scale(1.04);
+    }
+    .brand-copy { min-width: 0; }
+    .brand-name {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 500;
+      line-height: 1.04;
+      letter-spacing: -.02em;
+      white-space: nowrap;
+    }
+    .brand-tagline {
+      margin-top: 7px;
+      color: #9a7f6b;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .brand-back {
+      display: inline-block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .02em;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .18s ease, border-color .18s ease;
+    }
+    .brand-back:hover,
+    .brand-back:focus-visible {
+      color: var(--accent-dark);
+      border-bottom-color: var(--accent-soft);
+    }
+
+    .sidebar-close {
+      display: none;
+      position: absolute;
+      top: 16px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: rgba(255,255,255,.8);
+      cursor: pointer;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 5px;
+      margin: 19px 0 18px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 11px 13px;
+      border: 0;
+      border-radius: 11px;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      transition: background .18s ease, transform .18s ease, color .18s ease;
+    }
+    .nav-item:hover { background: rgba(226, 213, 202, .42); transform: translateX(2px); }
+    .nav-item.active {
+      background: var(--accent-dark);
+      color: #fbf8f2;
+      box-shadow: none;
+    }
+    .nav-item.active .nav-label { color: inherit; }
+    .nav-icon { width: 19px; height: 19px; flex: 0 0 19px; }
+    .nav-label { font-family: var(--serif); font-size: 16px; }
+
+    .sidebar-card {
+      margin-bottom: 14px;
+      padding: 16px 17px;
+      background: rgba(255,255,255,.79);
+      border: 1px solid rgba(226, 216, 207, .8);
+      border-radius: 14px;
+      box-shadow: var(--shadow-soft);
+    }
+    .sidebar-card.glow {
+      background:
+        radial-gradient(circle at 92% 4%, rgba(183, 165, 117, .22), transparent 30%),
+        rgba(255,255,255,.88);
+    }
+    .sidebar-card h3 {
+      margin: 0 0 13px;
+      font-family: var(--serif);
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .summary-row {
+      display: grid;
+      grid-template-columns: 24px 28px 1fr;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .summary-row strong { color: var(--ink); font-weight: 700; }
+    .summary-row svg { width: 17px; height: 17px; }
+
+    .upcoming-list { display: grid; gap: 3px; }
+    .upcoming-item {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 10px;
+      width: 100%;
+      padding: 9px 0;
+      border: 0;
+      border-bottom: 1px solid rgba(232, 224, 217, .75);
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+    }
+    .upcoming-item:last-child { border-bottom: 0; }
+    .upcoming-time { font-size: 13px; font-weight: 700; }
+    .upcoming-title { display: flex; align-items: center; gap: 8px; font-family: var(--serif); font-size: 14px; font-weight: 700; }
+    .upcoming-customer { margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .tiny-dot { width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%; background: var(--accent-soft); }
+    .sidebar-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 10px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #8468a7;
+      cursor: pointer;
+      font-family: var(--serif);
+      font-size: 13px;
+    }
+    .sidebar-link svg { width: 15px; height: 15px; }
+
+    .main {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      min-width: 0;
+      min-height: 0;
+      background: var(--surface);
+    }
+    .topbar {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 92px;
+      padding: 19px 26px 18px 30px;
+      background: rgba(255,253,251,.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 13px; min-width: 0; }
+    .menu-button {
+      display: none;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+      cursor: pointer;
+    }
+    .page-title {
+      margin: 0;
+      overflow: hidden;
+      font-family: var(--serif);
+      font-size: clamp(28px, 2.35vw, 40px);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -.035em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+    .segmented {
+      display: inline-flex;
+      padding: 3px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      box-shadow: 0 3px 10px rgba(56, 39, 28, .03);
+    }
+    .segment {
+      min-width: 82px;
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--serif);
+      font-size: 14px;
+    }
+    .segment.active { background: var(--accent-dark); color: #fbf8f2; box-shadow: none; }
+
+    .primary-button, .secondary-button, .icon-button, .danger-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 42px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .primary-button {
+      padding: 10px 18px;
+      border: 1px solid var(--accent-dark);
+      background: var(--accent-dark);
+      color: #fbf8f2;
+      box-shadow: 0 8px 20px rgba(106, 90, 53, .16);
+      font-family: var(--serif);
+    }
+    .primary-button:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(111, 78, 58, .22); }
+    .secondary-button {
+      padding: 9px 15px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .secondary-button:hover, .icon-button:hover { background: var(--surface-2); }
+    .icon-button {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .icon-button.bare { border-color: transparent; background: transparent; }
+    .icon-button svg, .primary-button svg, .secondary-button svg { width: 18px; height: 18px; }
+    .danger-button { padding: 9px 14px; border: 1px solid rgba(167,93,93,.25); background: #fff8f8; color: var(--danger); }
+
+    .profile-button {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+    .avatar {
+      display: grid;
+      width: 39px;
+      height: 39px;
+      place-items: center;
+      border-radius: 50%;
+      background: #e8ded6;
+      font-family: var(--serif);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .content {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      padding: 18px 26px 24px 30px;
+      background:
+        radial-gradient(circle at 88% 2%, rgba(203,184,230,.06), transparent 22%),
+        var(--surface);
+    }
+
+    .calendar-card, .panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      box-shadow: 0 8px 25px rgba(54, 38, 28, .045);
+    }
+    .calendar-card { overflow: hidden; }
+    .calendar-toolbar {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) auto minmax(330px, 1fr);
+      align-items: center;
+      gap: 16px;
+      padding: 15px 17px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff, #fffdfb);
+    }
+    .calendar-nav { display: flex; align-items: center; gap: 7px; }
+    .calendar-label {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .legend { display: flex; align-items: center; justify-content: flex-end; gap: 16px; flex-wrap: wrap; }
+    .legend-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 0;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      font-family: var(--serif);
+      font-size: 13px;
+      opacity: 1;
+    }
+    .legend-button.off { opacity: .38; text-decoration: line-through; }
+    .legend-dot { width: 13px; height: 13px; border-radius: 50%; }
+    .legend-dot.booked { background: #ded2c9; }
+    .legend-dot.available { background: #fff; border: 1px dashed #d9ccc2; }
+    .legend-dot.pause { background: #f7e7c9; }
+    .legend-dot.closed { background: #ece9e7; }
+
+    .calendar-scroll { overflow: auto; }
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      min-width: 0;
+      background: var(--line);
+      gap: 1px;
+    }
+    .calendar-panel.compact .day-cell { min-height: 88px; padding: 7px 8px 6px; }
+    .calendar-panel.compact .event-chip { min-height: 32px; padding: 4px 7px; }
+    .calendar-panel.compact .event-title { font-size: 11px; }
+    .calendar-panel.compact .weekday-head { min-height: 36px; font-size: 12px; }
+    .weekday-head {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: grid;
+      min-height: 42px;
+      place-items: center;
+      background: #fffdfb;
+      font-family: var(--serif);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .day-cell {
+      position: relative;
+      min-height: 118px;
+      padding: 10px 10px 8px;
+      overflow: hidden;
+      background: #fff;
+      transition: background .15s ease, box-shadow .15s ease;
+    }
+    .day-cell:hover { background: #faf7f2; }
+    .day-cell.outside { background: #f7f3eb; }
+    .day-cell.selected { box-shadow: inset 0 0 0 2px rgba(143, 124, 78, .38); }
+    .day-cell.today::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      pointer-events: none;
+      border: 1px solid rgba(145, 107, 83, .15);
+      border-radius: 11px;
+    }
+    .day-top { display: flex; align-items: center; justify-content: space-between; min-height: 28px; }
+    .day-number {
+      display: grid;
+      width: 29px;
+      height: 29px;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--serif);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .outside .day-number { color: #c9bcb2; }
+    .today .day-number { background: var(--accent-dark); color: #fff; box-shadow: 0 4px 10px rgba(106,90,53,.22); }
+    .quick-add {
+      display: grid;
+      width: 27px;
+      height: 27px;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--soft);
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity .15s, background .15s;
+    }
+    .day-cell:hover .quick-add, .day-cell:focus-within .quick-add { opacity: 1; }
+    .quick-add:hover { background: var(--accent-pale); color: var(--accent-dark); }
+    .events { display: grid; gap: 5px; margin-top: 2px; }
+    .event-chip {
+      display: block;
+      width: 100%;
+      min-height: 42px;
+      padding: 7px 9px;
+      overflow: hidden;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: left;
+      transition: transform .13s ease, filter .13s ease;
+    }
+    .event-chip:hover { transform: translateY(-1px); filter: brightness(.985); }
+    .event-chip.booked { border: 1px solid rgba(143, 124, 78, .12); background: #e6ddd0; }
+    .event-chip.available { border: 1px dashed #d8cbc1; background: #fff; }
+    .event-chip.pause { border: 1px solid rgba(183, 165, 117, .18); background: #f3e8d4; }
+    .event-chip.closed { border: 1px solid #eeeae7; background: var(--closed); color: #756d68; }
+    .event-time { display: block; margin-bottom: 2px; font-size: 11px; font-weight: 700; }
+    .event-title { display: block; overflow: hidden; font-family: var(--serif); font-size: 12px; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
+    .more-events {
+      width: 100%;
+      padding: 4px 7px;
+      border: 0;
+      background: transparent;
+      color: #806c60;
+      cursor: pointer;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .week-wrap { min-width: 1120px; background: #fff; }
+    .week-grid {
+      display: grid;
+      grid-template-columns: 72px repeat(7, minmax(145px, 1fr));
+      background: var(--line);
+      gap: 1px;
+    }
+    .week-corner, .week-day-head, .week-time, .week-slot { background: #fff; }
+    .week-corner { min-height: 62px; }
+    .week-day-head { display: grid; min-height: 62px; place-items: center; padding: 8px; text-align: center; }
+    .week-day-name { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+    .week-day-date { display: grid; width: 31px; height: 31px; margin-top: 4px; place-items: center; border-radius: 50%; font-family: var(--serif); font-size: 16px; font-weight: 700; }
+    .week-day-head.today .week-day-date { background: var(--accent); color: #fff; }
+    .week-time { min-height: 76px; padding: 8px 9px; color: var(--muted); font-size: 11px; text-align: right; }
+    .week-slot { min-height: 76px; padding: 5px; cursor: pointer; }
+    .week-slot:hover { background: #fffaf6; }
+    .week-event { min-height: 31px; margin-bottom: 4px; padding: 6px 7px; border-radius: 7px; cursor: pointer; font-size: 11px; }
+    .week-event.booked { background: #e5dad2; }
+    .week-event.available { background: #fff; border: 1px dashed #d6c8bd; }
+    .week-event.pause { background: #faecd4; }
+    .week-event.closed { background: #efedeb; }
+
+    .day-view { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 18px; padding: 18px; background: #faf8f5; }
+    .day-agenda { overflow: hidden; background: #fff; border: 1px solid var(--line); border-radius: 14px; }
+    .agenda-row { display: grid; grid-template-columns: 74px minmax(0, 1fr); min-height: 75px; border-bottom: 1px solid var(--line); }
+    .agenda-row:last-child { border-bottom: 0; }
+    .agenda-time { padding: 15px 13px; color: var(--muted); font-size: 12px; text-align: right; }
+    .agenda-slot { padding: 7px; border-left: 1px solid var(--line); cursor: pointer; }
+    .agenda-slot:hover { background: #fffaf6; }
+    .agenda-event { display: flex; align-items: center; justify-content: space-between; gap: 15px; min-height: 54px; padding: 10px 13px; border-radius: 9px; cursor: pointer; }
+    .agenda-event.booked { background: #e6dbd3; }
+    .agenda-event.available { border: 1px dashed #d4c6bc; background: #fff; }
+    .agenda-event.pause { background: #fbedda; }
+    .agenda-event.closed { background: #efedeb; }
+    .agenda-title { font-family: var(--serif); font-weight: 700; }
+    .agenda-meta { margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .day-side { display: grid; align-content: start; gap: 14px; }
+
+    .page-stack { display: grid; gap: 18px; }
+    .hero-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      min-height: 150px;
+      padding: 27px 30px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(197, 172, 231, .30), transparent 28%),
+        linear-gradient(135deg, #f7f0ea, #fffdfb 68%);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+    .hero-panel h2 { margin: 0 0 9px; font-family: var(--serif); font-size: 32px; font-weight: 500; }
+    .hero-panel p { max-width: 650px; margin: 0; color: var(--muted); line-height: 1.6; }
+    .hero-orb { width: 104px; height: 104px; flex: 0 0 104px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, #d8c5b7 54%, #a88771); box-shadow: inset -12px -13px 25px rgba(86,59,42,.12), 0 18px 30px rgba(90,62,44,.12); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .stat-card { padding: 19px; border: 1px solid var(--line); border-radius: 15px; background: #fff; box-shadow: 0 7px 20px rgba(58,41,31,.04); cursor: pointer; }
+    .stat-top { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 12px; }
+    .stat-icon { display: grid; width: 33px; height: 33px; place-items: center; border-radius: 10px; background: var(--accent-pale); }
+    .stat-icon svg { width: 17px; height: 17px; }
+    .stat-value { margin-top: 17px; font-family: var(--serif); font-size: 32px; }
+    .stat-foot { margin-top: 5px; color: var(--muted); font-size: 11px; }
+    .two-col { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(300px, .75fr); gap: 18px; }
+    .panel { padding: 20px; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 16px; }
+    .panel-title { margin: 0; font-family: var(--serif); font-size: 21px; font-weight: 600; }
+    .clean-list { display: grid; gap: 9px; }
+    .clean-row { display: grid; grid-template-columns: 58px 1fr auto; align-items: center; gap: 12px; padding: 12px 11px; border: 1px solid var(--line); border-radius: 11px; background: #fffdfb; }
+    .clean-time { font-weight: 700; }
+    .clean-title { font-family: var(--serif); font-weight: 700; }
+    .clean-sub { margin-top: 3px; color: var(--muted); font-size: 11px; }
+    .status-pill { padding: 5px 8px; border-radius: 999px; background: #e7ded7; color: #5f4d42; font-size: 10px; font-weight: 700; }
+    .progress-list { display: grid; gap: 16px; }
+    .progress-label { display: flex; justify-content: space-between; margin-bottom: 7px; color: var(--muted); font-size: 12px; }
+    .progress-track { height: 8px; overflow: hidden; border-radius: 999px; background: #eee8e3; }
+    .progress-bar { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #cbb7a8, #987963); }
+
+    .section-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .search-box { position: relative; width: min(420px, 100%); }
+    .search-box svg { position: absolute; top: 50%; left: 13px; width: 17px; height: 17px; transform: translateY(-50%); color: var(--soft); }
+    .search-box input { width: 100%; height: 44px; padding: 0 14px 0 41px; border: 1px solid var(--line); border-radius: 11px; outline: none; background: #fff; color: var(--ink); }
+    .search-box input:focus { border-color: #baa18f; box-shadow: 0 0 0 4px rgba(184,154,133,.12); }
+
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { padding: 13px 15px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 11px; font-weight: 700; text-align: left; text-transform: uppercase; letter-spacing: .08em; }
+    .data-table td { padding: 14px 15px; border-bottom: 1px solid var(--line); font-size: 13px; }
+    .data-table tbody tr { cursor: pointer; }
+    .data-table tbody tr:hover { background: #fffaf6; }
+    .customer-cell { display: flex; align-items: center; gap: 11px; }
+    .customer-avatar { display: grid; width: 35px; height: 35px; place-items: center; border-radius: 50%; background: #e9dfd7; font-family: var(--serif); font-weight: 700; }
+    .table-scroll { overflow: auto; }
+
+    .card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+    .service-card, .person-card { position: relative; padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: #fff; box-shadow: 0 7px 20px rgba(58,41,31,.04); }
+    .service-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; border-radius: 16px 16px 0 0; background: linear-gradient(90deg, #c7b2a2, #eaded5); }
+    .service-card h3, .person-card h3 { margin: 8px 0 6px; font-family: var(--serif); font-size: 20px; }
+    .service-card p, .person-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .service-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .price { font-family: var(--serif); font-size: 19px; font-weight: 700; }
+    .person-top { display: flex; align-items: center; gap: 13px; }
+    .person-avatar { display: grid; width: 54px; height: 54px; place-items: center; border-radius: 50%; background: linear-gradient(135deg, #efe6df, #d6c1b2); font-family: var(--serif); font-size: 20px; font-weight: 700; }
+    .person-status { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; color: var(--success); font-size: 11px; font-weight: 700; }
+    .person-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+
+    .settings-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, .7fr); gap: 18px; }
+    .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 22px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .setting-row:last-child { border-bottom: 0; }
+    .setting-title { font-family: var(--serif); font-weight: 700; }
+    .setting-sub { margin-top: 5px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .toggle { position: relative; width: 48px; height: 27px; flex: 0 0 48px; padding: 0; border: 0; border-radius: 999px; background: #d9d1cb; cursor: pointer; transition: background .18s; }
+    .toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 21px; height: 21px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(44,30,21,.18); transition: transform .18s; }
+    .toggle.on { background: #9a7c67; }
+    .toggle.on::after { transform: translateX(21px); }
+    .hours-grid { display: grid; gap: 10px; }
+    .hours-row { display: grid; grid-template-columns: 1fr 85px 14px 85px; align-items: center; gap: 8px; }
+    .hours-row input { width: 100%; height: 37px; padding: 0 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+
+    .popover {
+      position: fixed;
+      z-index: 90;
+      width: 250px;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      box-shadow: 0 18px 40px rgba(54,37,27,.17);
+      animation: pop .15s ease-out;
+    }
+    @keyframes pop { from { opacity: 0; transform: translateY(-5px) scale(.98); } to { opacity: 1; transform: none; } }
+    .popover-title { padding: 8px 9px 10px; font-family: var(--serif); font-weight: 700; }
+    .popover-item { display: flex; gap: 10px; width: 100%; padding: 10px 9px; border: 0; border-radius: 8px; background: transparent; cursor: pointer; text-align: left; }
+    .popover-item:hover { background: #faf5f1; }
+    .notification-dot { width: 8px; height: 8px; margin-top: 5px; flex: 0 0 8px; border-radius: 50%; background: #9c7b66; }
+    .popover-small { color: var(--muted); font-size: 11px; margin-top: 3px; }
+
+    .modal-backdrop {
+      position: fixed;
+      z-index: 120;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(45, 34, 28, .34);
+      backdrop-filter: blur(5px);
+      animation: fade .17s ease-out;
+    }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    .modal {
+      width: min(590px, 100%);
+      max-height: min(780px, calc(100vh - 40px));
+      overflow: auto;
+      background: #fffdfb;
+      border: 1px solid rgba(226,216,207,.9);
+      border-radius: 19px;
+      box-shadow: 0 30px 80px rgba(38,27,20,.22);
+      animation: modalIn .2s ease-out;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 21px 22px 17px; border-bottom: 1px solid var(--line); }
+    .modal-title { margin: 0; font-family: var(--serif); font-size: 27px; font-weight: 500; }
+    .modal-body { padding: 20px 22px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 15px; }
+    .field { display: grid; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { color: #5f5149; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+    .field input, .field select, .field textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--line-strong); border-radius: 9px; outline: none; background: #fff; color: var(--ink); }
+    .field textarea { min-height: 90px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: #b2937e; box-shadow: 0 0 0 4px rgba(178,147,126,.12); }
+    .modal-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 22px 21px; border-top: 1px solid var(--line); }
+    .modal-foot-right { display: flex; gap: 10px; }
+
+    .toast {
+      position: fixed;
+      z-index: 160;
+      right: 26px;
+      bottom: 26px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      max-width: 390px;
+      padding: 13px 16px;
+      background: #3f3028;
+      color: #fff;
+      border-radius: 11px;
+      box-shadow: 0 15px 35px rgba(39,28,22,.22);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity .2s, transform .2s;
+    }
+    .toast.show { opacity: 1; transform: none; }
+    .toast svg { width: 18px; height: 18px; }
+
+    .empty-state { padding: 55px 20px; color: var(--muted); text-align: center; }
+    .empty-state h3 { margin: 0 0 8px; color: var(--ink); font-family: var(--serif); font-size: 22px; }
+
+    .mobile-scrim { display: none; }
+
+    @media (max-width: 1440px) {
+      .app-shell { width: calc(100vw - 24px); height: calc(100vh - 24px); margin: 12px; }
+      .sidebar { padding: 20px 16px 18px; }
+      .topbar { padding: 16px 20px 16px 22px; min-height: 84px; }
+      .content { padding: 16px 18px 20px; }
+    }
+
+    @media (max-width: 1180px) {
+      .app-shell { grid-template-columns: 270px minmax(0,1fr); }
+      .month-grid {
+        grid-template-columns: repeat(7, minmax(110px, 1fr));
+        min-width: 790px;
+      }
+      .brand-logo-wrap { flex-basis: 58px; width: 58px; height: 58px; }
+      .brand-logo { width: 58px; height: 58px; }
+      .brand-name { font-size: 23px; }
+      .brand-tagline { font-size: 8px; }
+      .sidebar { padding-left: 14px; padding-right: 14px; }
+      .calendar-toolbar { grid-template-columns: auto 1fr; }
+      .legend { grid-column: 1 / -1; justify-content: flex-start; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .card-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+
+    @media (max-width: 900px) {
+      html, body { overflow: hidden; overflow-x: clip; }
+      .app-shell { grid-template-columns: minmax(0,1fr); width: 100%; max-width: 100vw; height: 100vh; height: 100dvh; margin: 0; border: 0; border-radius: 0; }
+      .month-grid {
+        grid-template-columns: repeat(7, minmax(108px, 1fr));
+        min-width: 780px;
+      }
+      .week-wrap { min-width: 920px; }
+      .sidebar { position: fixed; inset: 0 auto 0 0; width: min(320px, 88vw); transform: translateX(-102%); transition: transform .22s ease; box-shadow: 18px 0 50px rgba(42,29,21,.18); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-close { display: grid; place-items: center; }
+      .mobile-scrim { position: fixed; z-index: 25; inset: 0; display: block; background: rgba(45,33,26,.32); opacity: 0; pointer-events: none; transition: opacity .2s; }
+      .mobile-scrim.show { opacity: 1; pointer-events: auto; }
+      .menu-button { display: grid; }
+      .topbar { min-height: 78px; padding: 14px 16px; }
+      .content { padding: 14px 14px 20px; }
+      .segmented { display: none; }
+      .topbar-actions .icon-button { display: none; }
+      .page-title { font-size: 30px; }
+      .two-col, .settings-grid, .day-view { grid-template-columns: 1fr; }
+      .day-side { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+
+    @media (max-width: 650px) {
+      .page-title { font-size: 24px; letter-spacing: -.02em; }
+      .topbar { gap: 10px; padding: 12px 12px 12px 14px; min-height: 68px; }
+      .topbar-actions { gap: 8px; }
+      .primary-button .button-text { display: none; }
+      .primary-button { width: 42px; padding: 0; }
+      .profile-button { display: none; }
+      .calendar-toolbar { grid-template-columns: 1fr; align-items: start; }
+      .calendar-label { grid-row: 1; text-align: left; }
+      .calendar-nav { grid-row: 2; }
+      .legend { grid-row: 3; gap: 10px 14px; }
+      .stats-grid, .card-grid, .day-side { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .hero-orb { display: none; }
+      .hero-panel { padding: 22px; }
+      .section-toolbar { align-items: stretch; flex-direction: column; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .modal-foot { align-items: stretch; flex-direction: column-reverse; }
+      .modal-foot-right { width: 100%; }
+      .modal-foot-right > * { flex: 1; }
+      .hours-row { grid-template-columns: 1fr 75px 10px 75px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell" id="appShell">
+    <aside class="sidebar" id="sidebar" aria-label="Huvudmeny">
+      <button class="sidebar-close" type="button" data-action="close-sidebar" aria-label="Stäng meny">✕</button>
+      <div class="brand">
+        <div class="brand-logo-wrap">
+          <img class="brand-logo" src="../brand/logo-192.png" alt="Studio Aura-logotyp" width="72" height="72" decoding="async" />
+        </div>
+        <div class="brand-copy">
+          <h2 class="brand-name">Studio Aura</h2>
+          <div class="brand-tagline">Beauty &amp; Solarium</div>
+          <a class="brand-back" href="../">Tillbaka till Studio Aura</a>
+        </div>
+      </div>
+      <nav class="nav-list" id="navList"></nav>
+      <div id="sidebarDynamic"></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar" id="topbar"></header>
+      <section class="content" id="content" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <div class="mobile-scrim" id="mobileScrim" data-action="close-sidebar"></div>
+  <div id="popoverRoot"></div>
+  <div id="modalRoot"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const STORAGE_KEY = "studioAuraBookingPrototypeV1";
+      const demoToday = dateFromISO("2025-05-16");
+      const monthNames = ["januari", "februari", "mars", "april", "maj", "juni", "juli", "augusti", "september", "oktober", "november", "december"];
+      const weekdayNames = ["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"];
+      const shortWeekdays = ["Mån", "Tis", "Ons", "Tors", "Fre", "Lör", "Sön"];
+
+      const icon = (name, cls = "") => {
+        const attrs = `class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"`;
+        const paths = {
+          grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+          calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>',
+          user: '<circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/>',
+          users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+          lotus: '<path d="M12 21c0-6 4-10 9-11 0 6-3.5 10-9 11Z"/><path d="M12 21C12 15 8 11 3 10c0 6 3.5 10 9 11Z"/><path d="M12 21c-4-5-4-11 0-17 4 6 4 12 0 17Z"/>',
+          settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.17.38.44.72.8.96.31.21.69.33 1.08.34H21v4h-.09A1.7 1.7 0 0 0 19.4 15Z"/>',
+          chevronLeft: '<path d="m15 18-6-6 6-6"/>',
+          chevronRight: '<path d="m9 18 6-6-6-6"/>',
+          chevronDown: '<path d="m6 9 6 6 6-6"/>',
+          plus: '<path d="M12 5v14M5 12h14"/>',
+          bell: '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>',
+          menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+          clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+          search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+          check: '<path d="m5 12 4 4L19 6"/>',
+          arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+          mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+          phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.62 2.63a2 2 0 0 1-.45 2.11L8 9.73a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.85.29 1.73.5 2.63.62A2 2 0 0 1 22 16.92Z"/>',
+          trash: '<path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v5M14 11v5"/>',
+          edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',
+          info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+          reset: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'
+        };
+        return `<svg ${attrs}>${paths[name] || ""}</svg>`;
+      };
+
+      const navItems = [
+        { id: "overview", label: "Översikt", icon: "grid" },
+        { id: "bookings", label: "Bokningar", icon: "calendar" },
+        { id: "customers", label: "Kunder", icon: "user" },
+        { id: "services", label: "Tjänster", icon: "lotus" },
+        { id: "staff", label: "Personal", icon: "users" },
+        { id: "settings", label: "Inställningar", icon: "settings" }
+      ];
+
+      const defaultCustomers = [
+        { id: "c1", name: "Anna Andersson", email: "anna.andersson@example.se", phone: "070-123 45 67", visits: 12, lastVisit: "2025-05-12" },
+        { id: "c2", name: "Maria Svensson", email: "maria.svensson@example.se", phone: "073-882 10 42", visits: 7, lastVisit: "2025-05-13" },
+        { id: "c3", name: "Johan Karlsson", email: "johan.karlsson@example.se", phone: "076-440 21 19", visits: 4, lastVisit: "2025-05-14" },
+        { id: "c4", name: "Elin Berg", email: "elin.berg@example.se", phone: "070-228 19 95", visits: 18, lastVisit: "2025-05-15" },
+        { id: "c5", name: "Sara Lind", email: "sara.lind@example.se", phone: "072-191 44 05", visits: 9, lastVisit: "2025-05-09" },
+        { id: "c6", name: "Nora Ek", email: "nora.ek@example.se", phone: "070-619 30 14", visits: 3, lastVisit: "2025-05-02" },
+        { id: "c7", name: "Olivia Holm", email: "olivia.holm@example.se", phone: "076-530 82 47", visits: 5, lastVisit: "2025-04-30" }
+      ];
+
+      const services = [
+        { name: "Soltid 20 min", duration: 20, price: 180, description: "En effektiv solsession i valfritt solarium." },
+        { name: "Soltid 30 min", duration: 30, price: 240, description: "För dig som önskar en längre och lugnare session." },
+        { name: "Ansiktsbehandling", duration: 50, price: 695, description: "Avkopplande behandling med fokus på lyster och återfuktning." },
+        { name: "Konsultation", duration: 20, price: 0, description: "Personlig rådgivning inför behandling eller solning." },
+        { name: "Rödljusbehandling", duration: 30, price: 320, description: "Skonsam ljusbehandling med fokus på hud och återhämtning." },
+        { name: "Solkort – introduktion", duration: 15, price: 0, description: "Kort genomgång av anläggningen för nya kunder." }
+      ];
+
+      const staff = [
+        { name: "Emma Karlsson", initials: "EK", role: "Studioansvarig", status: "På plats idag", specialty: "Kundservice och hudrådgivning" },
+        { name: "Lina Sjöberg", initials: "LS", role: "Hudterapeut", status: "På plats idag", specialty: "Ansiktsbehandlingar" },
+        { name: "Maja Nyberg", initials: "MN", role: "Hudterapeut", status: "Nästa pass 17 maj", specialty: "Rödljus och hudvård" }
+      ];
+
+      const defaultSettings = {
+        reminders: true,
+        autoConfirm: true,
+        showAvailability: true,
+        compactMode: false,
+        openingHours: {
+          "Måndag": ["08:00", "20:00"],
+          "Tisdag": ["08:00", "20:00"],
+          "Onsdag": ["08:00", "20:00"],
+          "Torsdag": ["08:00", "20:00"],
+          "Fredag": ["08:00", "19:00"],
+          "Lördag": ["10:00", "16:00"],
+          "Söndag": ["Stängt", "Stängt"]
+        }
+      };
+
+      const restored = loadState();
+      const state = {
+        activeSection: restored.activeSection || "bookings",
+        calendarView: restored.calendarView || "month",
+        cursor: restored.cursor ? dateFromISO(restored.cursor) : new Date(2025, 4, 1),
+        selectedDate: restored.selectedDate ? dateFromISO(restored.selectedDate) : new Date(demoToday),
+        events: Array.isArray(restored.events) ? restored.events : [],
+        initializedMonths: new Set(restored.initializedMonths || []),
+        filters: new Set(restored.filters || ["booked", "available", "pause", "closed"]),
+        customers: Array.isArray(restored.customers) && restored.customers.length ? restored.customers : structuredClone(defaultCustomers),
+        settings: restored.settings || structuredClone(defaultSettings),
+        customerQuery: ""
+      };
+
+      ensureMonthEvents(state.cursor.getFullYear(), state.cursor.getMonth());
+      ensureMonthEvents(2025, 4);
+      persist();
+      renderApp();
+
+      function loadState() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        } catch {
+          return {};
+        }
+      }
+
+      function persist() {
+        const serializable = {
+          activeSection: state.activeSection,
+          calendarView: state.calendarView,
+          cursor: toISO(state.cursor),
+          selectedDate: toISO(state.selectedDate),
+          events: state.events,
+          initializedMonths: [...state.initializedMonths],
+          filters: [...state.filters],
+          customers: state.customers,
+          settings: state.settings
+        };
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable));
+        } catch {
+          /* Prototypen fungerar även när webbläsaren blockerar lokal lagring. */
+        }
+      }
+
+      function dateFromISO(value) {
+        const [y, m, d] = String(value).split("-").map(Number);
+        return new Date(y, m - 1, d, 12, 0, 0, 0);
+      }
+      function toISO(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+      }
+      function monthKey(year, month) { return `${year}-${String(month + 1).padStart(2, "0")}`; }
+      function addDays(date, amount) { const copy = new Date(date); copy.setDate(copy.getDate() + amount); return copy; }
+      function startOfWeek(date) { const copy = new Date(date); const offset = (copy.getDay() + 6) % 7; copy.setDate(copy.getDate() - offset); return copy; }
+      function capitalize(value) { return value ? value.charAt(0).toUpperCase() + value.slice(1) : value; }
+      function formatDate(date, options) { return new Intl.DateTimeFormat("sv-SE", options).format(date); }
+      function sameDate(a, b) { return toISO(a) === toISO(b); }
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+      function uid(prefix = "id") { return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`; }
+
+      function ensureMonthEvents(year, month) {
+        const key = monthKey(year, month);
+        if (state.initializedMonths.has(key)) return;
+
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        const customerNames = defaultCustomers.map(c => c.name);
+        const bookedTimes = { 1: "09:00", 2: "11:00", 3: "15:00", 4: "09:30", 5: "10:00" };
+        const serviceCycle = ["Soltid 20 min", "Ansiktsbehandling", "Konsultation", "Soltid 30 min", "Rödljusbehandling"];
+
+        for (let day = 1; day <= lastDay; day++) {
+          const date = new Date(year, month, day, 12);
+          const dow = date.getDay();
+          const iso = toISO(date);
+
+          if (dow === 0) {
+            state.events.push({ id: uid("seed"), date: iso, time: "10:00", title: "Stängt", customer: "", resource: "", duration: 0, status: "closed", notes: "" });
+            continue;
+          }
+
+          if (dow === 6) {
+            state.events.push({ id: uid("seed"), date: iso, time: "10:00", title: "Ledig tid", customer: "", resource: "Solarium 1", duration: 20, status: "available", notes: "" });
+            state.events.push({ id: uid("seed"), date: iso, time: day % 2 ? "14:00" : "14:30", title: "Ledig tid", customer: "", resource: "Solarium 2", duration: 20, status: "available", notes: "" });
+            continue;
+          }
+
+          const service = serviceCycle[(day + dow) % serviceCycle.length];
+          state.events.push({
+            id: uid("seed"),
+            date: iso,
+            time: bookedTimes[dow],
+            title: service,
+            customer: customerNames[(day + month) % customerNames.length],
+            resource: `Solarium ${(day % 3) + 1}`,
+            duration: service.includes("Ansikts") ? 50 : service.includes("Konsultation") ? 20 : service.includes("Rödljus") ? 30 : service.includes("30") ? 30 : 20,
+            status: "booked",
+            notes: ""
+          });
+
+          if (dow === 2 || dow === 5) {
+            state.events.push({ id: uid("seed"), date: iso, time: dow === 5 ? "13:30" : "13:00", title: "Paus", customer: "", resource: "", duration: 30, status: "pause", notes: "" });
+          } else {
+            const freeTime = dow === 1 ? "13:00" : dow === 3 ? "17:00" : "12:00";
+            state.events.push({ id: uid("seed"), date: iso, time: freeTime, title: "Ledig tid", customer: "", resource: `Solarium ${(day % 2) + 1}`, duration: 20, status: "available", notes: "" });
+          }
+        }
+
+        if (year === 2025 && month === 4) {
+          const specialDate = "2025-05-16";
+          state.events = state.events.filter(event => event.date !== specialDate);
+          const special = [
+            ["08:30", "Soltid 20 min", "Anna Andersson", "Solarium 1", 20, "booked"],
+            ["09:00", "Soltid 20 min", "Elin Berg", "Solarium 2", 20, "booked"],
+            ["09:30", "Konsultation", "Nora Ek", "Rum 1", 20, "booked"],
+            ["10:00", "Soltid 20 min", "Maria Svensson", "Solarium 3", 20, "booked"],
+            ["11:00", "Ansiktsbehandling", "Sara Lind", "Behandlingsrum", 50, "booked"],
+            ["12:00", "Paus", "", "", 30, "pause"],
+            ["13:00", "Rödljusbehandling", "Olivia Holm", "Rödljus 1", 30, "booked"],
+            ["14:00", "Soltid 30 min", "Johan Karlsson", "Solarium 1", 30, "booked"],
+            ["15:00", "Konsultation", "Maja Ek", "Rum 1", 20, "booked"],
+            ["16:00", "Ledig tid", "", "Solarium 2", 20, "available"],
+            ["17:00", "Ledig tid", "", "Solarium 3", 20, "available"]
+          ];
+          special.forEach(([time, title, customer, resource, duration, status]) => {
+            state.events.push({ id: uid("seed"), date: specialDate, time, title, customer, resource, duration, status, notes: "" });
+          });
+        }
+
+        state.initializedMonths.add(key);
+      }
+
+      function eventsForDate(date) {
+        const iso = typeof date === "string" ? date : toISO(date);
+        return state.events
+          .filter(event => event.date === iso)
+          .sort((a, b) => a.time.localeCompare(b.time));
+      }
+
+      function bookedEventsFrom(date) {
+        const iso = toISO(date);
+        return state.events
+          .filter(event => event.status === "booked" && (event.date > iso || event.date === iso))
+          .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+      }
+
+      function sectionTitle() {
+        return {
+          overview: "Översikt",
+          bookings: "Bokningskalender",
+          customers: "Kunder",
+          services: "Tjänster",
+          staff: "Personal",
+          settings: "Inställningar"
+        }[state.activeSection] || "Studio Aura";
+      }
+
+      function renderApp() {
+        renderNav();
+        renderSidebar();
+        renderTopbar();
+        renderContent();
+      }
+
+      function renderNav() {
+        document.getElementById("navList").innerHTML = navItems.map(item => `
+          <button class="nav-item ${state.activeSection === item.id ? "active" : ""}" type="button" data-action="nav" data-section="${item.id}">
+            ${icon(item.icon, "nav-icon")}
+            <span class="nav-label">${item.label}</span>
+          </button>
+        `).join("");
+      }
+
+      function renderSidebar() {
+        const selected = demoToday;
+        const todayEvents = eventsForDate(selected);
+        const bookedCount = todayEvents.filter(e => e.status === "booked").length;
+        const freeCount = todayEvents.filter(e => e.status === "available").length;
+        const upcoming = bookedEventsFrom(selected).slice(0, 3);
+
+        document.getElementById("sidebarDynamic").innerHTML = `
+          <section class="sidebar-card glow">
+            <h3>Idag · ${selected.getDate()} ${monthNames[selected.getMonth()]} ${selected.getFullYear()}</h3>
+            <div class="summary-row">${icon("calendar")}<strong>${bookedCount}</strong><span>Bokningar</span></div>
+            <div class="summary-row">${icon("user")}<strong>3</strong><span>Nya kunder</span></div>
+            <div class="summary-row">${icon("clock")}<strong>${freeCount}</strong><span>Lediga tider</span></div>
+          </section>
+          <section class="sidebar-card">
+            <h3>Kommande bokningar</h3>
+            <div class="upcoming-list">
+              ${upcoming.map(event => `
+                <button class="upcoming-item" type="button" data-action="open-event" data-event-id="${event.id}">
+                  <span class="upcoming-time">${event.time}</span>
+                  <span>
+                    <span class="upcoming-title"><span class="tiny-dot"></span>${escapeHtml(event.title)}</span>
+                    <span class="upcoming-customer">${escapeHtml(event.customer)}</span>
+                  </span>
+                </button>
+              `).join("") || `<div class="empty-state" style="padding:18px 0">Inga bokningar.</div>`}
+            </div>
+            <button class="sidebar-link" type="button" data-action="nav" data-section="bookings">Visa alla bokningar ${icon("arrow")}</button>
+          </section>
+        `;
+      }
+
+      function renderTopbar() {
+        const bookingsControls = state.activeSection === "bookings" ? `
+          <div class="segmented" aria-label="Kalendervy">
+            ${["month", "week", "day"].map(view => `
+              <button class="segment ${state.calendarView === view ? "active" : ""}" type="button" data-action="view" data-view="${view}">
+                ${{ month: "Månad", week: "Vecka", day: "Dag" }[view]}
+              </button>
+            `).join("")}
+          </div>
+        ` : "";
+
+        let mainAction = "Ny bokning";
+        let action = "new-booking";
+        if (state.activeSection === "customers") { mainAction = "Ny kund"; action = "new-customer"; }
+        if (state.activeSection === "services") { mainAction = "Ny tjänst"; action = "new-service"; }
+        if (state.activeSection === "staff") { mainAction = "Ny profil"; action = "new-staff"; }
+        if (state.activeSection === "settings") { mainAction = "Spara"; action = "save-settings"; }
+
+        document.getElementById("topbar").innerHTML = `
+          <div class="topbar-left">
+            <button class="menu-button" type="button" data-action="open-sidebar" aria-label="Öppna meny">${icon("menu")}</button>
+            <h1 class="page-title">${sectionTitle()}</h1>
+          </div>
+          <div class="topbar-actions">
+            ${bookingsControls}
+            <button class="primary-button" type="button" data-action="${action}">${icon(state.activeSection === "settings" ? "check" : "plus")}<span class="button-text">${mainAction}</span></button>
+            <button class="icon-button bare" type="button" data-action="notifications" aria-label="Notiser">${icon("bell")}</button>
+            <button class="profile-button" type="button" data-action="profile-menu" aria-label="Profilmeny">
+              <span class="avatar">EK</span>${icon("chevronDown")}
+            </button>
+          </div>
+        `;
+      }
+
+      function renderContent() {
+        const content = document.getElementById("content");
+        if (state.activeSection === "bookings") content.innerHTML = renderBookings();
+        else if (state.activeSection === "overview") content.innerHTML = renderOverview();
+        else if (state.activeSection === "customers") content.innerHTML = renderCustomers();
+        else if (state.activeSection === "services") content.innerHTML = renderServices();
+        else if (state.activeSection === "staff") content.innerHTML = renderStaff();
+        else if (state.activeSection === "settings") content.innerHTML = renderSettings();
+      }
+
+      function renderBookings() {
+        ensureMonthEvents(state.cursor.getFullYear(), state.cursor.getMonth());
+        const label = calendarLabel();
+        return `
+          <div class="calendar-card calendar-panel ${state.settings.compactMode ? "compact" : ""}">
+            <div class="calendar-toolbar">
+              <div class="calendar-nav">
+                <button class="icon-button" type="button" data-action="calendar-prev" aria-label="Föregående">${icon("chevronLeft")}</button>
+                <button class="icon-button" type="button" data-action="calendar-next" aria-label="Nästa">${icon("chevronRight")}</button>
+                <button class="secondary-button" type="button" data-action="calendar-today">Idag</button>
+              </div>
+              <h2 class="calendar-label">${label}</h2>
+              <div class="legend">
+                ${[
+                  ["booked", "Bokad"], ["available", "Ledig tid"], ["pause", "Lunch / Paus"], ["closed", "Stängt"]
+                ].map(([status, label]) => {
+                  const off = !state.filters.has(status) || (status === "available" && !state.settings.showAvailability);
+                  return `
+                  <button class="legend-button ${off ? "off" : ""}" type="button" data-action="toggle-filter" data-status="${status}" ${status === "available" && !state.settings.showAvailability ? "disabled aria-disabled=\"true\"" : ""}>
+                    <span class="legend-dot ${status}"></span>${label}
+                  </button>`;
+                }).join("")}
+              </div>
+            </div>
+            <div class="calendar-scroll">
+              ${state.calendarView === "month" ? renderMonthView() : state.calendarView === "week" ? renderWeekView() : renderDayView()}
+            </div>
+          </div>
+        `;
+      }
+
+      function calendarLabel() {
+        if (state.calendarView === "month") return `${capitalize(monthNames[state.cursor.getMonth()])} ${state.cursor.getFullYear()}`;
+        if (state.calendarView === "week") {
+          const start = startOfWeek(state.selectedDate);
+          const end = addDays(start, 6);
+          if (start.getMonth() === end.getMonth()) return `${start.getDate()}–${end.getDate()} ${monthNames[end.getMonth()]} ${end.getFullYear()}`;
+          return `${start.getDate()} ${monthNames[start.getMonth()]} – ${end.getDate()} ${monthNames[end.getMonth()]} ${end.getFullYear()}`;
+        }
+        return capitalize(formatDate(state.selectedDate, { weekday: "long", day: "numeric", month: "long", year: "numeric" }));
+      }
+
+      function isEventVisible(event) {
+        if (!state.filters.has(event.status)) return false;
+        if (event.status === "available" && !state.settings.showAvailability) return false;
+        return true;
+      }
+
+      function renderMonthView() {
+        const year = state.cursor.getFullYear();
+        const month = state.cursor.getMonth();
+        const first = new Date(year, month, 1, 12);
+        const offset = (first.getDay() + 6) % 7;
+        const start = addDays(first, -offset);
+        const days = Array.from({ length: 42 }, (_, i) => addDays(start, i));
+
+        return `
+          <div class="month-grid">
+            ${weekdayNames.map(day => `<div class="weekday-head">${day}</div>`).join("")}
+            ${days.map(date => {
+              const outside = date.getMonth() !== month;
+              const today = sameDate(date, demoToday);
+              const selected = sameDate(date, state.selectedDate);
+              const allEvents = eventsForDate(date).filter(isEventVisible);
+              const visible = allEvents.slice(0, 2);
+              const extra = allEvents.length - visible.length;
+              return `
+                <div class="day-cell ${outside ? "outside" : ""} ${today ? "today" : ""} ${selected ? "selected" : ""}" data-date="${toISO(date)}">
+                  <div class="day-top">
+                    <button class="day-number" type="button" data-action="select-day" data-date="${toISO(date)}" aria-label="${formatDate(date, { dateStyle: "full" })}">${date.getDate()}</button>
+                    <button class="quick-add" type="button" data-action="new-booking-date" data-date="${toISO(date)}" aria-label="Ny bokning ${formatDate(date, { dateStyle: "long" })}">+</button>
+                  </div>
+                  <div class="events">
+                    ${visible.map(renderEventChip).join("")}
+                    ${extra > 0 ? `<button class="more-events" type="button" data-action="show-day" data-date="${toISO(date)}">+ ${extra} till</button>` : ""}
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `;
+      }
+
+      function renderEventChip(event) {
+        return `
+          <button class="event-chip ${event.status}" type="button" data-action="open-event" data-event-id="${event.id}">
+            <span class="event-time">${escapeHtml(event.time)}</span>
+            <span class="event-title">${escapeHtml(event.title)}</span>
+          </button>
+        `;
+      }
+
+      function renderWeekView() {
+        const start = startOfWeek(state.selectedDate);
+        const days = Array.from({ length: 7 }, (_, i) => addDays(start, i));
+        days.forEach(d => ensureMonthEvents(d.getFullYear(), d.getMonth()));
+        const hours = Array.from({ length: 13 }, (_, i) => 8 + i);
+
+        let html = `<div class="week-wrap"><div class="week-grid"><div class="week-corner"></div>`;
+        html += days.map((date, i) => `
+          <button class="week-day-head ${sameDate(date, demoToday) ? "today" : ""}" type="button" data-action="show-day" data-date="${toISO(date)}">
+            <div class="week-day-name">${shortWeekdays[i]}</div>
+            <div class="week-day-date">${date.getDate()}</div>
+          </button>
+        `).join("");
+
+        hours.forEach(hour => {
+          html += `<div class="week-time">${String(hour).padStart(2, "0")}:00</div>`;
+          days.forEach(date => {
+            const dateEvents = eventsForDate(date).filter(event => isEventVisible(event) && Number(event.time.slice(0, 2)) === hour);
+            html += `<div class="week-slot" data-action="new-booking-slot" data-date="${toISO(date)}" data-time="${String(hour).padStart(2, "0")}:00">`;
+            html += dateEvents.map(event => `
+              <button class="week-event ${event.status}" type="button" data-action="open-event" data-event-id="${event.id}">
+                <strong>${escapeHtml(event.time)}</strong><br>${escapeHtml(event.title)}
+              </button>
+            `).join("");
+            html += `</div>`;
+          });
+        });
+        html += `</div></div>`;
+        return html;
+      }
+
+      function renderDayView() {
+        ensureMonthEvents(state.selectedDate.getFullYear(), state.selectedDate.getMonth());
+        const hours = Array.from({ length: 13 }, (_, i) => 8 + i);
+        const dayEvents = eventsForDate(state.selectedDate).filter(isEventVisible);
+        const booked = dayEvents.filter(e => e.status === "booked").length;
+        const available = dayEvents.filter(e => e.status === "available").length;
+
+        return `
+          <div class="day-view">
+            <div class="day-agenda">
+              ${hours.map(hour => {
+                const time = `${String(hour).padStart(2, "0")}:00`;
+                const events = dayEvents.filter(event => Number(event.time.slice(0, 2)) === hour);
+                return `
+                  <div class="agenda-row">
+                    <div class="agenda-time">${time}</div>
+                    <div class="agenda-slot" data-action="new-booking-slot" data-date="${toISO(state.selectedDate)}" data-time="${time}">
+                      ${events.map(event => `
+                        <button class="agenda-event ${event.status}" type="button" data-action="open-event" data-event-id="${event.id}">
+                          <span>
+                            <span class="agenda-title">${escapeHtml(event.time)} · ${escapeHtml(event.title)}</span>
+                            <span class="agenda-meta">${escapeHtml(event.customer || event.resource || statusLabel(event.status))}</span>
+                          </span>
+                          ${event.duration ? `<span class="status-pill">${event.duration} min</span>` : ""}
+                        </button>
+                      `).join("")}
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+            <aside class="day-side">
+              <section class="panel">
+                <div class="panel-head"><h3 class="panel-title">Dagens översikt</h3></div>
+                <div class="summary-row">${icon("calendar")}<strong>${booked}</strong><span>Bokningar</span></div>
+                <div class="summary-row">${icon("clock")}<strong>${available}</strong><span>Lediga tider</span></div>
+                <div class="summary-row">${icon("users")}<strong>${new Set(dayEvents.filter(e => e.customer).map(e => e.customer)).size}</strong><span>Kunder</span></div>
+              </section>
+              <section class="panel">
+                <div class="panel-head"><h3 class="panel-title">Snabbåtgärder</h3></div>
+                <button class="primary-button" style="width:100%" type="button" data-action="new-booking-date" data-date="${toISO(state.selectedDate)}">${icon("plus")}Ny bokning</button>
+                <button class="secondary-button" style="width:100%;margin-top:9px" type="button" data-action="view" data-view="month">Visa månad</button>
+              </section>
+            </aside>
+          </div>
+        `;
+      }
+
+      function statusLabel(status) {
+        return { booked: "Bokad", available: "Ledig tid", pause: "Paus", closed: "Stängt" }[status] || status;
+      }
+
+      function renderOverview() {
+        ensureMonthEvents(2025, 4);
+        const monthPrefix = "2025-05";
+        const monthBookings = state.events.filter(e => e.status === "booked" && e.date.startsWith(monthPrefix));
+        const todayEvents = eventsForDate(demoToday).filter(e => e.status === "booked");
+        const upcoming = bookedEventsFrom(demoToday).slice(0, 5);
+        return `
+          <div class="page-stack">
+            <section class="hero-panel">
+              <div>
+                <h2>God morgon, Emma</h2>
+                <p>Här är dagens läge på Studio Aura. Kalendern har ${todayEvents.length} bokningar idag och två lediga tider kvar.</p>
+              </div>
+              <div class="hero-orb" aria-hidden="true"></div>
+            </section>
+
+            <div class="stats-grid">
+              ${statCard("Bokningar idag", todayEvents.length, "2 fler än i går", "calendar", "bookings")}
+              ${statCard("Månadens bokningar", monthBookings.length, "Maj 2025", "grid", "bookings")}
+              ${statCard("Aktiva kunder", state.customers.length, "3 nya den här veckan", "users", "customers")}
+              ${statCard("Lediga tider", eventsForDate(demoToday).filter(e => e.status === "available").length, "Idag", "clock", "bookings")}
+            </div>
+
+            <div class="two-col">
+              <section class="panel">
+                <div class="panel-head">
+                  <h3 class="panel-title">Dagens schema</h3>
+                  <button class="secondary-button" type="button" data-action="nav" data-section="bookings">Öppna kalender</button>
+                </div>
+                <div class="clean-list">
+                  ${upcoming.map(event => `
+                    <button class="clean-row" type="button" data-action="open-event" data-event-id="${event.id}" style="width:100%;text-align:left">
+                      <span class="clean-time">${event.time}</span>
+                      <span><span class="clean-title">${escapeHtml(event.title)}</span><span class="clean-sub">${escapeHtml(event.customer)} · ${escapeHtml(event.resource)}</span></span>
+                      <span class="status-pill">Bokad</span>
+                    </button>
+                  `).join("")}
+                </div>
+              </section>
+              <section class="panel">
+                <div class="panel-head"><h3 class="panel-title">Beläggning</h3><span class="status-pill">Idag</span></div>
+                <div class="progress-list">
+                  ${progress("Solarium 1", 82)}
+                  ${progress("Solarium 2", 67)}
+                  ${progress("Solarium 3", 74)}
+                  ${progress("Behandlingsrum", 58)}
+                </div>
+              </section>
+            </div>
+          </div>
+        `;
+      }
+
+      function statCard(label, value, foot, iconName, section) {
+        return `
+          <article class="stat-card" data-action="nav" data-section="${section}" role="button" tabindex="0">
+            <div class="stat-top"><span>${label}</span><span class="stat-icon">${icon(iconName)}</span></div>
+            <div class="stat-value">${value}</div>
+            <div class="stat-foot">${foot}</div>
+          </article>
+        `;
+      }
+      function progress(label, value) {
+        return `<div><div class="progress-label"><span>${label}</span><strong>${value}%</strong></div><div class="progress-track"><div class="progress-bar" style="width:${value}%"></div></div></div>`;
+      }
+
+      function renderCustomers() {
+        const query = state.customerQuery.trim().toLowerCase();
+        const filtered = state.customers.filter(customer => [customer.name, customer.email, customer.phone].some(v => v.toLowerCase().includes(query)));
+        return `
+          <div class="page-stack">
+            <div class="section-toolbar">
+              <label class="search-box">
+                ${icon("search")}
+                <input id="customerSearch" type="search" value="${escapeHtml(state.customerQuery)}" placeholder="Sök namn, e-post eller telefon…" aria-label="Sök kunder" />
+              </label>
+              <span class="status-pill">${filtered.length} kunder</span>
+            </div>
+            <section class="panel" style="padding:0;overflow:hidden">
+              <div class="table-scroll">
+                <table class="data-table">
+                  <thead><tr><th>Kund</th><th>Telefon</th><th>Besök</th><th>Senaste besök</th></tr></thead>
+                  <tbody>
+                    ${filtered.map(customer => `
+                      <tr data-action="customer-detail" data-customer-id="${customer.id}">
+                        <td><div class="customer-cell"><span class="customer-avatar">${initials(customer.name)}</span><span><strong>${escapeHtml(customer.name)}</strong><br><span style="color:var(--muted);font-size:11px">${escapeHtml(customer.email)}</span></span></div></td>
+                        <td>${escapeHtml(customer.phone)}</td>
+                        <td>${customer.visits}</td>
+                        <td>${formatDate(dateFromISO(customer.lastVisit), { day: "numeric", month: "short", year: "numeric" })}</td>
+                      </tr>
+                    `).join("") || `<tr><td colspan="4"><div class="empty-state"><h3>Ingen träff</h3><p>Prova ett annat sökord.</p></div></td></tr>`}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        `;
+      }
+
+      function initials(name) { return name.split(/\s+/).slice(0, 2).map(part => part[0]).join("").toUpperCase(); }
+
+      function renderServices() {
+        return `
+          <div class="page-stack">
+            <div class="section-toolbar"><p style="margin:0;color:var(--muted)">Hantera behandlingar, soltider och priser.</p><span class="status-pill">${services.length} aktiva</span></div>
+            <div class="card-grid">
+              ${services.map((service, index) => `
+                <article class="service-card">
+                  <span class="status-pill">Aktiv</span>
+                  <h3>${escapeHtml(service.name)}</h3>
+                  <p>${escapeHtml(service.description)}</p>
+                  <div class="service-meta"><span>${service.duration} min</span><span class="price">${service.price ? `${service.price} kr` : "Kostnadsfri"}</span></div>
+                  <button class="icon-button" style="position:absolute;top:14px;right:14px;width:34px;height:34px" type="button" data-action="service-detail" data-service-index="${index}" aria-label="Redigera tjänst">${icon("edit")}</button>
+                </article>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderStaff() {
+        return `
+          <div class="page-stack">
+            <div class="section-toolbar"><p style="margin:0;color:var(--muted)">Personal, roller och tillgänglighet.</p><span class="status-pill">2 på plats</span></div>
+            <div class="card-grid">
+              ${staff.map((person, index) => `
+                <article class="person-card">
+                  <div class="person-top"><span class="person-avatar">${person.initials}</span><span><h3 style="margin:0">${person.name}</h3><p>${person.role}</p></span></div>
+                  <div class="person-status">${person.status}</div>
+                  <div class="service-meta"><span style="color:var(--muted);font-size:12px">${person.specialty}</span><button class="icon-button" type="button" data-action="staff-detail" data-staff-index="${index}" style="width:34px;height:34px">${icon("edit")}</button></div>
+                </article>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderSettings() {
+        return `
+          <div class="settings-grid">
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">Bokningsinställningar</h3></div>
+              ${settingToggle("reminders", "Automatiska påminnelser", "Skicka en påminnelse till kunden före bokad tid.")}
+              ${settingToggle("autoConfirm", "Bekräfta bokningar automatiskt", "Nya bokningar blir direkt bekräftade.")}
+              ${settingToggle("showAvailability", "Visa lediga tider", "Visa lediga tider direkt i månadskalendern.")}
+              ${settingToggle("compactMode", "Kompakt kalender", "Minska höjden på kalenderns dagrutor.")}
+              <div class="setting-row">
+                <div><div class="setting-title">Återställ demo</div><div class="setting-sub">Återställ alla bokningar och ändringar till ursprungsläget.</div></div>
+                <button class="secondary-button" type="button" data-action="reset-demo">${icon("reset")}Återställ</button>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-head"><h3 class="panel-title">Öppettider</h3></div>
+              <div class="hours-grid">
+                ${Object.entries(state.settings.openingHours).map(([day, range]) => `
+                  <div class="hours-row">
+                    <strong style="font-family:var(--serif);font-size:13px">${day}</strong>
+                    <input type="text" value="${range[0]}" data-hour-day="${day}" data-hour-index="0" aria-label="${day} öppnar" />
+                    <span>–</span>
+                    <input type="text" value="${range[1]}" data-hour-day="${day}" data-hour-index="1" aria-label="${day} stänger" />
+                  </div>
+                `).join("")}
+              </div>
+            </section>
+          </div>
+        `;
+      }
+
+      function settingToggle(key, title, description) {
+        return `<div class="setting-row"><div><div class="setting-title">${title}</div><div class="setting-sub">${description}</div></div><button class="toggle ${state.settings[key] ? "on" : ""}" type="button" data-action="toggle-setting" data-setting="${key}" aria-pressed="${state.settings[key]}"></button></div>`;
+      }
+
+      document.addEventListener("click", event => {
+        if (event.target.matches("[data-modal-backdrop]")) {
+          closeModal();
+          return;
+        }
+        const target = event.target.closest("[data-action]");
+        if (!target) {
+          closePopovers();
+          return;
+        }
+
+        const action = target.dataset.action;
+        if (!target.closest(".popover")) closePopovers();
+
+        if (action === "nav") {
+          state.activeSection = target.dataset.section;
+          persist();
+          closeSidebar();
+          renderApp();
+        } else if (action === "view") {
+          state.calendarView = target.dataset.view;
+          if (state.calendarView === "month") state.cursor = new Date(state.selectedDate.getFullYear(), state.selectedDate.getMonth(), 1, 12);
+          persist();
+          renderApp();
+        } else if (action === "calendar-prev" || action === "calendar-next") {
+          const delta = action === "calendar-next" ? 1 : -1;
+          navigateCalendar(delta);
+        } else if (action === "calendar-today") {
+          state.selectedDate = new Date(demoToday);
+          state.cursor = new Date(demoToday.getFullYear(), demoToday.getMonth(), 1, 12);
+          persist();
+          renderApp();
+        } else if (action === "select-day") {
+          const date = dateFromISO(target.dataset.date);
+          state.selectedDate = date;
+          if (date.getMonth() !== state.cursor.getMonth() || date.getFullYear() !== state.cursor.getFullYear()) state.cursor = new Date(date.getFullYear(), date.getMonth(), 1, 12);
+          persist();
+          renderApp();
+        } else if (action === "show-day") {
+          state.selectedDate = dateFromISO(target.dataset.date);
+          state.calendarView = "day";
+          persist();
+          renderApp();
+        } else if (action === "new-booking" || action === "new-booking-date") {
+          openBookingModal({ date: target.dataset.date || toISO(state.selectedDate) });
+        } else if (action === "new-booking-slot") {
+          if (event.target.closest("[data-event-id]")) return;
+          openBookingModal({ date: target.dataset.date, time: target.dataset.time });
+        } else if (action === "open-event") {
+          event.stopPropagation();
+          openEvent(target.dataset.eventId);
+        } else if (action === "toggle-filter") {
+          const status = target.dataset.status;
+          state.filters.has(status) ? state.filters.delete(status) : state.filters.add(status);
+          persist();
+          renderApp();
+        } else if (action === "open-sidebar") {
+          document.getElementById("sidebar").classList.add("open");
+          document.getElementById("mobileScrim").classList.add("show");
+        } else if (action === "close-sidebar") {
+          closeSidebar();
+        } else if (action === "notifications") {
+          openNotifications(target);
+        } else if (action === "profile-menu") {
+          openProfileMenu(target);
+        } else if (action === "new-customer") {
+          openCustomerModal();
+        } else if (action === "customer-detail") {
+          openCustomerDetail(target.dataset.customerId);
+        } else if (action === "new-service") {
+          showToast("Tjänsteformuläret är markerat som nästa prototypsteg.");
+        } else if (action === "new-staff") {
+          showToast("Personalformuläret är markerat som nästa prototypsteg.");
+        } else if (action === "service-detail") {
+          const service = services[Number(target.dataset.serviceIndex)];
+          showToast(`${service.name}: redigeringsvyn kan byggas i nästa steg.`);
+        } else if (action === "staff-detail") {
+          const person = staff[Number(target.dataset.staffIndex)];
+          showToast(`${person.name}: profilvyn kan byggas i nästa steg.`);
+        } else if (action === "toggle-setting") {
+          const key = target.dataset.setting;
+          state.settings[key] = !state.settings[key];
+          persist();
+          renderApp();
+        } else if (action === "save-settings") {
+          saveOpeningHours();
+          persist();
+          showToast("Inställningarna är sparade.");
+        } else if (action === "reset-demo") {
+          if (confirm("Vill du återställa hela prototypen? Alla lokala ändringar tas bort.")) {
+            try { localStorage.removeItem(STORAGE_KEY); } catch {}
+            location.reload();
+          }
+        } else if (action === "close-modal") {
+          closeModal();
+        } else if (action === "delete-event") {
+          deleteEvent(target.dataset.eventId);
+        } else if (action === "logout") {
+          showToast("Utloggning är endast en del av mockupen.");
+        } else if (action === "profile") {
+          showToast("Profilvyn är förberedd för nästa steg.");
+        }
+      });
+
+      document.addEventListener("input", event => {
+        if (event.target.id === "customerSearch") {
+          state.customerQuery = event.target.value;
+          const cursor = event.target.selectionStart;
+          renderContent();
+          const input = document.getElementById("customerSearch");
+          input.focus();
+          input.setSelectionRange(cursor, cursor);
+        }
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          closeModal();
+          closePopovers();
+          closeSidebar();
+        }
+        if ((event.key === "Enter" || event.key === " ") && event.target.matches(".stat-card")) {
+          event.preventDefault();
+          event.target.click();
+        }
+      });
+
+      function navigateCalendar(delta) {
+        if (state.calendarView === "month") {
+          state.cursor = new Date(state.cursor.getFullYear(), state.cursor.getMonth() + delta, 1, 12);
+          state.selectedDate = new Date(state.cursor.getFullYear(), state.cursor.getMonth(), Math.min(state.selectedDate.getDate(), new Date(state.cursor.getFullYear(), state.cursor.getMonth() + 1, 0).getDate()), 12);
+          ensureMonthEvents(state.cursor.getFullYear(), state.cursor.getMonth());
+        } else if (state.calendarView === "week") {
+          state.selectedDate = addDays(state.selectedDate, delta * 7);
+          state.cursor = new Date(state.selectedDate.getFullYear(), state.selectedDate.getMonth(), 1, 12);
+        } else {
+          state.selectedDate = addDays(state.selectedDate, delta);
+          state.cursor = new Date(state.selectedDate.getFullYear(), state.selectedDate.getMonth(), 1, 12);
+        }
+        persist();
+        renderApp();
+      }
+
+      function openEvent(eventId) {
+        const event = state.events.find(item => item.id === eventId);
+        if (!event) return;
+        if (event.status === "available") {
+          openBookingModal({ date: event.date, time: event.time, sourceSlotId: event.id });
+          return;
+        }
+        openBookingModal({ eventId: event.id });
+      }
+
+      function openBookingModal({ eventId = "", date = toISO(state.selectedDate), time = "10:00", sourceSlotId = "" } = {}) {
+        const existing = eventId ? state.events.find(item => item.id === eventId) : null;
+        const model = existing || {
+          date,
+          time,
+          title: "Soltid 20 min",
+          customer: "",
+          resource: "Solarium 1",
+          duration: 20,
+          status: "booked",
+          notes: ""
+        };
+        const isEdit = Boolean(existing);
+        const customerOptions = state.customers.map(customer => `<option value="${escapeHtml(customer.name)}" ${model.customer === customer.name ? "selected" : ""}>${escapeHtml(customer.name)}</option>`).join("");
+        const serviceOptions = services.map(service => `<option value="${escapeHtml(service.name)}" data-duration="${service.duration}" ${model.title === service.name ? "selected" : ""}>${escapeHtml(service.name)}</option>`).join("");
+
+        document.getElementById("modalRoot").innerHTML = `
+          <div class="modal-backdrop" data-modal-backdrop>
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle">
+              <div class="modal-head">
+                <h2 class="modal-title" id="bookingModalTitle">${isEdit ? "Redigera bokning" : "Ny bokning"}</h2>
+                <button class="icon-button" type="button" data-action="close-modal" aria-label="Stäng">✕</button>
+              </div>
+              <form id="bookingForm">
+                <div class="modal-body">
+                  <input type="hidden" name="eventId" value="${escapeHtml(eventId)}" />
+                  <input type="hidden" name="sourceSlotId" value="${escapeHtml(sourceSlotId)}" />
+                  <div class="form-grid">
+                    <div class="field"><label for="bookingDate">Datum</label><input id="bookingDate" name="date" type="date" value="${escapeHtml(model.date)}" required /></div>
+                    <div class="field"><label for="bookingTime">Tid</label><input id="bookingTime" name="time" type="time" value="${escapeHtml(model.time)}" required /></div>
+                    <div class="field full"><label for="bookingService">Tjänst</label><select id="bookingService" name="title" required>${serviceOptions}<option value="Paus" ${model.title === "Paus" ? "selected" : ""}>Paus</option><option value="Stängt" ${model.title === "Stängt" ? "selected" : ""}>Stängt</option></select></div>
+                    <div class="field"><label for="bookingCustomer">Kund</label><select id="bookingCustomer" name="customer"><option value="">Välj kund…</option>${customerOptions}</select></div>
+                    <div class="field"><label for="bookingResource">Rum / solarium</label><select id="bookingResource" name="resource">
+                      ${["Solarium 1", "Solarium 2", "Solarium 3", "Rödljus 1", "Behandlingsrum", "Rum 1"].map(value => `<option value="${value}" ${model.resource === value ? "selected" : ""}>${value}</option>`).join("")}
+                    </select></div>
+                    <div class="field"><label for="bookingDuration">Längd (min)</label><input id="bookingDuration" name="duration" type="number" min="0" step="5" value="${Number(model.duration) || 20}" /></div>
+                    <div class="field"><label for="bookingStatus">Status</label><select id="bookingStatus" name="status">
+                      ${[["booked","Bokad"],["available","Ledig tid"],["pause","Paus"],["closed","Stängt"]].map(([value,label]) => `<option value="${value}" ${model.status === value ? "selected" : ""}>${label}</option>`).join("")}
+                    </select></div>
+                    <div class="field full"><label for="bookingNotes">Anteckning</label><textarea id="bookingNotes" name="notes" placeholder="Valfri intern anteckning…">${escapeHtml(model.notes)}</textarea></div>
+                  </div>
+                </div>
+                <div class="modal-foot">
+                  <div>${isEdit ? `<button class="danger-button" type="button" data-action="delete-event" data-event-id="${eventId}">${icon("trash")}Ta bort</button>` : ""}</div>
+                  <div class="modal-foot-right">
+                    <button class="secondary-button" type="button" data-action="close-modal">Avbryt</button>
+                    <button class="primary-button" type="submit">${icon("check")}Spara bokning</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+
+        const form = document.getElementById("bookingForm");
+        form.addEventListener("submit", saveBooking);
+        const serviceSelect = document.getElementById("bookingService");
+        serviceSelect.addEventListener("change", () => {
+          const selected = services.find(service => service.name === serviceSelect.value);
+          if (selected) document.getElementById("bookingDuration").value = selected.duration;
+          const status = document.getElementById("bookingStatus");
+          if (serviceSelect.value === "Paus") status.value = "pause";
+          else if (serviceSelect.value === "Stängt") status.value = "closed";
+          else status.value = "booked";
+        });
+        setTimeout(() => document.getElementById("bookingDate")?.focus(), 20);
+      }
+
+      function saveBooking(event) {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const eventId = formData.get("eventId");
+        const sourceSlotId = formData.get("sourceSlotId");
+        const model = {
+          id: eventId || uid("booking"),
+          date: formData.get("date"),
+          time: formData.get("time"),
+          title: formData.get("title"),
+          customer: formData.get("customer"),
+          resource: formData.get("resource"),
+          duration: Number(formData.get("duration")) || 0,
+          status: formData.get("status"),
+          notes: formData.get("notes")
+        };
+
+        if (eventId) {
+          const index = state.events.findIndex(item => item.id === eventId);
+          if (index >= 0) state.events[index] = model;
+        } else {
+          if (sourceSlotId) state.events = state.events.filter(item => item.id !== sourceSlotId);
+          state.events.push(model);
+        }
+
+        state.selectedDate = dateFromISO(model.date);
+        state.cursor = new Date(state.selectedDate.getFullYear(), state.selectedDate.getMonth(), 1, 12);
+        persist();
+        closeModal();
+        renderApp();
+        showToast(eventId ? "Bokningen är uppdaterad." : "Bokningen är skapad.");
+      }
+
+      function deleteEvent(eventId) {
+        if (!confirm("Vill du ta bort bokningen?")) return;
+        state.events = state.events.filter(item => item.id !== eventId);
+        persist();
+        closeModal();
+        renderApp();
+        showToast("Bokningen är borttagen.");
+      }
+
+      function openCustomerModal() {
+        document.getElementById("modalRoot").innerHTML = `
+          <div class="modal-backdrop" data-modal-backdrop>
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="customerModalTitle">
+              <div class="modal-head"><h2 class="modal-title" id="customerModalTitle">Ny kund</h2><button class="icon-button" type="button" data-action="close-modal">✕</button></div>
+              <form id="customerForm">
+                <div class="modal-body"><div class="form-grid">
+                  <div class="field full"><label>Namn</label><input name="name" required autofocus /></div>
+                  <div class="field"><label>E-post</label><input name="email" type="email" /></div>
+                  <div class="field"><label>Telefon</label><input name="phone" /></div>
+                </div></div>
+                <div class="modal-foot"><div></div><div class="modal-foot-right"><button class="secondary-button" type="button" data-action="close-modal">Avbryt</button><button class="primary-button" type="submit">${icon("check")}Spara kund</button></div></div>
+              </form>
+            </div>
+          </div>
+        `;
+        document.getElementById("customerForm").addEventListener("submit", event => {
+          event.preventDefault();
+          const data = new FormData(event.currentTarget);
+          state.customers.push({ id: uid("customer"), name: data.get("name"), email: data.get("email"), phone: data.get("phone"), visits: 0, lastVisit: toISO(demoToday) });
+          persist();
+          closeModal();
+          renderApp();
+          showToast("Kunden är tillagd.");
+        });
+      }
+
+      function openCustomerDetail(customerId) {
+        const customer = state.customers.find(item => item.id === customerId);
+        if (!customer) return;
+        document.getElementById("modalRoot").innerHTML = `
+          <div class="modal-backdrop" data-modal-backdrop>
+            <div class="modal" role="dialog" aria-modal="true">
+              <div class="modal-head"><h2 class="modal-title">${escapeHtml(customer.name)}</h2><button class="icon-button" type="button" data-action="close-modal">✕</button></div>
+              <div class="modal-body">
+                <div class="person-top"><span class="person-avatar">${initials(customer.name)}</span><span><h3 style="margin:0;font-family:var(--serif);font-size:22px">Kundprofil</h3><p style="margin:5px 0 0;color:var(--muted)">${customer.visits} registrerade besök</p></span></div>
+                <div class="clean-list" style="margin-top:22px">
+                  <div class="clean-row"><span>${icon("mail")}</span><span><span class="clean-title">E-post</span><span class="clean-sub">${escapeHtml(customer.email || "Inte angiven")}</span></span></div>
+                  <div class="clean-row"><span>${icon("phone")}</span><span><span class="clean-title">Telefon</span><span class="clean-sub">${escapeHtml(customer.phone || "Inte angiven")}</span></span></div>
+                  <div class="clean-row"><span>${icon("calendar")}</span><span><span class="clean-title">Senaste besök</span><span class="clean-sub">${formatDate(dateFromISO(customer.lastVisit), { dateStyle: "long" })}</span></span></div>
+                </div>
+              </div>
+              <div class="modal-foot"><div></div><div class="modal-foot-right"><button class="secondary-button" type="button" data-action="close-modal">Stäng</button><button class="primary-button" type="button" data-action="new-booking">${icon("plus")}Ny bokning</button></div></div>
+            </div>
+          </div>
+        `;
+      }
+
+      function openNotifications(button) {
+        const rect = button.getBoundingClientRect();
+        document.getElementById("popoverRoot").innerHTML = `
+          <div class="popover" style="top:${rect.bottom + 8}px;left:${Math.max(12, rect.right - 250)}px">
+            <div class="popover-title">Notiser</div>
+            <button class="popover-item" type="button"><span class="notification-dot"></span><span><strong>Ny bokning</strong><div class="popover-small">Anna bokade Soltid 20 min kl. 10:00.</div></span></button>
+            <button class="popover-item" type="button"><span class="notification-dot" style="background:#c8b795"></span><span><strong>Påminnelse skickad</strong><div class="popover-small">Dagens kunder har fått sina påminnelser.</div></span></button>
+          </div>
+        `;
+      }
+
+      function openProfileMenu(button) {
+        const rect = button.getBoundingClientRect();
+        document.getElementById("popoverRoot").innerHTML = `
+          <div class="popover" style="top:${rect.bottom + 8}px;left:${Math.max(12, rect.right - 220)}px;width:220px">
+            <div class="popover-title">Emma Karlsson</div>
+            <button class="popover-item" type="button" data-action="profile">${icon("user")}<span>Min profil</span></button>
+            <button class="popover-item" type="button" data-action="logout">${icon("arrow")}<span>Logga ut</span></button>
+          </div>
+        `;
+      }
+
+      function closePopovers() { document.getElementById("popoverRoot").innerHTML = ""; }
+      function closeModal() { document.getElementById("modalRoot").innerHTML = ""; }
+      function closeSidebar() { document.getElementById("sidebar").classList.remove("open"); document.getElementById("mobileScrim").classList.remove("show"); }
+
+      function saveOpeningHours() {
+        document.querySelectorAll("[data-hour-day]").forEach(input => {
+          const day = input.dataset.hourDay;
+          const index = Number(input.dataset.hourIndex);
+          if (!state.settings.openingHours[day]) state.settings.openingHours[day] = ["", ""];
+          state.settings.openingHours[day][index] = input.value;
+        });
+      }
+
+      let toastTimer;
+      function showToast(message) {
+        clearTimeout(toastTimer);
+        const toast = document.getElementById("toast");
+        toast.innerHTML = `${icon("check")}<span>${escapeHtml(message)}</span>`;
+        toast.classList.add("show");
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+    })();
+  </script>
+</body>
+</html>

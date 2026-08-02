@@ -5,6 +5,7 @@ import { Safety } from './components/Safety'
 import { Prices } from './components/Prices'
 import { Membership } from './components/Membership'
 import { Gallery } from './components/Gallery'
+import { BookingProgram } from './components/BookingProgram'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
@@ -27,6 +28,7 @@ export default function App() {
         <Prices />
         <Membership />
         <Gallery />
+        <BookingProgram />
         <Contact />
       </main>
       <Footer />
