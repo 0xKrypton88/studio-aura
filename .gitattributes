@@ -2,6 +2,10 @@
 reference/*.html -text
 reference/*.png -text
 
+# Keep the checksum manifest LF-only so `sha256sum -c` works on Windows
+# (CRLF checkout would leave `\r` as part of each filename).
+reference/SHA256SUMS text eol=lf
+
 # Normalize authored text files in the repository.
 *.md text eol=lf
 *.ts text eol=lf
