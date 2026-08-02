@@ -1,3 +1,5 @@
+import { assetPath } from './assets'
+
 /** Verified business facts from the Studio Aura source capture. */
 export const site = {
   name: 'Studio Aura',
@@ -32,35 +34,35 @@ export const navItems = [
 
 export const galleryImages = [
   {
-    src: '/gallery/studio-01.jpg',
+    src: assetPath('gallery/studio-01.jpg'),
     alt: 'Solariumkabin hos Studio Aura med varm belysning',
   },
   {
-    src: '/gallery/studio-02.jpg',
+    src: assetPath('gallery/studio-02.jpg'),
     alt: 'Interiördetalj i Studio Aura',
   },
   {
-    src: '/gallery/studio-03.jpg',
+    src: assetPath('gallery/studio-03.jpg'),
     alt: 'Solstudioatmosfär i Strömsnäsbruk',
   },
   {
-    src: '/gallery/studio-04.jpg',
+    src: assetPath('gallery/studio-04.jpg'),
     alt: 'Belysning och miljö i studion',
   },
   {
-    src: '/gallery/studio-05.jpg',
+    src: assetPath('gallery/studio-05.jpg'),
     alt: 'Studio Aura – lokal och utrustning',
   },
   {
-    src: '/gallery/studio-06.jpg',
+    src: assetPath('gallery/studio-06.jpg'),
     alt: 'Detalj från solstudion',
   },
   {
-    src: '/gallery/studio-07.jpg',
+    src: assetPath('gallery/studio-07.jpg'),
     alt: 'Inbjudande miljö hos Studio Aura',
   },
   {
-    src: '/gallery/studio-08.jpg',
+    src: assetPath('gallery/studio-08.jpg'),
     alt: 'Studio Aura – solupplevelse',
   },
 ] as const

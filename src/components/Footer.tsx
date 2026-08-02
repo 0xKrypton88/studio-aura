@@ -1,3 +1,4 @@
+import { assetPath } from '../assets'
 import { site } from '../content'
 
 export function Footer() {
@@ -6,7 +7,7 @@ export function Footer() {
       <div className="site-footer__inner">
         <div className="site-footer__brand">
           <img
-            src="/brand/logo-192.png"
+            src={assetPath('brand/logo-192.png')}
             width={56}
             height={56}
             alt=""

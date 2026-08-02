@@ -2,8 +2,22 @@ import { describe, expect, it } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
+import { assetPath } from '../assets'
 
 describe('site navigation and mobile menu', () => {
+  it('resolves every local image through the configured deployment base path', () => {
+    const { container } = render(<App />)
+    const sources = Array.from(container.querySelectorAll('img')).map((image) =>
+      image.getAttribute('src'),
+    )
+
+    expect(assetPath('/gallery/example.jpg', '/studio-aura/')).toBe(
+      '/studio-aura/gallery/example.jpg',
+    )
+    expect(sources.length).toBeGreaterThan(0)
+    expect(sources.every((source) => source?.startsWith(import.meta.env.BASE_URL))).toBe(true)
+  })
+
   it('exposes landmark navigation with section anchors', () => {
     render(<App />)
 

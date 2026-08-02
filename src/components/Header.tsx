@@ -1,4 +1,5 @@
 import { useEffect, useId, useState } from 'react'
+import { assetPath } from '../assets'
 import { navItems, site } from '../content'
 
 export function Header() {
@@ -25,7 +26,7 @@ export function Header() {
       <div className="site-header__inner">
         <a className="brand-mark" href="#top" aria-label={`${site.name} – till toppen`}>
           <img
-            src="/brand/logo-192.png"
+            src={assetPath('brand/logo-192.png')}
             width={44}
             height={44}
             alt=""

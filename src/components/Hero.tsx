@@ -1,3 +1,4 @@
+import { assetPath } from '../assets'
 import { site } from '../content'
 
 export function Hero() {
@@ -6,8 +7,8 @@ export function Hero() {
       <div className="hero__media" aria-hidden="true">
         <img
           className="hero__image"
-          src="/gallery/hero-atmosphere.jpg"
-          srcSet="/gallery/hero-atmosphere-sm.jpg 960w, /gallery/hero-atmosphere.jpg 1920w"
+          src={assetPath('gallery/hero-atmosphere.jpg')}
+          srcSet={`${assetPath('gallery/hero-atmosphere-sm.jpg')} 960w, ${assetPath('gallery/hero-atmosphere.jpg')} 1920w`}
           sizes="100vw"
           alt=""
           width={1920}
@@ -21,7 +22,7 @@ export function Hero() {
       <div className="hero__content">
         <img
           className="hero__logo"
-          src="/studio-aura-logo.png"
+          src={assetPath('studio-aura-logo.png')}
           width={220}
           height={220}
           alt=""
