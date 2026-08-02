@@ -22,7 +22,11 @@ npm run lint
 npm run typecheck
 npm run build
 npm run preview
+npx playwright install chromium
+npm run test:e2e
 ```
+
+Browser acceptance (`npm run test:e2e`) builds against the local Vite preview by default (`http://127.0.0.1:4173/studio-aura/`). Set `BASE_URL` to exercise a deployed URL instead. Desktop (1440×900) and mobile (390×844) screenshots are written under `test-results/acceptance-screenshots/`.
 
 ## Design thesis
 
