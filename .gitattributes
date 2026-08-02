@@ -1,6 +1,7 @@
 # Preserve captured reference artifacts byte-for-byte.
 reference/*.html -text
 reference/*.png -text
+reference/SHA256SUMS text eol=lf
 
 # Normalize authored text files in the repository.
 *.md text eol=lf
