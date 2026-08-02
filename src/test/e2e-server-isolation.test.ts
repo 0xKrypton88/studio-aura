@@ -1,10 +1,7 @@
-import { readFileSync } from 'node:fs'
-import path from 'node:path'
 import { describe, expect, it } from 'vitest'
+import source from '../../playwright.config.ts?raw'
 
 const PREVIEW_SCRIPT_PORT = 4173
-const configPath = path.resolve(process.cwd(), 'playwright.config.ts')
-const source = readFileSync(configPath, 'utf8')
 
 describe('playwright local e2e server isolation', () => {
   it('keeps a dedicated e2e port distinct from ordinary preview', () => {
