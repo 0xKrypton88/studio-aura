@@ -34,11 +34,13 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
   min-width: 320px;
+  overflow-x: clip;
   background:
     radial-gradient(1200px 600px at 10% -10%, rgba(183, 165, 117, 0.18), transparent 55%),
     radial-gradient(900px 500px at 100% 0%, rgba(235, 227, 212, 0.9), transparent 50%),
@@ -847,7 +849,12 @@ h3 {
 
   .site-nav {
     position: fixed;
-    inset: var(--header-h) 0 0;
+    top: var(--header-h);
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100svh - var(--header-h));
+    min-height: calc(100dvh - var(--header-h));
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
@@ -855,12 +862,17 @@ h3 {
     padding: 1.5rem 1.25rem 2rem;
     background: color-mix(in srgb, var(--ivory-soft) 96%, white);
     transform: translateX(100%);
-    transition: transform 240ms ease;
+    transition: transform 240ms ease, visibility 240ms ease;
     overflow: auto;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 40;
   }
 
   .site-nav.is-open {
     transform: none;
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .site-nav__list {
