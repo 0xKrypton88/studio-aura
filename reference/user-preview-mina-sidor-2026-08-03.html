@@ -1,0 +1,2091 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f5eee6" />
+  <meta name="description" content="Klickbar designmockup för Studio Aura – publik webbplats och enkel kundportal." />
+  <title>Studio Aura — Klickbar preview</title>
+  <style>
+    :root {
+      --paper: #f5eee6;
+      --paper-2: #fffaf4;
+      --paper-3: #ece0d2;
+      --ink: #2a211c;
+      --muted: #71645b;
+      --line: rgba(58, 42, 32, 0.13);
+      --bronze: #9c6847;
+      --bronze-dark: #74462f;
+      --gold: #c99866;
+      --rose: #9e6b73;
+      --aubergine: #3c2937;
+      --violet: #6f5592;
+      --success: #5f7963;
+      --success-bg: #edf3eb;
+      --warning: #966c1f;
+      --warning-bg: #fff1ca;
+      --danger: #8c4b42;
+      --white: #ffffff;
+      --shadow-sm: 0 14px 40px rgba(60, 38, 24, 0.08);
+      --shadow-md: 0 24px 70px rgba(60, 38, 24, 0.14);
+      --shadow-lg: 0 45px 120px rgba(45, 28, 20, 0.2);
+      --radius-sm: 14px;
+      --radius-md: 24px;
+      --radius-lg: 36px;
+      --container: min(1180px, calc(100vw - 40px));
+      --serif: Georgia, 'Times New Roman', serif;
+      --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    body.modal-open { overflow: hidden; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 3px solid rgba(111, 85, 146, 0.48); outline-offset: 3px; }
+    ::selection { background: #dec5b0; color: var(--ink); }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      flex: 0 0 auto;
+    }
+    .icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .site-view { min-height: 100vh; }
+    .portal-view { display: none; min-height: 100vh; }
+    body[data-view="portal"] .site-view { display: none; }
+    body[data-view="portal"] .portal-view { display: block; }
+
+    /* Shared controls */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 50px;
+      padding: 0 22px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-weight: 720;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      background: var(--ink);
+      color: var(--white);
+      box-shadow: 0 12px 30px rgba(42, 33, 28, 0.18);
+    }
+    .btn-primary:hover { box-shadow: 0 17px 40px rgba(42, 33, 28, 0.25); }
+    .btn-light { background: rgba(255,255,255,0.82); border-color: rgba(255,255,255,0.65); backdrop-filter: blur(12px); }
+    .btn-ghost { background: transparent; border-color: var(--line); }
+    .btn-bronze { background: var(--bronze); color: white; box-shadow: 0 12px 30px rgba(156, 104, 71, .24); }
+    .btn-small { min-height: 40px; padding: 0 16px; font-size: 14px; }
+    .btn-block { width: 100%; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--bronze-dark);
+    }
+    .eyebrow::before { content: ""; width: 26px; height: 1px; background: currentColor; }
+    .display {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 400;
+      letter-spacing: -0.045em;
+      line-height: .98;
+    }
+    .section-title { font-size: clamp(42px, 5.6vw, 72px); max-width: 900px; }
+    .section-copy { margin: 22px 0 0; max-width: 610px; color: var(--muted); font-size: clamp(17px, 1.8vw, 20px); }
+    .container { width: var(--container); margin: 0 auto; }
+
+    /* Header */
+    .site-header {
+      position: fixed;
+      z-index: 50;
+      top: 0;
+      left: 0;
+      right: 0;
+      transition: background 220ms ease, border-color 220ms ease, transform 220ms ease;
+      border-bottom: 1px solid transparent;
+    }
+    .site-header.is-scrolled {
+      background: rgba(249, 243, 236, .86);
+      border-color: var(--line);
+      backdrop-filter: blur(18px) saturate(130%);
+    }
+    .header-inner {
+      width: var(--container);
+      height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 12px; min-width: max-content; }
+    .brand-mark {
+      width: 92px;
+      height: 92px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(42, 33, 28, .12);
+      background: #fff;
+      box-shadow: 0 16px 38px rgba(42, 33, 28, .14);
+      flex: 0 0 auto;
+    }
+    .brand-mark::after { content: none; }
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .brand-copy { display: grid; line-height: 1; }
+    .brand-copy strong { font-family: var(--serif); font-size: 18px; font-weight: 500; letter-spacing: -.03em; }
+    .brand-copy span { margin-top: 5px; font-size: 8px; text-transform: uppercase; letter-spacing: .24em; color: var(--muted); }
+    .desktop-nav { display: flex; align-items: center; gap: 30px; margin-left: auto; }
+    .desktop-nav a { font-size: 14px; font-weight: 680; position: relative; }
+    .desktop-nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 100%;
+      bottom: -8px;
+      height: 1px;
+      background: var(--ink);
+      transition: right 180ms ease;
+    }
+    .desktop-nav a:hover::after { right: 0; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .menu-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: none;
+      place-items: center;
+      background: rgba(255,255,255,.7);
+      border: 1px solid var(--line);
+      cursor: pointer;
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      z-index: 45;
+      inset: 0;
+      padding: 110px 24px 30px;
+      background: rgba(245, 238, 230, .98);
+      backdrop-filter: blur(18px);
+    }
+    .mobile-menu.is-open { display: flex; flex-direction: column; }
+    .mobile-menu nav { display: grid; gap: 6px; }
+    .mobile-menu nav a { padding: 16px 8px; border-bottom: 1px solid var(--line); font-family: var(--serif); font-size: 30px; }
+    .mobile-menu .btn { margin-top: auto; }
+
+    /* Hero */
+    .hero {
+      min-height: 850px;
+      height: 100svh;
+      max-height: 980px;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      align-items: center;
+      padding: 120px 0 64px;
+      isolation: isolate;
+      background:
+        radial-gradient(circle at 78% 23%, rgba(202, 163, 126, .32), transparent 27%),
+        radial-gradient(circle at 7% 74%, rgba(160, 104, 112, .15), transparent 29%),
+        linear-gradient(135deg, #f8f1e8 0%, #efe0d1 56%, #e9d7c5 100%);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      border-radius: 50%;
+      border: 1px solid rgba(116, 70, 47, .12);
+      left: -180px;
+      top: 22%;
+      z-index: -1;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: .28;
+      background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .96fr) minmax(390px, .82fr);
+      gap: clamp(46px, 7vw, 100px);
+      align-items: center;
+    }
+    .hero-copy { position: relative; z-index: 2; }
+    .hero-watermark {
+      position: absolute;
+      left: -10px;
+      top: 34px;
+      width: 420px;
+      height: 420px;
+      opacity: .15;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(-8deg);
+      filter: saturate(.9);
+    }
+    .hero-watermark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .hero-copy > *:not(.hero-watermark) { position: relative; z-index: 1; }
+
+    .hero-visual::before {
+      content: "";
+      position: absolute;
+      right: 18px;
+      bottom: 12px;
+      width: 280px;
+      height: 280px;
+      background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K") center/contain no-repeat;
+      opacity: .09;
+      pointer-events: none;
+      z-index: 1;
+      transform: rotate(8deg);
+    }
+    .club-section::before {
+      content: "";
+      position: absolute;
+      left: -30px;
+      top: 28px;
+      width: 430px;
+      height: 430px;
+      background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K") center/contain no-repeat;
+      opacity: .08;
+      pointer-events: none;
+      z-index: 1;
+      transform: rotate(-10deg);
+    }
+    .portal-main::before {
+      content: "";
+      position: absolute;
+      right: 26px;
+      top: 16px;
+      width: 320px;
+      height: 320px;
+      background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K") center/contain no-repeat;
+      opacity: .065;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .portal-main > * { position: relative; z-index: 1; }
+    .member-top::after {
+      content: "";
+      position: absolute;
+      right: 126px;
+      top: -16px;
+      width: 200px;
+      height: 200px;
+      background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K") center/contain no-repeat;
+      opacity: .10;
+      pointer-events: none;
+    }
+
+    .portal-sidebar::after {
+      content: "";
+      position: absolute;
+      left: 18px;
+      bottom: 24px;
+      width: 180px;
+      height: 180px;
+      background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K") center/contain no-repeat;
+      opacity: .06;
+      pointer-events: none;
+    }
+    .site-footer { position: relative; overflow: hidden; }
+    .site-footer::after {
+      content: "";
+      position: absolute;
+      right: -20px;
+      bottom: -54px;
+      width: 220px;
+      height: 220px;
+      background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K") center/contain no-repeat;
+      opacity: .05;
+      pointer-events: none;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #75685f;
+      font-weight: 750;
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .live-dot { width: 9px; height: 9px; border-radius: 50%; background: #708d69; box-shadow: 0 0 0 6px rgba(112, 141, 105, .12); }
+    .hero h1 {
+      margin: 30px 0 22px;
+      max-width: 720px;
+      font-size: clamp(66px, 8.4vw, 126px);
+    }
+    .hero h1 em { color: var(--bronze); font-style: italic; font-weight: 400; }
+    .hero-lead { max-width: 570px; margin: 0; color: #62554d; font-size: clamp(18px, 2vw, 21px); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+    .hero-facts { display: flex; flex-wrap: wrap; gap: 18px 28px; margin-top: 42px; }
+    .hero-fact { display: flex; gap: 11px; align-items: center; color: #5d5048; font-size: 14px; font-weight: 700; }
+    .hero-fact .icon { color: var(--bronze); }
+
+    .hero-visual { position: relative; min-height: 620px; }
+    .visual-orbit {
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.38);
+      right: -100px;
+      top: 55px;
+    }
+    .hero-photo {
+      position: absolute;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,.62), transparent 24%),
+        linear-gradient(145deg, #9f806a, #4b372f 72%);
+    }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms cubic-bezier(.2,.7,.2,1), opacity .2s; }
+    .hero-photo:hover img { transform: scale(1.035); }
+    .hero-photo-main { width: min(420px, 78%); height: 570px; right: 28px; top: 22px; border-radius: 210px 210px 30px 30px; }
+    .hero-photo-secondary {
+      width: 170px;
+      height: 224px;
+      left: 42px;
+      bottom: 38px;
+      border: 6px solid rgba(248, 241, 232, .95);
+      border-radius: 28px;
+      box-shadow: 0 26px 60px rgba(45, 28, 20, 0.18);
+      background: linear-gradient(150deg, #231a44, #7f4c8e 52%, #56a8c3);
+    }
+    .floating-card {
+      position: absolute;
+      z-index: 3;
+      border: 1px solid rgba(255,255,255,.65);
+      background: rgba(255,250,244,.84);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-sm);
+    }
+    .price-bubble { right: 6px; bottom: 64px; width: 158px; padding: 16px 18px; border-radius: 22px; }
+    .price-bubble span { display: block; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+    .price-bubble strong { display: block; margin-top: 3px; font-family: var(--serif); font-size: 36px; font-weight: 400; letter-spacing: -.06em; }
+    .price-bubble small { color: var(--muted); }
+    .rating-bubble { left: 68px; top: 34px; padding: 11px 14px; border-radius: 999px; display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 720; color: #564942; }
+    .rating-bubble .spark { color: #af7b4f; }
+    .hero-scroll {
+      position: absolute;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      display: grid;
+      place-items: center;
+      gap: 7px;
+      font-size: 10px;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+      color: rgba(42,33,28,.55);
+    }
+    .hero-scroll::after { content: ""; width: 1px; height: 28px; background: currentColor; animation: scrollPulse 1.9s ease-in-out infinite; transform-origin: top; }
+    @keyframes scrollPulse { 0%,100% { transform: scaleY(.4); opacity: .4; } 50% { transform: scaleY(1); opacity: 1; } }
+
+    .intro-strip {
+      padding: 24px 0;
+      overflow: hidden;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: var(--paper-2);
+    }
+    .strip-track { display: flex; width: max-content; animation: marquee 26s linear infinite; }
+    .strip-group { display: flex; align-items: center; gap: 24px; padding-right: 24px; }
+    .strip-item { display: flex; align-items: center; gap: 24px; font-family: var(--serif); font-size: 22px; font-style: italic; color: #5e5047; }
+    .strip-item::after { content: "✦"; color: var(--bronze); font-family: var(--sans); font-size: 12px; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    /* Sections */
+    .section { padding: clamp(90px, 12vw, 155px) 0; position: relative; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 40px; margin-bottom: 64px; }
+    .section-number { font-family: var(--serif); font-size: 16px; color: var(--bronze); }
+
+    .steps-section { background: var(--paper-2); }
+    .steps-grid { display: grid; grid-template-columns: .78fr 1.22fr; gap: clamp(60px, 9vw, 130px); }
+    .steps-intro { position: sticky; top: 130px; align-self: start; }
+    .steps-intro .section-title { font-size: clamp(44px, 5.2vw, 68px); }
+    .steps-list { display: grid; }
+    .step-card {
+      display: grid;
+      grid-template-columns: 72px 1fr auto;
+      gap: 22px;
+      align-items: start;
+      padding: 34px 0;
+      border-top: 1px solid var(--line);
+    }
+    .step-card:last-child { border-bottom: 1px solid var(--line); }
+    .step-index {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--paper-3);
+      color: var(--bronze-dark);
+      font-family: var(--serif);
+      font-size: 22px;
+    }
+    .step-card h3 { margin: 2px 0 8px; font-family: var(--serif); font-size: 29px; font-weight: 400; letter-spacing: -.04em; }
+    .step-card p { margin: 0; color: var(--muted); max-width: 560px; }
+    .step-card .icon { margin-top: 12px; color: var(--bronze); }
+
+    .studio-section {
+      background: var(--aubergine);
+      color: white;
+      overflow: hidden;
+    }
+    .studio-section::before {
+      content: "";
+      position: absolute;
+      width: 650px;
+      height: 650px;
+      border-radius: 50%;
+      right: -260px;
+      top: -180px;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .studio-section .eyebrow { color: #d9bda9; }
+    .studio-section .section-copy { color: rgba(255,255,255,.64); }
+    .studio-showcase { display: grid; grid-template-columns: 1.25fr .75fr; gap: 22px; }
+    .studio-main-card {
+      min-height: 620px;
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, #261b48, #8d5699 54%, #2b8fae);
+    }
+    .studio-main-card img { width: 100%; height: 100%; position: absolute; object-fit: cover; transition: transform 1s cubic-bezier(.2,.7,.2,1), opacity .2s; }
+    .studio-main-card:hover img { transform: scale(1.04); }
+    .studio-main-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 42%, rgba(20,12,26,.86)); }
+    .studio-card-copy { position: absolute; z-index: 2; left: 38px; right: 38px; bottom: 35px; display: flex; justify-content: space-between; align-items: end; gap: 30px; }
+    .studio-card-copy h3 { margin: 0; font-family: var(--serif); font-size: clamp(36px, 5vw, 58px); font-weight: 400; letter-spacing: -.05em; }
+    .studio-card-copy p { margin: 6px 0 0; color: rgba(255,255,255,.68); }
+    .studio-tag { flex: 0 0 auto; padding: 10px 14px; border: 1px solid rgba(255,255,255,.3); border-radius: 999px; background: rgba(20,12,26,.24); backdrop-filter: blur(12px); font-size: 12px; font-weight: 750; }
+    .studio-side { display: grid; gap: 22px; }
+    .side-photo {
+      min-height: 299px;
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      background:
+        radial-gradient(circle at 25% 20%, rgba(255,255,255,.2), transparent 25%),
+        linear-gradient(145deg, #a8846b, #4e392e);
+    }
+    .side-photo img { width: 100%; height: 100%; position: absolute; object-fit: cover; transition: transform 800ms ease, opacity .2s; }
+    .side-photo:hover img { transform: scale(1.05); }
+    .side-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(25,17,14,.6)); }
+    .photo-label { position: absolute; z-index: 2; left: 24px; bottom: 21px; font-size: 14px; font-weight: 750; }
+
+    .club-section {
+      overflow: hidden;
+      color: #fff7f1;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(156,102,208,.14), transparent 20%),
+        radial-gradient(circle at 84% 14%, rgba(96,176,255,.12), transparent 16%),
+        linear-gradient(180deg, #120f16 0%, #17111d 52%, #24142a 100%);
+    }
+    .club-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(182,140,255,.10), transparent 18%),
+        radial-gradient(circle at 78% 18%, rgba(66,169,255,.11), transparent 20%),
+        linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,0) 18%, rgba(255,255,255,.025) 46%, rgba(255,255,255,0) 70%);
+      pointer-events: none;
+    }
+    .club-section::after {
+      content: "AURORA";
+      position: absolute;
+      right: -14px;
+      bottom: -122px;
+      font-family: var(--serif);
+      font-size: clamp(220px, 32vw, 500px);
+      line-height: 1;
+      letter-spacing: -.08em;
+      color: rgba(255,255,255,.045);
+      pointer-events: none;
+    }
+    .club-stars,
+    .club-stars::before,
+    .club-stars::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-repeat: no-repeat;
+    }
+    .club-stars {
+      z-index: 1;
+      background-image:
+        radial-gradient(circle, rgba(255,247,224,.9) 0 1.5px, transparent 2px),
+        radial-gradient(circle, rgba(255,247,224,.78) 0 1px, transparent 1.8px),
+        radial-gradient(circle, rgba(203,227,255,.86) 0 1.3px, transparent 2px),
+        radial-gradient(circle, rgba(255,247,224,.72) 0 1px, transparent 1.9px),
+        radial-gradient(circle, rgba(255,255,255,.74) 0 1.4px, transparent 2px),
+        radial-gradient(circle, rgba(255,247,224,.65) 0 1px, transparent 1.8px);
+      background-size: 8px 8px, 7px 7px, 9px 9px, 7px 7px, 8px 8px, 7px 7px;
+      background-position: 8% 20%, 19% 66%, 76% 18%, 88% 40%, 62% 72%, 28% 14%;
+      animation: starFloat 12s ease-in-out infinite;
+      opacity: .9;
+    }
+    .club-stars::before {
+      background-image:
+        radial-gradient(circle, rgba(255,247,224,.65) 0 1px, transparent 2px),
+        radial-gradient(circle, rgba(182,140,255,.55) 0 1.2px, transparent 2px),
+        radial-gradient(circle, rgba(96,176,255,.55) 0 1.2px, transparent 2px);
+      background-size: 8px 8px, 10px 10px, 10px 10px;
+      background-position: 12% 46%, 66% 24%, 82% 66%;
+      animation: starFloatSlow 18s ease-in-out infinite;
+      opacity: .75;
+    }
+    .club-stars::after {
+      background:
+        radial-gradient(circle at 24% 14%, rgba(147,212,255,.08), transparent 18%),
+        radial-gradient(circle at 78% 28%, rgba(192,143,255,.10), transparent 16%),
+        radial-gradient(circle at 56% 68%, rgba(255,206,146,.07), transparent 18%);
+      filter: blur(10px);
+      animation: auroraShift 16s ease-in-out infinite;
+      opacity: .9;
+    }
+    .club-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(60px, 8vw, 110px); align-items: center; position: relative; z-index: 2; }
+    .club-copy { position: relative; z-index: 2; }
+    .club-copy::before {
+      content: "SA";
+      position: absolute;
+      left: -68px;
+      top: -40px;
+      font-family: var(--serif);
+      font-size: clamp(170px, 19vw, 270px);
+      line-height: .86;
+      letter-spacing: -.1em;
+      color: rgba(255,255,255,.045);
+      pointer-events: none;
+    }
+    .club-copy .eyebrow { color: #e4c9aa; }
+    .club-copy .section-title { font-size: clamp(58px, 7.2vw, 98px); line-height: .9; max-width: 8.2ch; color: #fffaf5; }
+    .club-copy .section-copy { max-width: 560px; color: rgba(255,245,236,.74); }
+    .club-note { margin-top: 20px; display: inline-flex; align-items: center; gap: 10px; padding: 11px 15px; border-radius: 999px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); font-size: 12px; font-weight: 750; color: #eadccf; backdrop-filter: blur(12px); box-shadow: 0 12px 26px rgba(0,0,0,.15); }
+    .club-note .spark { color: #f2d7a3; font-size: 14px; }
+    .club-benefits { display: grid; gap: 14px; margin: 34px 0 38px; }
+    .benefit-row { display: flex; align-items: center; gap: 14px; padding: 15px 16px; border-radius: 18px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); color: #fff7f1; font-weight: 700; backdrop-filter: blur(14px); box-shadow: 0 18px 36px rgba(8,6,12,.15); }
+    .benefit-check { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(145deg, rgba(248,224,171,.95), rgba(190,154,104,.98)); color: #3a2a1b; box-shadow: inset 0 0 0 1px rgba(255,255,255,.22), 0 8px 16px rgba(215,170,105,.24); }
+    .club-copy .btn { box-shadow: 0 18px 36px rgba(0,0,0,.22); }
+    .member-card {
+      min-height: 590px;
+      padding: 42px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 42px;
+      color: white;
+      background:
+        radial-gradient(circle at 82% 14%, rgba(255,255,255,.18), transparent 28%),
+        radial-gradient(circle at 14% 88%, rgba(232,176,109,.18), transparent 26%),
+        linear-gradient(145deg, #1d1423 0%, #30203a 28%, #4a2b52 56%, #5f3678 74%, #78538d 100%);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 40px 90px rgba(2,0,8,.45), inset 0 1px 0 rgba(255,255,255,.06);
+      transform: rotate(1.15deg);
+      isolation: isolate;
+    }
+    .member-card::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background: linear-gradient(115deg, transparent 34%, rgba(255,255,255,.22) 46%, transparent 56%);
+      transform: translateX(-55%) rotate(8deg);
+      animation: clubShimmer 8s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .member-card::after { content: ""; position: absolute; width: 470px; height: 470px; border: 1px solid rgba(255,255,255,.08); border-radius: 50%; right: -180px; bottom: -170px; }
+    .member-aurora {
+      position: absolute;
+      inset: auto -8% -16% 18%;
+      height: 250px;
+      background: radial-gradient(circle at 30% 40%, rgba(162,112,255,.28), transparent 38%), radial-gradient(circle at 72% 30%, rgba(81,188,255,.22), transparent 34%), radial-gradient(circle at 48% 68%, rgba(255,219,141,.12), transparent 32%);
+      filter: blur(24px);
+      animation: auroraWave 11s ease-in-out infinite;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .member-glow {
+      position: absolute;
+      right: 30px;
+      top: 24px;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(255,255,255,.12), transparent 66%);
+      filter: blur(2px);
+      animation: clubPulse 5s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .member-orbit {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.07);
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .member-orbit::before,
+    .member-orbit::after {
+      content: "✦";
+      position: absolute;
+      color: rgba(255,244,220,.88);
+      font-size: 14px;
+    }
+    .member-orbit::before {
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      transform-origin: 0 182px;
+      animation: orbitSpin 14s linear infinite;
+    }
+    .member-orbit::after {
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(154,215,255,.82);
+      transform-origin: 0 -182px;
+      animation: orbitSpinReverse 18s linear infinite;
+    }
+    .member-top { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; }
+    .member-top .brand-mark { width: 86px; height: 86px; border-color: rgba(255,255,255,.16); background: #fff; box-shadow: 0 18px 40px rgba(14, 12, 11, .24); }
+    .member-top .brand-mark::after { content: none; }
+    .demo-chip { padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.10); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; color: #f6e8db; }
+    .member-offer { margin-top: 66px; position: relative; z-index: 2; }
+    .member-offer span { display: block; color: rgba(255,255,255,.70); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .16em; }
+    .member-label { margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 999px; background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.12); color: rgba(255,248,240,.90); font-size: 11px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; box-shadow: 0 10px 22px rgba(0,0,0,.12); }
+    .member-offer strong { display: block; margin-top: 16px; font-family: var(--serif); font-size: clamp(68px, 8vw, 104px); line-height: .9; font-weight: 400; letter-spacing: -.06em; color: #fffaf7; }
+    .member-offer p { margin: 16px 0 0; color: rgba(255,255,255,.78); max-width: 405px; }
+    .member-bottom { position: absolute; left: 42px; right: 42px; bottom: 38px; z-index: 2; display: flex; justify-content: space-between; align-items: end; gap: 20px; }
+    .member-name { font-family: var(--serif); font-size: 30px; }
+    .member-num { color: rgba(255,255,255,.58); font-size: 11px; letter-spacing: .17em; }
+    .member-card .btn { min-height: 48px; background: #fff7f1; color: var(--ink); box-shadow: 0 16px 28px rgba(0,0,0,.18); }
+    @keyframes clubShimmer {
+      0%, 100% { transform: translateX(-62%) rotate(8deg); opacity: .2; }
+      50% { transform: translateX(60%) rotate(8deg); opacity: 1; }
+    }
+    @keyframes clubPulse {
+      0%, 100% { transform: scale(.96); opacity: .52; }
+      50% { transform: scale(1.08); opacity: .95; }
+    }
+    @keyframes orbitSpin {
+      0% { transform: rotate(0deg) translateX(-50%); }
+      100% { transform: rotate(360deg) translateX(-50%); }
+    }
+    @keyframes orbitSpinReverse {
+      0% { transform: rotate(360deg) translateX(-50%); }
+      100% { transform: rotate(0deg) translateX(-50%); }
+    }
+    @keyframes auroraWave {
+      0%,100% { transform: translate3d(0,0,0) scale(1); opacity: .72; }
+      50% { transform: translate3d(-4%, -6%, 0) scale(1.06); opacity: .98; }
+    }
+    @keyframes auroraShift {
+      0%,100% { transform: translate3d(0,0,0) scale(1); }
+      50% { transform: translate3d(1.8%, -2%, 0) scale(1.08); }
+    }
+    @keyframes starFloat {
+      0%,100% { transform: translateY(0); opacity: .88; }
+      50% { transform: translateY(-8px); opacity: 1; }
+    }
+    @keyframes starFloatSlow {
+      0%,100% { transform: translate3d(0,0,0); opacity: .72; }
+      50% { transform: translate3d(8px,-10px,0); opacity: .96; }
+    }
+
+    .safety-section { background: var(--paper-2); }
+    .safety-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(50px, 8vw, 100px); align-items: center; }
+    .safety-visual {
+      min-height: 600px;
+      position: relative;
+      border-radius: 300px 300px 34px 34px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,245,220,.35), transparent 28%),
+        linear-gradient(150deg, #6e4b38, #2f2420);
+      box-shadow: var(--shadow-md);
+    }
+    .safety-visual img { width: 100%; height: 100%; position: absolute; object-fit: cover; transition: transform 1s ease, opacity .2s; }
+    .safety-visual:hover img { transform: scale(1.035); }
+    .safety-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(42,33,28,.06), rgba(42,33,28,.42)); }
+    .safety-quote { position: absolute; z-index: 2; left: 34px; right: 34px; bottom: 36px; padding: 24px; border-radius: 22px; background: rgba(255,250,244,.82); backdrop-filter: blur(14px); color: var(--ink); }
+    .safety-quote strong { display: block; font-family: var(--serif); font-size: 25px; font-weight: 400; letter-spacing: -.03em; }
+    .safety-quote span { display: block; margin-top: 5px; color: var(--muted); font-size: 13px; }
+    .safety-list { display: grid; gap: 0; margin-top: 38px; }
+    .safety-item { display: grid; grid-template-columns: 46px 1fr; gap: 16px; padding: 22px 0; border-top: 1px solid var(--line); }
+    .safety-item:last-child { border-bottom: 1px solid var(--line); }
+    .safety-icon { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--paper-3); color: var(--bronze-dark); }
+    .safety-item h3 { margin: 0 0 4px; font-family: var(--serif); font-size: 23px; font-weight: 400; }
+    .safety-item p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .gallery-section { padding-top: 30px; background: var(--paper-2); overflow: hidden; }
+    .gallery-head { text-align: center; margin-bottom: 54px; }
+    .gallery-head .eyebrow { justify-content: center; }
+    .gallery-head .section-title { margin-inline: auto; font-size: clamp(46px, 6vw, 76px); }
+    .gallery-grid { display: grid; grid-template-columns: 1fr .8fr 1fr; grid-template-rows: 260px 260px; gap: 16px; }
+    .gallery-card { position: relative; overflow: hidden; border-radius: 24px; background: linear-gradient(145deg, #c9a98b, #66483a); }
+    .gallery-card:nth-child(1) { grid-row: 1 / span 2; }
+    .gallery-card:nth-child(4) { grid-column: 3; grid-row: 1 / span 2; }
+    .gallery-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 800ms ease, filter 800ms ease, opacity .2s; }
+    .gallery-card:hover img { transform: scale(1.05); filter: saturate(1.06); }
+    .gallery-card::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); border-radius: inherit; pointer-events: none; }
+
+    .contact-section { background: #2c221d; color: white; padding-bottom: 48px; }
+    .contact-section .eyebrow { color: #d8bca7; }
+    .contact-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 70px; align-items: end; }
+    .contact-title { font-size: clamp(58px, 8vw, 110px); max-width: 820px; }
+    .contact-title em { color: #d8bca7; font-weight: 400; }
+    .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 35px; }
+    .contact-card { padding: 30px; border-radius: 24px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); }
+    .contact-card dl { margin: 0; display: grid; gap: 22px; }
+    .contact-card div { display: grid; grid-template-columns: 110px 1fr; gap: 18px; }
+    .contact-card dt { color: rgba(255,255,255,.46); font-size: 12px; text-transform: uppercase; letter-spacing: .11em; font-weight: 800; }
+    .contact-card dd { margin: 0; }
+    .site-footer { margin-top: 100px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.1); display: flex; justify-content: space-between; gap: 30px; color: rgba(255,255,255,.42); font-size: 12px; }
+
+    /* Reveal animations */
+    [data-reveal] { opacity: 1; transform: none; }
+    .reveal-ready [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity 750ms cubic-bezier(.2,.7,.2,1), transform 750ms cubic-bezier(.2,.7,.2,1); }
+    .reveal-ready [data-reveal="left"] { transform: translateX(-28px); }
+    .reveal-ready [data-reveal="right"] { transform: translateX(28px); }
+    .reveal-ready [data-reveal].is-visible { opacity: 1; transform: translate(0,0); }
+    .delay-1 { transition-delay: 80ms; }
+    .delay-2 { transition-delay: 160ms; }
+    .delay-3 { transition-delay: 240ms; }
+
+    /* Portal */
+    .portal-view {
+      background:
+        radial-gradient(circle at 90% 0%, rgba(203, 163, 127, .18), transparent 22%),
+        #f6f0e9;
+      color: #2c241f;
+    }
+    .portal-shell { min-height: 100vh; display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+    .portal-sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--line);
+      background: rgba(255,250,244,.78);
+      backdrop-filter: blur(18px);
+      z-index: 15;
+    }
+    .portal-sidebar .brand { padding: 0 9px; }
+    .portal-demo-label { margin: 26px 8px 18px; padding: 10px 12px; display: flex; align-items: center; gap: 9px; border-radius: 12px; background: #f0e3d7; color: var(--bronze-dark); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+    .portal-nav { display: grid; gap: 5px; }
+    .portal-nav-btn {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 0;
+      border-radius: 13px;
+      background: transparent;
+      color: #73675e;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      transition: background 170ms ease, color 170ms ease, transform 170ms ease;
+    }
+    .portal-nav-btn:hover { background: rgba(44,36,31,.045); color: var(--ink); transform: translateX(2px); }
+    .portal-nav-btn.is-active { color: white; background: #342923; box-shadow: 0 12px 25px rgba(52,41,35,.17); }
+    .portal-nav-btn .badge { margin-left: auto; min-width: 22px; height: 22px; display: grid; place-items: center; padding: 0 7px; border-radius: 999px; font-size: 10px; background: rgba(255,255,255,.15); }
+    .portal-side-bottom { margin-top: auto; display: grid; gap: 7px; }
+    .portal-side-link {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 44px;
+      padding: 0 12px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 12px;
+      text-align: left;
+    }
+    .portal-side-link:hover { background: rgba(44,36,31,.045); color: var(--ink); }
+
+    .portal-main { min-width: 0; position: relative; overflow: hidden; }
+    .portal-topbar {
+      min-height: 84px;
+      padding: 0 clamp(24px, 4vw, 56px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(246,240,233,.78);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 12;
+    }
+    .portal-mobile-brand { display: none; }
+    .page-heading small { display: block; color: var(--muted); font-size: 12px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
+    .page-heading strong { display: block; margin-top: 3px; font-family: var(--serif); font-size: 27px; font-weight: 400; letter-spacing: -.035em; }
+    .user-menu { display: flex; align-items: center; gap: 12px; }
+    .scenario-btn { min-height: 40px; padding: 0 13px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.5); cursor: pointer; color: var(--muted); font-size: 12px; font-weight: 750; }
+    .scenario-btn:hover { color: var(--ink); background: white; }
+    .avatar { width: 43px; height: 43px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(145deg, #d6b397, #936c5f); color: white; font-weight: 800; box-shadow: inset 0 0 0 3px rgba(255,255,255,.42); }
+    .portal-content { padding: clamp(28px, 4vw, 54px); max-width: 1440px; margin: 0 auto; }
+    .portal-panel { display: none; animation: panelIn 280ms ease both; }
+    .portal-panel.is-active { display: block; }
+    @keyframes panelIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .portal-welcome { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 28px; }
+    .portal-welcome h1 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(38px, 4.4vw, 58px); letter-spacing: -.045em; line-height: 1.03; }
+    .portal-welcome p { margin: 9px 0 0; color: var(--muted); }
+    .last-sync { color: var(--muted); font-size: 12px; }
+    .dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.22fr) minmax(300px, .78fr); gap: 20px; }
+    .portal-card {
+      border: 1px solid rgba(61,44,34,.09);
+      border-radius: 24px;
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 14px 45px rgba(61,44,34,.055);
+    }
+    .balance-card {
+      min-height: 320px;
+      padding: clamp(26px, 4vw, 38px);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 90% 5%, rgba(255,255,255,.22), transparent 28%),
+        radial-gradient(circle at 5% 100%, rgba(204,160,111,.23), transparent 33%),
+        linear-gradient(145deg, #30242d, #5d3e54 55%, #93624f);
+      border-color: transparent;
+      box-shadow: 0 25px 70px rgba(59,38,48,.2);
+    }
+    .balance-card::after { content: ""; width: 360px; height: 360px; position: absolute; right: -180px; bottom: -190px; border: 1px solid rgba(255,255,255,.13); border-radius: 50%; }
+    .card-overline { color: rgba(255,255,255,.6); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; }
+    .balance-total { margin-top: 8px; font-family: var(--serif); font-size: clamp(58px, 6vw, 82px); letter-spacing: -.065em; line-height: 1; }
+    .balance-total small { font-family: var(--sans); font-size: 22px; letter-spacing: 0; color: rgba(255,255,255,.7); }
+    .balance-breakdown { display: flex; gap: 24px; margin-top: 20px; }
+    .balance-line { display: grid; gap: 2px; }
+    .balance-line > span { color: rgba(255,255,255,.56); font-size: 11px; }
+    .balance-line strong { font-size: 16px; }
+    .balance-actions { display: flex; gap: 10px; margin-top: 32px; position: relative; z-index: 2; }
+    .balance-actions .btn { min-height: 46px; }
+    .balance-actions .btn:first-child { background: white; color: var(--ink); }
+    .balance-actions .btn:last-child { color: white; border-color: rgba(255,255,255,.2); }
+    .balance-stamp { position: absolute; right: 28px; top: 20px; width: 96px; height: 96px; padding: 5px; border-radius: 24px; border: 1px solid rgba(255,255,255,.16); display: grid; place-items: center; background: rgba(255,255,255,.14); overflow: hidden; box-shadow: 0 14px 34px rgba(17, 14, 13, .10); }
+    .balance-stamp img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; display: block; background: #fff; }
+
+    .status-card { padding: 26px; display: flex; flex-direction: column; }
+    .card-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .card-heading h2, .card-heading h3 { margin: 0; font-family: var(--serif); font-weight: 400; letter-spacing: -.035em; }
+    .card-heading h2 { font-size: 29px; }
+    .card-heading h3 { font-size: 24px; }
+    .small-link { border: 0; padding: 0; background: transparent; color: var(--bronze-dark); font-size: 12px; font-weight: 800; cursor: pointer; }
+    .small-link:hover { text-decoration: underline; }
+    .activity-status { margin-top: 22px; padding: 18px; border-radius: 17px; display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; transition: background 180ms ease; }
+    .activity-status.warning { background: var(--warning-bg); color: #694c18; }
+    .activity-status.safe { background: var(--success-bg); color: #426047; }
+    .status-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.6); }
+    .activity-status strong { display: block; margin-bottom: 4px; }
+    .activity-status p { margin: 0; color: inherit; opacity: .82; font-size: 13px; line-height: 1.45; }
+    .status-meter { margin-top: auto; padding-top: 23px; }
+    .status-meter-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+    .meter { height: 8px; margin-top: 9px; border-radius: 999px; background: #e8ddd4; overflow: hidden; }
+    .meter span { display: block; height: 100%; width: 72%; border-radius: inherit; background: #d9a743; transition: width 300ms ease, background 300ms ease; }
+    .status-card.safe-mode .meter span { width: 38%; background: var(--success); }
+
+    .stats-row { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .stat-card { padding: 22px; min-height: 142px; display: flex; flex-direction: column; justify-content: space-between; }
+    .stat-top { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 12px; font-weight: 750; }
+    .stat-top .icon { color: var(--bronze); }
+    .stat-value { font-family: var(--serif); font-size: 38px; line-height: 1; letter-spacing: -.05em; }
+    .stat-caption { margin-top: 7px; color: var(--muted); font-size: 11px; }
+
+    .dashboard-lower { grid-column: 1 / -1; display: grid; grid-template-columns: 1.25fr .75fr; gap: 20px; }
+    .history-card, .referral-card { padding: 26px; }
+    .visit-list { display: grid; margin-top: 16px; }
+    .visit-row { display: grid; grid-template-columns: minmax(150px, 1fr) 100px 100px 34px; gap: 18px; align-items: center; padding: 17px 0; border-top: 1px solid var(--line); }
+    .visit-date strong { display: block; font-size: 14px; }
+    .visit-date span, .visit-cell span { display: block; color: var(--muted); font-size: 11px; }
+    .visit-cell strong { font-size: 13px; }
+    .visit-status { width: 27px; height: 27px; border-radius: 50%; display: grid; place-items: center; background: var(--success-bg); color: var(--success); }
+    .visit-row.extra-row { display: none; }
+    .history-card.show-extra .visit-row.extra-row { display: grid; }
+    .referral-card {
+      position: relative;
+      overflow: hidden;
+      color: white;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(255,255,255,.18), transparent 28%),
+        linear-gradient(145deg, #6d4a3c, #9a6a54);
+      border-color: transparent;
+    }
+    .referral-card::after { content: "50"; position: absolute; right: -8px; bottom: -72px; font-family: var(--serif); font-size: 210px; line-height: 1; opacity: .09; }
+    .referral-card h3 { margin: 0; font-family: var(--serif); font-size: 34px; font-weight: 400; letter-spacing: -.04em; }
+    .referral-card p { margin: 10px 0 24px; color: rgba(255,255,255,.7); max-width: 340px; }
+    .referral-code { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 13px 14px; border-radius: 14px; border: 1px dashed rgba(255,255,255,.33); background: rgba(255,255,255,.08); position: relative; z-index: 2; }
+    .referral-code strong { letter-spacing: .11em; font-size: 13px; }
+    .copy-btn { width: 38px; height: 38px; border-radius: 50%; border: 0; background: white; color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+    .referral-foot { margin-top: 18px; font-size: 11px; color: rgba(255,255,255,.56); position: relative; z-index: 2; }
+
+    /* Portal tab pages */
+    .panel-header { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 26px; }
+    .panel-header h1 { margin: 0; font-family: var(--serif); font-size: clamp(38px, 5vw, 58px); font-weight: 400; letter-spacing: -.05em; }
+    .panel-header p { margin: 8px 0 0; color: var(--muted); }
+    .wallet-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 20px; }
+    .wallet-card { padding: 28px; }
+    .wallet-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+    .wallet-tile { padding: 20px; border-radius: 18px; background: #f3ebe3; }
+    .wallet-tile > span { color: var(--muted); font-size: 11px; }
+    .wallet-tile strong { display: block; margin-top: 5px; font-family: var(--serif); font-size: 34px; font-weight: 400; letter-spacing: -.05em; }
+    .progress-wrap { margin-top: 25px; }
+    .progress-copy { display: flex; justify-content: space-between; gap: 18px; color: var(--muted); font-size: 12px; }
+    .progress-bar { height: 12px; border-radius: 999px; background: #eee3d9; margin-top: 10px; overflow: hidden; }
+    .progress-bar span { display: block; width: 70%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--bronze), #c89c74); }
+    .topup-promo { padding: 30px; min-height: 100%; color: white; background: linear-gradient(145deg, #33262f, #775064); border-color: transparent; display: flex; flex-direction: column; justify-content: space-between; }
+    .topup-promo .promo-number { font-family: var(--serif); font-size: 70px; line-height: .9; letter-spacing: -.07em; }
+    .topup-promo p { color: rgba(255,255,255,.67); }
+    .transaction-card { padding: 28px; margin-top: 20px; }
+    .transaction-list { display: grid; margin-top: 16px; }
+    .transaction-row { display: grid; grid-template-columns: 46px 1fr auto; gap: 14px; align-items: center; padding: 15px 0; border-top: 1px solid var(--line); }
+    .tx-icon { width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; background: #f0e6dd; color: var(--bronze-dark); }
+    .tx-icon.bonus { background: #eee7f5; color: var(--violet); }
+    .tx-icon.spend { background: #f4e5e2; color: var(--danger); }
+    .tx-copy strong { display: block; font-size: 13px; }
+    .tx-copy span { color: var(--muted); font-size: 11px; }
+    .tx-amount { text-align: right; }
+    .tx-amount strong { display: block; font-size: 14px; }
+    .tx-amount span { color: var(--muted); font-size: 10px; }
+    .positive { color: var(--success); }
+    .negative { color: var(--danger); }
+
+    .visit-page-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 20px; }
+    .chart-card { padding: 28px; }
+    .bar-chart { height: 250px; display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; align-items: end; margin-top: 28px; padding-top: 20px; border-bottom: 1px solid var(--line); }
+    .bar-wrap { height: 100%; display: flex; flex-direction: column; justify-content: end; align-items: center; gap: 10px; }
+    .bar { width: min(34px, 75%); height: var(--h); border-radius: 12px 12px 3px 3px; background: linear-gradient(180deg, #b5acb6, #5b4d5f); transform-origin: bottom; animation: growBar 700ms cubic-bezier(.2,.7,.2,1) both; }
+    .bar-wrap:nth-child(4) .bar,
+    .bar-wrap:nth-child(8) .bar { background: linear-gradient(180deg, #9f8aa3, #453648); }
+    .bar-label { color: #746962; font-size: 11px; font-weight: 650; }
+    .bar-wrap:nth-child(2) .bar { animation-delay: 60ms; }
+    .bar-wrap:nth-child(3) .bar { animation-delay: 120ms; }
+    .bar-wrap:nth-child(4) .bar { animation-delay: 180ms; }
+    .bar-wrap:nth-child(5) .bar { animation-delay: 240ms; }
+    .bar-wrap:nth-child(6) .bar { animation-delay: 300ms; }
+    .bar-wrap:nth-child(7) .bar { animation-delay: 360ms; }
+    .bar-wrap:nth-child(8) .bar { animation-delay: 420ms; }
+    @keyframes growBar { from { transform: scaleY(0); } }
+    .bar-label { color: #746962; font-size: 11px; font-weight: 650; }
+    .insight-card { padding: 28px; }
+    .frequency-ring { width: 170px; height: 170px; margin: 25px auto; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(#7f6980 0 72%, #e7dfdc 72% 100%); position: relative; }
+    .frequency-ring::before { content: ""; position: absolute; inset: 14px; border-radius: 50%; background: white; }
+    .ring-copy { position: relative; z-index: 2; text-align: center; }
+    .ring-copy strong { display: block; font-family: var(--serif); font-size: 38px; line-height: 1; font-weight: 400; }
+    .ring-copy span { color: var(--muted); font-size: 10px; }
+    .visit-table-card { grid-column: 1 / -1; padding: 28px; }
+    .full-visit-row { display: grid; grid-template-columns: 1.2fr .7fr .7fr .7fr; gap: 16px; padding: 16px 0; border-top: 1px solid var(--line); font-size: 13px; }
+    .full-visit-row.header { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; font-weight: 800; }
+
+    .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .benefit-card { min-height: 270px; padding: 25px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+    .benefit-card.featured { color: white; background: linear-gradient(145deg, #352832, #86576f); border-color: transparent; }
+    .benefit-icon { width: 50px; height: 50px; border-radius: 16px; display: grid; place-items: center; background: #f0e5dc; color: var(--bronze-dark); }
+    .featured .benefit-icon { background: rgba(255,255,255,.12); color: white; }
+    .benefit-card h3 { margin: 25px 0 8px; font-family: var(--serif); font-size: 27px; font-weight: 400; letter-spacing: -.035em; }
+    .benefit-card p { margin: 0; color: var(--muted); font-size: 13px; }
+    .featured p { color: rgba(255,255,255,.65); }
+    .benefit-card .btn, .benefit-card .small-link { margin-top: auto; align-self: flex-start; }
+    .benefit-card .btn { min-height: 42px; }
+    .coupon { margin-top: auto; padding: 12px 14px; border: 1px dashed var(--line); border-radius: 13px; display: flex; justify-content: space-between; gap: 10px; font-weight: 800; font-size: 12px; letter-spacing: .08em; }
+    .featured .coupon { border-color: rgba(255,255,255,.25); }
+
+    .profile-grid { display: grid; grid-template-columns: .75fr 1.25fr; gap: 20px; }
+    .profile-card { padding: 28px; }
+    .profile-identity { text-align: center; }
+    .profile-avatar { width: 92px; height: 92px; margin: 0 auto 16px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(145deg, #d6b397, #936c5f); color: white; font-family: var(--serif); font-size: 33px; box-shadow: inset 0 0 0 6px rgba(255,255,255,.52); }
+    .profile-identity h2 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 32px; }
+    .profile-identity p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .member-since { margin-top: 22px; padding: 14px; border-radius: 14px; background: #f2e9e1; color: var(--muted); font-size: 12px; }
+    .settings-list { display: grid; margin-top: 14px; }
+    .setting-row { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; padding: 18px 0; border-top: 1px solid var(--line); }
+    .setting-row strong { display: block; font-size: 13px; }
+    .setting-row span { color: var(--muted); font-size: 11px; }
+    .setting-value { color: var(--muted); font-size: 12px; }
+    .switch { width: 46px; height: 26px; border-radius: 999px; border: 0; padding: 3px; background: #d8cdc4; cursor: pointer; transition: background 180ms ease; }
+    .switch::after { content: ""; display: block; width: 20px; height: 20px; border-radius: 50%; background: white; box-shadow: 0 2px 5px rgba(0,0,0,.12); transition: transform 180ms ease; }
+    .switch.is-on { background: var(--success); }
+    .switch.is-on::after { transform: translateX(20px); }
+
+    .portal-mobile-nav { display: none; }
+
+    /* Modal / toast */
+    .modal-backdrop {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(30,23,20,.5);
+      backdrop-filter: blur(12px);
+    }
+    .modal-backdrop.is-open { display: flex; animation: fadeIn 180ms ease both; }
+    @keyframes fadeIn { from { opacity: 0; } }
+    .modal {
+      width: min(520px, 100%);
+      max-height: calc(100vh - 40px);
+      overflow: auto;
+      border-radius: 28px;
+      background: var(--paper-2);
+      box-shadow: 0 30px 100px rgba(30,23,20,.28);
+      animation: modalIn 250ms cubic-bezier(.2,.7,.2,1) both;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(16px) scale(.98); } }
+    .modal-head { padding: 24px 26px 20px; display: flex; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); }
+    .modal-head h2 { margin: 0; font-family: var(--serif); font-size: 31px; font-weight: 400; letter-spacing: -.04em; }
+    .modal-head p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .modal-close { width: 38px; height: 38px; flex: 0 0 auto; border-radius: 50%; border: 1px solid var(--line); background: transparent; cursor: pointer; display: grid; place-items: center; }
+    .modal-body { padding: 26px; }
+    .demo-login-card { padding: 18px; border-radius: 18px; background: #f0e5dc; display: flex; align-items: center; gap: 14px; }
+    .demo-login-card .avatar { width: 48px; height: 48px; }
+    .demo-login-card strong { display: block; }
+    .demo-login-card span { color: var(--muted); font-size: 12px; }
+    .field { display: grid; gap: 7px; margin-top: 20px; }
+    .field label { font-size: 12px; font-weight: 800; }
+    .field input { width: 100%; height: 52px; padding: 0 15px; border-radius: 14px; border: 1px solid var(--line); background: white; color: var(--ink); outline: 0; }
+    .field input:focus { border-color: rgba(111,85,146,.55); box-shadow: 0 0 0 4px rgba(111,85,146,.1); }
+    .demo-note { display: flex; gap: 10px; margin: 18px 0 0; color: var(--muted); font-size: 11px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 24px; }
+    .topup-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .topup-option { min-height: 108px; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: white; cursor: pointer; text-align: left; position: relative; transition: border 160ms ease, transform 160ms ease, box-shadow 160ms ease; }
+    .topup-option:hover { transform: translateY(-2px); }
+    .topup-option.is-selected { border-color: var(--bronze); box-shadow: 0 0 0 3px rgba(156,104,71,.1); }
+    .topup-option strong { display: block; font-family: var(--serif); font-size: 27px; font-weight: 400; }
+    .topup-option span { color: var(--muted); font-size: 11px; }
+    .topup-option .bonus-pill { position: absolute; top: 9px; right: 9px; padding: 4px 7px; border-radius: 999px; background: #eee6f5; color: var(--violet); font-size: 9px; font-weight: 850; }
+    .topup-summary { margin-top: 18px; padding: 16px; border-radius: 15px; background: #f0e7df; display: flex; justify-content: space-between; align-items: center; }
+    .topup-summary span { color: var(--muted); font-size: 11px; }
+    .topup-summary strong { font-family: var(--serif); font-size: 26px; font-weight: 400; }
+    .toast {
+      position: fixed;
+      z-index: 200;
+      right: 24px;
+      bottom: 24px;
+      max-width: min(390px, calc(100vw - 32px));
+      padding: 14px 17px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      border-radius: 15px;
+      background: #2d251f;
+      color: white;
+      box-shadow: 0 18px 50px rgba(36,27,22,.28);
+      transform: translateY(30px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease, transform 200ms ease;
+      font-size: 13px;
+    }
+    .toast.is-showing { opacity: 1; transform: none; }
+    .toast .icon { color: #ddb88f; }
+
+    /* Responsive */
+    @media (max-width: 1050px) {
+      .desktop-nav { display: none; }
+      .menu-btn { display: grid; }
+      .header-actions .btn { display: none; }
+      .hero { height: auto; max-height: none; min-height: 860px; }
+      .hero-grid { grid-template-columns: 1fr 420px; gap: 30px; }
+      .hero h1 { font-size: clamp(62px, 9vw, 92px); }
+      .hero-visual { min-height: 570px; }
+      .hero-photo-main { height: 520px; right: 0; }
+      .hero-photo-secondary { width: 160px; height: 214px; left: 28px; bottom: 28px; }
+      .steps-grid { grid-template-columns: 1fr; gap: 55px; }
+      .steps-intro { position: static; }
+      .studio-showcase { grid-template-columns: 1fr; }
+      .studio-side { grid-template-columns: 1fr 1fr; }
+      .side-photo { min-height: 300px; }
+      .club-grid, .safety-grid { grid-template-columns: 1fr 1fr; gap: 45px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .contact-card { max-width: 660px; }
+      .portal-shell { grid-template-columns: 220px minmax(0,1fr); }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .dashboard-lower { grid-template-columns: 1fr; }
+      .wallet-grid, .visit-page-grid, .profile-grid { grid-template-columns: 1fr; }
+      .benefits-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 820px) {
+      :root { --container: min(100% - 32px, 680px); }
+      .hero { min-height: auto; padding-top: 135px; padding-bottom: 95px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-copy { text-align: center; }
+      .hero-watermark { left: 50%; top: 32px; width: 250px; height: 250px; transform: translateX(-50%) rotate(-6deg); opacity: .11; }
+      .hero-lead { margin-inline: auto; }
+      .hero-actions, .hero-facts { justify-content: center; }
+      .hero-visual { min-height: 590px; margin-top: 15px; }
+      .hero-photo-main { width: min(440px, 78vw); left: 50%; right: auto; transform: translateX(-44%); }
+      .hero-photo-secondary { left: 10%; bottom: 18px; width: 152px; height: 205px; }
+      .price-bubble { right: 2%; }
+      .rating-bubble { left: 7%; }
+      .section-head { align-items: start; flex-direction: column; }
+      .club-grid, .safety-grid { grid-template-columns: 1fr; }
+      .member-card { transform: none; }
+      .safety-visual { min-height: 520px; max-width: 520px; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 320px 230px 320px; }
+      .gallery-card:nth-child(1) { grid-row: auto; }
+      .gallery-card:nth-child(4) { grid-column: auto; grid-row: auto; }
+      .gallery-card:nth-child(1), .gallery-card:nth-child(4) { grid-row: span 2; }
+
+      .portal-shell { display: block; padding-bottom: 82px; }
+      .portal-sidebar { display: none; }
+      .portal-topbar { min-height: 72px; padding: 0 18px; }
+      .portal-mobile-brand { display: inline-flex; }
+      .portal-mobile-brand .brand-copy { display: none; }
+      .page-heading { display: none; }
+      .scenario-btn { font-size: 0; width: 40px; padding: 0; display: grid; place-items: center; }
+      .scenario-btn::before { content: "↻"; font-size: 18px; }
+      .portal-content { padding: 25px 16px 10px; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .stats-row, .dashboard-lower { grid-column: auto; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .visit-row { grid-template-columns: 1fr 75px 30px; }
+      .visit-row .visit-cell:nth-child(3) { display: none; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .portal-mobile-nav {
+        position: fixed;
+        z-index: 30;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        min-height: 66px;
+        padding: 7px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        border: 1px solid rgba(61,44,34,.1);
+        border-radius: 21px;
+        background: rgba(255,250,244,.93);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 15px 45px rgba(61,44,34,.14);
+      }
+      .portal-mobile-nav .portal-nav-btn { min-height: 52px; padding: 0; justify-content: center; display: grid; gap: 2px; font-size: 9px; text-align: center; border-radius: 15px; }
+      .portal-mobile-nav .portal-nav-btn .icon { margin: 0 auto; width: 18px; height: 18px; }
+      .portal-mobile-nav .portal-nav-btn .badge { display: none; }
+      .portal-mobile-nav .portal-nav-btn:hover { transform: none; }
+    }
+
+    @media (max-width: 590px) {
+      :root { --container: min(100% - 24px, 520px); }
+      .header-inner { height: 72px; }
+      .brand-mark { width: 68px; height: 68px; border-radius: 18px; }
+      .hero { padding-top: 115px; }
+      .hero h1 { font-size: clamp(58px, 18vw, 82px); }
+      .hero-watermark { top: 28px; width: 220px; height: 220px; opacity: .10; }
+      .hero-kicker { font-size: 10px; }
+      .hero-actions { display: grid; }
+      .hero-actions .btn { width: 100%; }
+      .hero-facts { gap: 14px; }
+      .hero-fact { font-size: 12px; }
+      .hero-visual { min-height: 500px; }
+      .hero-photo-main { height: 460px; width: 78vw; transform: translateX(-48%); }
+      .hero-photo-secondary { width: 128px; height: 174px; left: 9%; bottom: 10px; border-width: 6px; border-radius: 24px; }
+      .rating-bubble { left: 4%; top: 32px; }
+      .price-bubble { width: 145px; right: 0; bottom: 42px; padding: 15px; }
+      .price-bubble strong { font-size: 31px; }
+      .hero-scroll { display: none; }
+      .section { padding: 92px 0; }
+      .section-head { margin-bottom: 42px; }
+      .step-card { grid-template-columns: 52px 1fr; gap: 16px; }
+      .step-index { width: 48px; height: 48px; font-size: 19px; }
+      .step-card > .icon { display: none; }
+      .step-card h3 { font-size: 25px; }
+      .studio-main-card { min-height: 520px; }
+      .studio-card-copy { left: 24px; right: 24px; bottom: 25px; display: block; }
+      .studio-tag { display: inline-flex; margin-top: 15px; }
+      .studio-side { grid-template-columns: 1fr; }
+      .side-photo { min-height: 270px; }
+      .member-card { min-height: 500px; padding: 26px; }
+      .member-bottom { left: 26px; right: 26px; bottom: 25px; align-items: start; flex-direction: column; }
+      .safety-visual { min-height: 480px; }
+      .gallery-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 310px); }
+      .gallery-card:nth-child(1), .gallery-card:nth-child(4) { grid-row: auto; }
+      .contact-title { font-size: clamp(54px, 17vw, 80px); }
+      .contact-card div { grid-template-columns: 1fr; gap: 5px; }
+      .site-footer { flex-direction: column; margin-top: 70px; }
+      .portal-welcome { align-items: start; flex-direction: column; }
+      .balance-card { min-height: 350px; }
+      .balance-actions { display: grid; }
+      .balance-actions .btn { width: 100%; }
+      .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-card { padding: 17px; min-height: 125px; }
+      .stat-value { font-size: 31px; }
+      .visit-row { grid-template-columns: 1fr 68px 28px; gap: 9px; }
+      .wallet-summary { grid-template-columns: 1fr; }
+      .full-visit-row { grid-template-columns: 1.3fr .7fr .7fr; }
+      .full-visit-row > :nth-child(4) { display: none; }
+      .topup-options { grid-template-columns: 1fr; }
+      .modal-actions { display: grid; }
+      .modal-actions .btn { width: 100%; }
+      .toast { right: 16px; bottom: 92px; }
+      .bar-chart { gap: 5px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      [data-reveal] { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body data-view="site">
+  <!-- SVG sprite via hidden symbols -->
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.8-4.1 3.3-6 7.5-6s6.7 1.9 7.5 6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1116 0z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M7.2 3.5l3 4.1-2.1 2.1a15 15 0 006.2 6.2l2.1-2.1 4.1 3c-.7 2.3-2.1 3.7-4.5 3.7-6.9 0-12.5-5.6-12.5-12.5 0-2.4 1.4-3.8 3.7-4.5z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-2.6 8.1-7 10-4.4-1.9-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v11h14V10M9 21v-7h6v7"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 016.5 4H18v16H6.5A2.5 2.5 0 014 17.5v-11z"/><path d="M4 8h14M15 12h6v5h-6a2.5 2.5 0 010-5z"/></symbol>
+    <symbol id="i-visit" viewBox="0 0 24 24"><path d="M5 21V4h12l2 2v15"/><path d="M2 21h20M9 8h4M9 12h4M9 16h4"/></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><path d="M3 10h18v4H3zM5 14h14v7H5zM12 10v11"/><path d="M12 10H8.5A2.5 2.5 0 118.5 5C10 5 12 10 12 10zM12 10h3.5A2.5 2.5 0 1015.5 5C14 5 12 10 12 10z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.6V21h-4v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 00.3-1.9A1.7 1.7 0 003 14H3v-4h.1a1.7 1.7 0 001.6-1 1.7 1.7 0 00-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 009 4.6a1.7 1.7 0 001-1.6V3h4v.1a1.7 1.7 0 001 1.6 1.7 1.7 0 001.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 00-.3 1.9 1.7 1.7 0 001.6 1h.1v4H21a1.7 1.7 0 00-1.6 1z"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.5 2.5 0 014.8 1c0 2-2.5 2.1-2.5 4M12 18h.01"/></symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24"><path d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 00-2-2H5a2 2 0 00-2 2v9a2 2 0 002 2h3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3L2.8 20h18.4L12 3z"/><path d="M12 9v5M12 17.5h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="M4 18l5-5 4 3 7-9"/><path d="M15 7h5v5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 7 9-7"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l1.5 6.5L20 10l-6.5 1.5L12 18l-1.5-6.5L4 10l6.5-1.5L12 2z"/></symbol>
+  </svg>
+
+  <div class="site-view">
+    <header class="site-header" id="siteHeader">
+      <div class="header-inner">
+        <a class="brand" href="#top" aria-label="Studio Aura, till startsidan">
+          <span class="brand-mark"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K" alt="Studio Aura logotyp" /></span>
+          <span class="brand-copy"><strong>Studio Aura</strong><span>Strömsnäsbruk</span></span>
+        </a>
+        <nav class="desktop-nav" aria-label="Huvudmeny">
+          <a href="#sa-fungerar-det">Så fungerar det</a>
+          <a href="#studion">Studion</a>
+          <a href="#aura-club">Aura Club</a>
+          <a href="#saker-solning">Säker solning</a>
+          <a href="#kontakt">Kontakt</a>
+        </nav>
+        <div class="header-actions">
+          <button class="btn btn-primary btn-small js-open-login">
+            <span class="icon"><svg><use href="#i-user"/></svg></span>
+            Mina sidor
+          </button>
+          <button class="menu-btn" id="menuBtn" aria-label="Öppna meny" aria-expanded="false">
+            <span class="icon"><svg><use href="#i-menu"/></svg></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <nav aria-label="Mobilmeny">
+        <a href="#sa-fungerar-det">Så fungerar det</a>
+        <a href="#studion">Studion</a>
+        <a href="#aura-club">Aura Club</a>
+        <a href="#saker-solning">Säker solning</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+      <button class="btn btn-primary js-open-login">Testa kundportalen</button>
+    </div>
+
+    <main>
+      <section class="hero" id="top">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="hero-watermark" aria-hidden="true"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K" alt="" /></div>
+            <div class="hero-kicker" data-reveal>
+              <span class="live-dot"></span>
+              Öppet dagligen · 05.00–00.00
+            </div>
+            <h1 class="display delay-1" data-reveal>Din stund.<br>Din <em>aura.</em></h1>
+            <p class="hero-lead" data-reveal>
+              En varm och modern solstudio i Strömsnäsbruk. Enkelt tillträde via befintligt SMS-system, tydliga priser och en ny kundklubb som belönar din lojalitet.
+            </p>
+            <div class="hero-actions" data-reveal>
+              <a class="btn btn-primary" href="#sa-fungerar-det">Upptäck Studio Aura <span class="icon"><svg><use href="#i-arrow"/></svg></span></a>
+              <button class="btn btn-light js-open-login">Testa kundportalen</button>
+            </div>
+            <div class="hero-facts" data-reveal>
+              <div class="hero-fact"><span class="icon"><svg><use href="#i-card"/></svg></span>4 kr per minut</div>
+              <div class="hero-fact"><span class="icon"><svg><use href="#i-clock"/></svg></span>Max 15 minuter</div>
+              <div class="hero-fact"><span class="icon"><svg><use href="#i-pin"/></svg></span>Lagastigsgatan 63</div>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-label="Bilder från Studio Aura">
+            <div class="visual-orbit" aria-hidden="true"></div>
+            <div class="hero-photo hero-photo-main" data-parallax="0.08">
+              <img loading="eager" alt="Varm interiör i Studio Aura" src="https://static.wixstatic.com/media/9c4df0_c3243eac02e54c6ab3a3670052ccec0b~mv2.jpg/v1/fill/w_514%2Ch_727%2Cal_c%2Clg_1%2Cq_85%2Cenc_avif%2Cquality_auto/IMG_7418_JPG.jpg" onerror="this.style.opacity='0';this.setAttribute('aria-hidden','true')" />
+            </div>
+            <div class="hero-photo hero-photo-secondary" data-parallax="-0.05">
+              <img loading="eager" alt="Solarium med violett och blått ljus" src="https://static.wixstatic.com/media/9c4df0_4127cfb4330c4c9dacd0409f633d3c35~mv2.jpeg/v1/fill/w_503%2Ch_768%2Cal_c%2Clg_1%2Cq_85%2Cenc_avif%2Cquality_auto/image1.jpeg" onerror="this.style.opacity='0';this.setAttribute('aria-hidden','true')" />
+            </div>
+            <div class="floating-card rating-bubble"><span class="spark">✦</span> Varm, enkel, personlig</div>
+            <div class="floating-card price-bubble"><span>Minutpris</span><strong>4 kr</strong><small>15 min · 60 kr</small></div>
+          </div>
+        </div>
+        <a class="hero-scroll" href="#sa-fungerar-det">Scrolla</a>
+      </section>
+
+      <div class="intro-strip" aria-hidden="true">
+        <div class="strip-track">
+          <div class="strip-group">
+            <span class="strip-item">Varmt ljus &amp; lugn känsla</span>
+            <span class="strip-item">Öppet 05–00</span>
+            <span class="strip-item">4 kr per minut</span>
+            <span class="strip-item">Aura Club</span>
+          </div>
+          <div class="strip-group">
+            <span class="strip-item">Varmt ljus &amp; lugn känsla</span>
+            <span class="strip-item">Öppet 05–00</span>
+            <span class="strip-item">4 kr per minut</span>
+            <span class="strip-item">Aura Club</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="section steps-section" id="sa-fungerar-det">
+        <div class="container steps-grid">
+          <div class="steps-intro" data-reveal="left">
+            <p class="eyebrow">Så fungerar det</p>
+            <h2 class="display section-title">Från mobilen till din stund.</h2>
+            <p class="section-copy">Nuvarande SMS- och tillträdessystem behålls. Den nya hemsidan gör vägen dit tydligare och enklare att förstå.</p>
+          </div>
+          <div class="steps-list">
+            <article class="step-card" data-reveal>
+              <span class="step-index">01</span>
+              <div><h3>Bli medlem</h3><p>Registrera dina uppgifter via det befintliga medlemsflödet. På den skarpa sidan länkas kunden direkt till rätt plats.</p></div>
+              <span class="icon"><svg><use href="#i-arrow"/></svg></span>
+            </article>
+            <article class="step-card" data-reveal>
+              <span class="step-index">02</span>
+              <div><h3>Få tillträde via SMS</h3><p>Använd informationen och telefonnumret från det nuvarande systemet när du kommer till studion.</p></div>
+              <span class="icon"><svg><use href="#i-arrow"/></svg></span>
+            </article>
+            <article class="step-card" data-reveal>
+              <span class="step-index">03</span>
+              <div><h3>Välj soltid med omtanke</h3><p>Följ exponeringsschemat på plats, använd skyddsglasögon och överskrid aldrig rekommenderad tid.</p></div>
+              <span class="icon"><svg><use href="#i-arrow"/></svg></span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section studio-section" id="studion">
+        <div class="container">
+          <div class="section-head">
+            <div data-reveal="left">
+              <p class="eyebrow">Studion</p>
+              <h2 class="display section-title">En varm miljö med en elektrisk glöd.</h2>
+              <p class="section-copy">Den nya designen använder lokalens riktiga toner, material och violetta ljus i stället för generiska bilder.</p>
+            </div>
+            <span class="section-number">02 / 05</span>
+          </div>
+          <div class="studio-showcase">
+            <article class="studio-main-card" data-reveal>
+              <img loading="lazy" alt="Studio Auras solarium" src="https://static.wixstatic.com/media/9c4df0_4127cfb4330c4c9dacd0409f633d3c35~mv2.jpeg/v1/fill/w_503%2Ch_768%2Cal_c%2Clg_1%2Cq_85%2Cenc_avif%2Cquality_auto/image1.jpeg" onerror="this.style.opacity='0';this.setAttribute('aria-hidden','true')" />
+              <div class="studio-card-copy">
+                <div><h3>Din egen stund</h3><p>Privat, enkelt och öppet när det passar dig.</p></div>
+                <span class="studio-tag">4 kr / minut</span>
+              </div>
+            </article>
+            <div class="studio-side">
+              <article class="side-photo" data-reveal="right">
+                <img loading="lazy" alt="Lounge och väntrum i Studio Aura" src="https://static.wixstatic.com/media/9c4df0_c3243eac02e54c6ab3a3670052ccec0b~mv2.jpg/v1/fill/w_514%2Ch_727%2Cal_c%2Clg_1%2Cq_85%2Cenc_avif%2Cquality_auto/IMG_7418_JPG.jpg" onerror="this.style.opacity='0';this.setAttribute('aria-hidden','true')" />
+                <span class="photo-label">Lugn lounge</span>
+              </article>
+              <article class="side-photo" data-reveal="right">
+                <img loading="lazy" alt="Detalj med texten It is all about your aura" src="https://static.wixstatic.com/media/9c4df0_44fa7f94f14e428287b9b45b566a8182~mv2.jpg/v1/fill/w_313%2Ch_312%2Cq_90%2Cenc_avif%2Cquality_auto/9c4df0_44fa7f94f14e428287b9b45b566a8182~mv2.jpg" onerror="this.style.opacity='0';this.setAttribute('aria-hidden','true')" />
+                <span class="photo-label">It’s all about your aura</span>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section club-section" id="aura-club">
+        <span class="club-stars" aria-hidden="true"></span>
+        <div class="container club-grid">
+          <div class="club-copy" data-reveal="left">
+            <p class="eyebrow">Club Aurora</p>
+            <h2 class="display section-title">En egen värld, mitt i Studio Aura.</h2>
+            <p class="section-copy">När man scrollar hit ska det kännas som att man kommer in i något annat. Club Aurora är den mer exklusiva delen av upplevelsen — mörkare, varmare, lite mer neon och mycket mer wow. Här blir bonus, besök, nivå och medlemskänsla en egen destination som drar kunden tillbaka.</p>
+            <div class="club-note"><span class="spark">✦</span> En mer exklusiv zon för medlemmar som vill följa sin aura, sina belöningar och sin progression</div>
+            <div class="club-benefits">
+              <div class="benefit-row"><span class="benefit-check">✓</span>Aurora Credit – fyll på 500 kr och lås upp 50 kr bonus direkt</div>
+              <div class="benefit-row"><span class="benefit-check">✓</span>Referral Privilege – värva en vän och få 50 kr var</div>
+              <div class="benefit-row"><span class="benefit-check">✓</span>Private Overview – följ saldo, besök, minuter och aktivitetsnivå i en premiumvy</div>
+            </div>
+            <button class="btn btn-light js-open-login">Utforska Club Aurora <span class="icon"><svg><use href="#i-arrow"/></svg></span></button>
+          </div>
+          <div class="member-card" data-reveal="right">
+            <span class="member-aurora" aria-hidden="true"></span>
+            <span class="member-glow" aria-hidden="true"></span>
+            <span class="member-orbit" aria-hidden="true"></span>
+            <div class="member-top">
+              <span class="brand-mark"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K" alt="Studio Aura logotyp" /></span>
+              <span class="demo-chip">VIP concept</span>
+            </div>
+            <div class="member-offer">
+              <span>Club Aurora reward</span>
+              <div class="member-label">✦ Signature Benefit</div>
+              <strong>500 + 50</strong>
+              <p>Mer än bara bonus. Ett litet lyft varje gång kunden fyller på, med en portal som känns privat, glödande och värd att komma tillbaka till.</p>
+            </div>
+            <div class="member-bottom">
+              <div><div class="member-name">Aurora Signature</div><div class="member-num">PRIVATE MEMBER · 000184</div></div>
+              <button class="btn js-open-login">Gå in</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section safety-section" id="saker-solning">
+        <div class="container safety-grid">
+          <div class="safety-visual" data-reveal="left">
+            <img loading="lazy" alt="Varm detaljbild från Studio Aura" src="https://static.wixstatic.com/media/9c4df0_a9704cdd7f4a49c4a295425b152650d2~mv2.jpg/v1/fill/w_313%2Ch_312%2Cq_90%2Cenc_avif%2Cquality_auto/9c4df0_a9704cdd7f4a49c4a295425b152650d2~mv2.jpg" onerror="this.style.opacity='0';this.setAttribute('aria-hidden','true')" />
+            <div class="safety-quote"><strong>En bra upplevelse är också en ansvarsfull upplevelse.</strong><span>Portalen kan uppmärksamma täta besök utan att skuldbelägga kunden.</span></div>
+          </div>
+          <div data-reveal="right">
+            <p class="eyebrow">Säker solning</p>
+            <h2 class="display section-title">Tydligt, lugnt och lätt att göra rätt.</h2>
+            <p class="section-copy">Säkerhetsinformationen får en central plats på hemsidan och blir även en naturlig del av kundportalen.</p>
+            <div class="safety-list">
+              <article class="safety-item"><span class="safety-icon"><span class="icon"><svg><use href="#i-user"/></svg></span></span><div><h3>18-årsgräns</h3><p>Informationen visas tydligt före medlemsflödet och vid studion.</p></div></article>
+              <article class="safety-item"><span class="safety-icon"><span class="icon"><svg><use href="#i-clock"/></svg></span></span><div><h3>Följ exponeringsschemat</h3><p>Maximal möjlig soltid i obemannat solarium är 15 minuter.</p></div></article>
+              <article class="safety-item"><span class="safety-icon"><span class="icon"><svg><use href="#i-alert"/></svg></span></span><div><h3>Smart aktivitetsvarning</h3><p>Gul markering om registrerade besök ligger tätare än två dygn.</p></div></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section gallery-section" aria-label="Galleri">
+        <div class="container">
+          <div class="gallery-head" data-reveal>
+            <p class="eyebrow">Känslan på plats</p>
+            <h2 class="display section-title">Varmt i detaljerna.<br>Starkt i uttrycket.</h2>
+          </div>
+          <div class="gallery-grid">
+            <article class="gallery-card" data-reveal><img loading="lazy" alt="Studio Auras interiör" src="https://static.wixstatic.com/media/9c4df0_c3243eac02e54c6ab3a3670052ccec0b~mv2.jpg/v1/fill/w_514%2Ch_727%2Cal_c%2Clg_1%2Cq_85%2Cenc_avif%2Cquality_auto/IMG_7418_JPG.jpg" onerror="this.style.opacity='0';this.setAttribute('aria-hidden','true')" /></article>
+            <article class="gallery-card" data-reveal><img loading="lazy" alt="Studio Auras skyltfönster" src="https://static.wixstatic.com/media/9c4df0_821b063381bb49e29aabf3c7d203c3fd~mv2.jpg/v1/fill/w_313%2Ch_312%2Cq_90%2Cenc_avif%2Cquality_auto/9c4df0_821b063381bb49e29aabf3c7d203c3fd~mv2.jpg" onerror="this.style.opacity='0';this.setAttribute('aria-hidden','true')" /></article>
+            <article class="gallery-card" data-reveal><img loading="lazy" alt="Inredningsdetalj" src="https://static.wixstatic.com/media/9c4df0_a9704cdd7f4a49c4a295425b152650d2~mv2.jpg/v1/fill/w_313%2Ch_312%2Cq_90%2Cenc_avif%2Cquality_auto/9c4df0_a9704cdd7f4a49c4a295425b152650d2~mv2.jpg" onerror="this.style.opacity='0';this.setAttribute('aria-hidden','true')" /></article>
+            <article class="gallery-card" data-reveal><img loading="lazy" alt="Studio Auras solarium" src="https://static.wixstatic.com/media/9c4df0_4127cfb4330c4c9dacd0409f633d3c35~mv2.jpeg/v1/fill/w_503%2Ch_768%2Cal_c%2Clg_1%2Cq_85%2Cenc_avif%2Cquality_auto/image1.jpeg" onerror="this.style.opacity='0';this.setAttribute('aria-hidden','true')" /></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact-section" id="kontakt">
+        <div class="container">
+          <div class="contact-grid">
+            <div data-reveal="left">
+              <p class="eyebrow">Hitta hit</p>
+              <h2 class="display contact-title">Din stund väntar i <em>Strömsnäsbruk.</em></h2>
+              <div class="contact-actions">
+                <a class="btn btn-light" href="https://maps.app.goo.gl/yhvzEaoFd5w5Byss8" target="_blank" rel="noreferrer">Visa vägen <span class="icon"><svg><use href="#i-arrow"/></svg></span></a>
+                <button class="btn btn-ghost js-open-login" style="color:white;border-color:rgba(255,255,255,.18)">Testa Mina sidor</button>
+              </div>
+            </div>
+            <div class="contact-card" data-reveal="right">
+              <dl>
+                <div><dt>Adress</dt><dd>Lagastigsgatan 63<br>287 31 Strömsnäsbruk</dd></div>
+                <div><dt>Öppet</dt><dd>Alla dagar<br>05.00–00.00</dd></div>
+                <div><dt>Kontakt</dt><dd>0722 740 122<br>Studioaura21@gmail.com</dd></div>
+              </dl>
+            </div>
+          </div>
+          <footer class="site-footer"><span>© Studio Aura · Visuell konceptmockup</span><span>Demo – inga riktiga köp, konton eller bokningar</span></footer>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Portal -->
+  <div class="portal-view" aria-label="Demo av kundportal">
+    <div class="portal-shell">
+      <aside class="portal-sidebar">
+        <a class="brand" href="#" data-site-home>
+          <span class="brand-mark"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K" alt="Studio Aura logotyp" /></span>
+          <span class="brand-copy"><strong>Studio Aura</strong><span>Mina sidor</span></span>
+        </a>
+        <div class="portal-demo-label"><span class="live-dot"></span> Interaktiv demo</div>
+        <nav class="portal-nav" aria-label="Portalmeny">
+          <button class="portal-nav-btn is-active" data-panel="overview"><span class="icon"><svg><use href="#i-home"/></svg></span>Översikt</button>
+          <button class="portal-nav-btn" data-panel="wallet"><span class="icon"><svg><use href="#i-wallet"/></svg></span>Saldo &amp; bonus</button>
+          <button class="portal-nav-btn" data-panel="visits"><span class="icon"><svg><use href="#i-visit"/></svg></span>Mina besök<span class="badge">18</span></button>
+          <button class="portal-nav-btn" data-panel="benefits"><span class="icon"><svg><use href="#i-gift"/></svg></span>Förmåner<span class="badge">2</span></button>
+          <button class="portal-nav-btn" data-panel="profile"><span class="icon"><svg><use href="#i-user"/></svg></span>Min profil</button>
+        </nav>
+        <div class="portal-side-bottom">
+          <button class="portal-side-link" id="resetDemo"><span class="icon"><svg><use href="#i-settings"/></svg></span>Återställ demo</button>
+          <button class="portal-side-link"><span class="icon"><svg><use href="#i-help"/></svg></span>Hjälp &amp; kontakt</button>
+          <button class="portal-side-link" data-site-home><span class="icon"><svg><use href="#i-log-out"/></svg></span>Till hemsidan</button>
+        </div>
+      </aside>
+
+      <main class="portal-main">
+        <header class="portal-topbar">
+          <a class="brand portal-mobile-brand" href="#" data-site-home aria-label="Till hemsidan"><span class="brand-mark"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K" alt="Studio Aura logotyp" /></span><span class="brand-copy"><strong>Studio Aura</strong><span>Mina sidor</span></span></a>
+          <div class="page-heading"><small>Mina sidor</small><strong id="panelTitle">Översikt</strong></div>
+          <div class="user-menu">
+            <button class="scenario-btn" id="scenarioToggle" title="Byt mellan gul och grön aktivitetsstatus">Byt demoscenario</button>
+            <span class="avatar" aria-label="Testanvändare Maja">MS</span>
+          </div>
+        </header>
+
+        <div class="portal-content">
+          <section class="portal-panel is-active" data-panel-content="overview">
+            <div class="portal-welcome">
+              <div><h1>Hej Maja, välkommen tillbaka.</h1><p>Här är din Aura-översikt just nu.</p></div>
+              <span class="last-sync">Demo uppdaterad precis nu</span>
+            </div>
+
+            <div class="dashboard-grid">
+              <article class="portal-card balance-card">
+                <span class="balance-stamp"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNjAwIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUiPgogIDx0aXRsZSBpZD0idGl0bGUiPlN0dWRpbyBBdXJhPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgcng9IjM4IiBmaWxsPSIjZmJmOGYzIi8+CiAgPHBhdGggZD0iTSA0MTQgNjUgQSAyNTIgMjUyIDAgMSAwIDIwNSA1NDgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ExOGU1YiIgc3Ryb2tlLXdpZHRoPSIyLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxnIGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiPgogICAgPHRleHQgeD0iMTU1IiB5PSIzODUiIGZvbnQtc2l6ZT0iMjg2IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTI2Ij5TPC90ZXh0PgogICAgPHRleHQgeD0iMzAyIiB5PSIzODUiIGZvbnQtc2l6ZT0iMjc4IiBmb250LXdlaWdodD0iNDAwIiBsZXR0ZXItc3BhY2luZz0iLTIwIj5BPC90ZXh0PgogIDwvZz4KICA8ZGVmcz4KICAgIDxwYXRoIGlkPSJicmFuZC1jdXJ2ZSIgZD0iTSAzNDUgNTM1IEEgMjUwIDI1MCAwIDAgMCA1NDEgMjQ1Ii8+CiAgPC9kZWZzPgogIDx0ZXh0IGZpbGw9IiNhMThlNWIiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLCAnVGltZXMgTmV3IFJvbWFuJywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGxldHRlci1zcGFjaW5nPSI4LjUiPgogICAgPHRleHRQYXRoIGhyZWY9IiNicmFuZC1jdXJ2ZSIgc3RhcnRPZmZzZXQ9IjMlIj5TVFVESU8gQVVSQTwvdGV4dFBhdGg+CiAgPC90ZXh0Pgo8L3N2Zz4K" alt="Studio Aura logotyp" /></span>
+                <span class="card-overline">Totalt tillgängligt</span>
+                <div class="balance-total"><span data-total-balance>505</span> <small>kr</small></div>
+                <div class="balance-breakdown">
+                  <div class="balance-line"><span>Insatt saldo</span><strong><span data-paid-balance>420</span> kr</strong></div>
+                  <div class="balance-line"><span>Aura Bonus</span><strong><span data-bonus-balance>85</span> kr</strong></div>
+                </div>
+                <div class="balance-actions">
+                  <button class="btn js-open-topup"><span class="icon"><svg><use href="#i-plus"/></svg></span>Fyll på saldo</button>
+                  <button class="btn btn-ghost js-use-bonus">Använd bonus</button>
+                </div>
+              </article>
+
+              <article class="portal-card status-card" id="statusCard">
+                <div class="card-heading"><h2>Din aktivitet</h2><span class="icon"><svg><use href="#i-trend"/></svg></span></div>
+                <div class="activity-status warning" id="activityStatus">
+                  <span class="status-icon"><span class="icon"><svg><use href="#i-alert"/></svg></span></span>
+                  <div><strong id="statusTitle">Lite tätt mellan besöken</strong><p id="statusText">Senaste registrerade besöket var igår. Vänta tills minst två dygn har gått och följ alltid exponeringsschemat.</p></div>
+                </div>
+                <div class="status-meter">
+                  <div class="status-meter-label"><span>Besöksfrekvens senaste 7 dagarna</span><strong id="frequencyLabel">3 besök</strong></div>
+                  <div class="meter"><span></span></div>
+                </div>
+              </article>
+
+              <div class="stats-row">
+                <article class="portal-card stat-card"><div class="stat-top"><span>Totalt antal besök</span><span class="icon"><svg><use href="#i-visit"/></svg></span></div><div><div class="stat-value">18</div><div class="stat-caption">sedan januari</div></div></article>
+                <article class="portal-card stat-card"><div class="stat-top"><span>Total soltid</span><span class="icon"><svg><use href="#i-clock"/></svg></span></div><div><div class="stat-value">3 h 42 m</div><div class="stat-caption">registrerad tid</div></div></article>
+                <article class="portal-card stat-card"><div class="stat-top"><span>Genomsnitt</span><span class="icon"><svg><use href="#i-trend"/></svg></span></div><div><div class="stat-value">12 min</div><div class="stat-caption">per besök</div></div></article>
+                <article class="portal-card stat-card"><div class="stat-top"><span>Bonus intjänad</span><span class="icon"><svg><use href="#i-gift"/></svg></span></div><div><div class="stat-value"><span data-earned-bonus>185</span> kr</div><div class="stat-caption">som Aura-medlem</div></div></article>
+              </div>
+
+              <div class="dashboard-lower">
+                <article class="portal-card history-card" id="historyCard">
+                  <div class="card-heading"><h3>Senaste besöken</h3><button class="small-link" id="toggleHistory">Visa fler</button></div>
+                  <div class="visit-list">
+                    <div class="visit-row"><div class="visit-date"><strong>Igår · 19.42</strong><span>Besök registrerat</span></div><div class="visit-cell"><span>Tid</span><strong>12 min</strong></div><div class="visit-cell"><span>Kostnad</span><strong>48 kr</strong></div><span class="visit-status"><span class="icon"><svg><use href="#i-check"/></svg></span></span></div>
+                    <div class="visit-row"><div class="visit-date"><strong>3 dagar sedan · 18.05</strong><span>Besök registrerat</span></div><div class="visit-cell"><span>Tid</span><strong>10 min</strong></div><div class="visit-cell"><span>Kostnad</span><strong>40 kr</strong></div><span class="visit-status"><span class="icon"><svg><use href="#i-check"/></svg></span></span></div>
+                    <div class="visit-row"><div class="visit-date"><strong>6 dagar sedan · 20.14</strong><span>Besök registrerat</span></div><div class="visit-cell"><span>Tid</span><strong>15 min</strong></div><div class="visit-cell"><span>Kostnad</span><strong>60 kr</strong></div><span class="visit-status"><span class="icon"><svg><use href="#i-check"/></svg></span></span></div>
+                    <div class="visit-row extra-row"><div class="visit-date"><strong>12 dagar sedan · 17.32</strong><span>Besök registrerat</span></div><div class="visit-cell"><span>Tid</span><strong>12 min</strong></div><div class="visit-cell"><span>Kostnad</span><strong>48 kr</strong></div><span class="visit-status"><span class="icon"><svg><use href="#i-check"/></svg></span></span></div>
+                    <div class="visit-row extra-row"><div class="visit-date"><strong>18 dagar sedan · 19.06</strong><span>Besök registrerat</span></div><div class="visit-cell"><span>Tid</span><strong>11 min</strong></div><div class="visit-cell"><span>Kostnad</span><strong>44 kr</strong></div><span class="visit-status"><span class="icon"><svg><use href="#i-check"/></svg></span></span></div>
+                  </div>
+                </article>
+
+                <article class="portal-card referral-card">
+                  <h3>50 kr till dig.<br>50 kr till din vän.</h3>
+                  <p>Dela din kod. Bonusen aktiveras i konceptet när vännen gjort sin första godkända insättning.</p>
+                  <div class="referral-code"><strong>AURA-MAJA50</strong><button class="copy-btn js-copy-code" aria-label="Kopiera värvningskod"><span class="icon"><svg><use href="#i-copy"/></svg></span></button></div>
+                  <div class="referral-foot">Demo av möjlig värvningsfunktion.</div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section class="portal-panel" data-panel-content="wallet">
+            <div class="panel-header"><div><h1>Saldo &amp; bonus</h1><p>En tydlig uppdelning mellan insatta pengar och intjänad Aura Bonus.</p></div><button class="btn btn-primary js-open-topup"><span class="icon"><svg><use href="#i-plus"/></svg></span>Fyll på</button></div>
+            <div class="wallet-grid">
+              <article class="portal-card wallet-card">
+                <div class="card-heading"><h2>Din plånbok</h2><span class="icon"><svg><use href="#i-wallet"/></svg></span></div>
+                <div class="wallet-summary">
+                  <div class="wallet-tile"><span>Insatt saldo</span><strong><span data-paid-balance>420</span> kr</strong></div>
+                  <div class="wallet-tile"><span>Aura Bonus</span><strong><span data-bonus-balance>85</span> kr</strong></div>
+                </div>
+                <div class="progress-wrap"><div class="progress-copy"><span>Bonus intjänad totalt</span><strong><span data-earned-bonus>185</span> kr</strong></div><div class="progress-bar"><span></span></div></div>
+                <button class="btn btn-ghost btn-block js-use-bonus" style="margin-top:24px">Använd 50 kr Aura Bonus</button>
+              </article>
+              <article class="portal-card topup-promo">
+                <div><span class="card-overline">Medlemsförmån</span><div class="promo-number">500<br>+ 50</div><p>Fyll på 500 kr i demoportalen och se hur både saldo, bonus och historik uppdateras direkt.</p></div>
+                <button class="btn btn-light js-open-topup">Prova påfyllning</button>
+              </article>
+            </div>
+            <article class="portal-card transaction-card">
+              <div class="card-heading"><h2>Transaktioner</h2><button class="small-link" id="downloadDemo">Ladda ned demo</button></div>
+              <div class="transaction-list" id="transactionList">
+                <div class="transaction-row"><span class="tx-icon bonus"><span class="icon"><svg><use href="#i-gift"/></svg></span></span><div class="tx-copy"><strong>Värvningsbonus</strong><span>Din vän registrerade sin första insättning</span></div><div class="tx-amount"><strong class="positive">+50 kr</strong><span>14 juli</span></div></div>
+                <div class="transaction-row"><span class="tx-icon spend"><span class="icon"><svg><use href="#i-visit"/></svg></span></span><div class="tx-copy"><strong>Besök</strong><span>12 minuter</span></div><div class="tx-amount"><strong class="negative">−48 kr</strong><span>12 juli</span></div></div>
+                <div class="transaction-row"><span class="tx-icon"><span class="icon"><svg><use href="#i-plus"/></svg></span></span><div class="tx-copy"><strong>Insättning</strong><span>Påfyllning via befintligt system</span></div><div class="tx-amount"><strong class="positive">+500 kr</strong><span>5 juli</span></div></div>
+                <div class="transaction-row"><span class="tx-icon bonus"><span class="icon"><svg><use href="#i-gift"/></svg></span></span><div class="tx-copy"><strong>Påfyllningsbonus</strong><span>500 kr gav 50 kr Aura Bonus</span></div><div class="tx-amount"><strong class="positive">+50 kr</strong><span>5 juli</span></div></div>
+              </div>
+            </article>
+          </section>
+
+          <section class="portal-panel" data-panel-content="visits">
+            <div class="panel-header"><div><h1>Mina besök</h1><p>Översikt över registrerad tid, historik och en lugn aktivitetsöversyn.</p></div></div>
+            <div class="visit-page-grid">
+              <article class="portal-card chart-card">
+                <div class="card-heading"><h2>Besök senaste 8 veckorna</h2><span class="icon"><svg><use href="#i-trend"/></svg></span></div>
+                <div class="bar-chart" aria-label="Stapeldiagram över besök per vecka">
+                  <div class="bar-wrap"><div class="bar" style="--h:34%"></div><span class="bar-label">v.21</span></div>
+                  <div class="bar-wrap"><div class="bar" style="--h:52%"></div><span class="bar-label">v.22</span></div>
+                  <div class="bar-wrap"><div class="bar" style="--h:31%"></div><span class="bar-label">v.23</span></div>
+                  <div class="bar-wrap"><div class="bar" style="--h:68%"></div><span class="bar-label">v.24</span></div>
+                  <div class="bar-wrap"><div class="bar" style="--h:42%"></div><span class="bar-label">v.25</span></div>
+                  <div class="bar-wrap"><div class="bar" style="--h:50%"></div><span class="bar-label">v.26</span></div>
+                  <div class="bar-wrap"><div class="bar" style="--h:38%"></div><span class="bar-label">v.27</span></div>
+                  <div class="bar-wrap"><div class="bar" style="--h:72%"></div><span class="bar-label">v.28</span></div>
+                </div>
+              </article>
+              <article class="portal-card insight-card">
+                <div class="card-heading"><h2>Aktivitetsnivå</h2><span class="icon"><svg><use href="#i-info"/></svg></span></div>
+                <div class="frequency-ring"><div class="ring-copy"><strong>3</strong><span>besök / 7 dagar</span></div></div>
+                <div class="activity-status warning"><span class="status-icon"><span class="icon"><svg><use href="#i-alert"/></svg></span></span><div><strong>Ta lite extra paus</strong><p>Den här indikatorn är ett koncept, inte medicinsk rådgivning. Följ alltid officiella råd och exponeringsschemat.</p></div></div>
+              </article>
+              <article class="portal-card visit-table-card">
+                <div class="card-heading"><h2>Full historik</h2><button class="small-link">Exportera</button></div>
+                <div class="full-visit-row header"><span>Datum</span><span>Soltid</span><span>Kostnad</span><span>Status</span></div>
+                <div class="full-visit-row"><strong>Igår, 19.42</strong><span>12 min</span><span>48 kr</span><span class="positive">Registrerat</span></div>
+                <div class="full-visit-row"><strong>3 dagar sedan, 18.05</strong><span>10 min</span><span>40 kr</span><span class="positive">Registrerat</span></div>
+                <div class="full-visit-row"><strong>6 dagar sedan, 20.14</strong><span>15 min</span><span>60 kr</span><span class="positive">Registrerat</span></div>
+                <div class="full-visit-row"><strong>12 dagar sedan, 17.32</strong><span>12 min</span><span>48 kr</span><span class="positive">Registrerat</span></div>
+                <div class="full-visit-row"><strong>18 dagar sedan, 19.06</strong><span>11 min</span><span>44 kr</span><span class="positive">Registrerat</span></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="portal-panel" data-panel-content="benefits">
+            <div class="panel-header"><div><h1>Dina förmåner</h1><p>Få och tydliga erbjudanden i stället för ett rörigt poängsystem.</p></div></div>
+            <div class="benefits-grid">
+              <article class="portal-card benefit-card featured"><span class="benefit-icon"><span class="icon"><svg><use href="#i-gift"/></svg></span></span><h3>500 kr blir 550 kr</h3><p>Fyll på 500 kr och få 50 kr extra som Aura Bonus.</p><button class="btn btn-light js-open-topup">Använd erbjudandet</button></article>
+              <article class="portal-card benefit-card"><span class="benefit-icon"><span class="icon"><svg><use href="#i-user"/></svg></span></span><h3>Värva en vän</h3><p>När vännen gjort sin första godkända insättning får ni 50 kr vardera.</p><div class="coupon"><span>AURA-MAJA50</span><button class="small-link js-copy-code">Kopiera</button></div></article>
+              <article class="portal-card benefit-card"><span class="benefit-icon"><span class="icon"><svg><use href="#i-calendar"/></svg></span></span><h3>Födelsedagsbonus</h3><p>Ett enkelt exempel på en personlig förmån som kan aktiveras under födelsedagsmånaden.</p><button class="small-link" data-toast="Förmånen visas som koncept och är inte aktiverad.">Läs villkor</button></article>
+              <article class="portal-card benefit-card"><span class="benefit-icon"><span class="icon"><svg><use href="#i-shield"/></svg></span></span><h3>Servicegaranti</h3><p>Rapportera ett verifierat problem och få snabb återkoppling eller kompensation.</p><button class="small-link" data-toast="Ett supportärende skulle öppnas i den skarpa portalen.">Rapportera problem</button></article>
+              <article class="portal-card benefit-card"><span class="benefit-icon"><span class="icon"><svg><use href="#i-spark"/></svg></span></span><h3>Medlemsjubileum</h3><p>En mindre bonus när du varit medlem ett år – utan att kopplas till tätare solning.</p><button class="small-link" data-toast="Maja har varit medlem i 8 månader i demot.">Se medlemsdatum</button></article>
+              <article class="portal-card benefit-card"><span class="benefit-icon"><span class="icon"><svg><use href="#i-mail"/></svg></span></span><h3>Personliga nyheter</h3><p>Välj själv om du vill få relevanta erbjudanden och driftinformation.</p><button class="small-link" data-panel-jump="profile">Hantera utskick</button></article>
+            </div>
+          </section>
+
+          <section class="portal-panel" data-panel-content="profile">
+            <div class="panel-header"><div><h1>Min profil</h1><p>Endast den information som behövs för medlemskapet.</p></div></div>
+            <div class="profile-grid">
+              <article class="portal-card profile-card profile-identity"><div class="profile-avatar">MS</div><h2>Maja Svensson</h2><p>Demo-medlem · 07X-XXX XX 42</p><div class="member-since">Medlem sedan 14 november 2025</div><button class="btn btn-ghost btn-block" style="margin-top:14px" data-toast="Profilredigering är inte aktiverad i mockupen.">Redigera uppgifter</button></article>
+              <article class="portal-card profile-card">
+                <div class="card-heading"><h2>Inställningar</h2><span class="icon"><svg><use href="#i-settings"/></svg></span></div>
+                <div class="settings-list">
+                  <div class="setting-row"><div><strong>SMS-notiser</strong><span>Driftinformation och viktiga kontohändelser</span></div><button class="switch is-on" aria-label="Växla SMS-notiser"></button></div>
+                  <div class="setting-row"><div><strong>Erbjudanden via SMS</strong><span>Bonus och medlemsförmåner</span></div><button class="switch" aria-label="Växla erbjudanden via SMS"></button></div>
+                  <div class="setting-row"><div><strong>E-post</strong><span>maja.svensson@example.se</span></div><span class="setting-value">Verifierad</span></div>
+                  <div class="setting-row"><div><strong>Aktivitetsvarning</strong><span>Visa en lugn varning vid täta registrerade besök</span></div><button class="switch is-on" aria-label="Växla aktivitetsvarning"></button></div>
+                  <div class="setting-row"><div><strong>Integritet</strong><span>Se hur dina uppgifter används i konceptet</span></div><button class="small-link" data-toast="Integritetspolicyn skulle öppnas här.">Visa</button></div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <nav class="portal-mobile-nav" aria-label="Mobil portalmeny">
+      <button class="portal-nav-btn is-active" data-panel="overview"><span class="icon"><svg><use href="#i-home"/></svg></span>Översikt</button>
+      <button class="portal-nav-btn" data-panel="wallet"><span class="icon"><svg><use href="#i-wallet"/></svg></span>Saldo</button>
+      <button class="portal-nav-btn" data-panel="visits"><span class="icon"><svg><use href="#i-visit"/></svg></span>Besök</button>
+      <button class="portal-nav-btn" data-panel="benefits"><span class="icon"><svg><use href="#i-gift"/></svg></span>Förmåner</button>
+      <button class="portal-nav-btn" data-panel="profile"><span class="icon"><svg><use href="#i-user"/></svg></span>Profil</button>
+    </nav>
+  </div>
+
+  <!-- Login modal -->
+  <div class="modal-backdrop" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal">
+      <div class="modal-head"><div><h2 id="loginTitle">Testa Mina sidor</h2><p>En klickbar demo – ingen riktig inloggning sker.</p></div><button class="modal-close" data-close-modal aria-label="Stäng"><span class="icon"><svg><use href="#i-close"/></svg></span></button></div>
+      <div class="modal-body">
+        <div class="demo-login-card"><span class="avatar">MS</span><div><strong>Demoanvändare: Maja</strong><span>Saldo, bonus och besök är exempeldata.</span></div></div>
+        <div class="field"><label for="demoPhone">Mobilnummer</label><input id="demoPhone" inputmode="tel" value="070 123 45 42" aria-describedby="loginNote" /></div>
+        <div class="demo-note" id="loginNote"><span class="icon"><svg><use href="#i-info"/></svg></span><span>I skarp version kan detta ersättas av SMS-kod eller koppling till befintlig kundinloggning.</span></div>
+        <div class="modal-actions"><button class="btn btn-ghost" data-close-modal>Avbryt</button><button class="btn btn-primary" id="enterPortal">Fortsätt till demo <span class="icon"><svg><use href="#i-arrow"/></svg></span></button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topup modal -->
+  <div class="modal-backdrop" id="topupModal" role="dialog" aria-modal="true" aria-labelledby="topupTitle">
+    <div class="modal">
+      <div class="modal-head"><div><h2 id="topupTitle">Fyll på saldo</h2><p>Testläge – inga pengar dras.</p></div><button class="modal-close" data-close-modal aria-label="Stäng"><span class="icon"><svg><use href="#i-close"/></svg></span></button></div>
+      <div class="modal-body">
+        <div class="topup-options">
+          <button class="topup-option" data-amount="200" data-bonus="0"><strong>200 kr</strong><span>200 kr saldo</span></button>
+          <button class="topup-option is-selected" data-amount="500" data-bonus="50"><span class="bonus-pill">+50 bonus</span><strong>500 kr</strong><span>550 kr totalt</span></button>
+          <button class="topup-option" data-amount="1000" data-bonus="150"><span class="bonus-pill">+150 bonus</span><strong>1 000 kr</strong><span>1 150 kr totalt</span></button>
+        </div>
+        <div class="topup-summary"><div><span>Du får totalt</span><strong id="topupTotal">550 kr</strong></div><span id="topupDetail">500 saldo + 50 bonus</span></div>
+        <div class="demo-note"><span class="icon"><svg><use href="#i-info"/></svg></span><span>Det här simulerar endast portalupplevelsen. Betalning och synk mot nuvarande system ingår inte.</span></div>
+        <div class="modal-actions"><button class="btn btn-ghost" data-close-modal>Avbryt</button><button class="btn btn-bronze" id="confirmTopup">Simulera insättning</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><span class="icon"><svg><use href="#i-check"/></svg></span><span id="toastText">Klart.</span></div>
+
+  <script>
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+    const state = {
+      paid: Number(localStorage.getItem('aura-paid')) || 420,
+      bonus: Number(localStorage.getItem('aura-bonus')) || 85,
+      earned: Number(localStorage.getItem('aura-earned')) || 185,
+      scenario: localStorage.getItem('aura-scenario') || 'warning',
+      selectedTopup: { amount: 500, bonus: 50 }
+    };
+
+    function iconUse(id) {
+      return `<span class="icon"><svg><use href="#${id}"/></svg></span>`;
+    }
+
+    function imageFallback(img) {
+      img.style.opacity = '0';
+      img.setAttribute('aria-hidden', 'true');
+    }
+    window.imageFallback = imageFallback;
+
+    function updateBalances() {
+      $$('[data-paid-balance]').forEach(el => el.textContent = state.paid.toLocaleString('sv-SE'));
+      $$('[data-bonus-balance]').forEach(el => el.textContent = state.bonus.toLocaleString('sv-SE'));
+      $$('[data-total-balance]').forEach(el => el.textContent = (state.paid + state.bonus).toLocaleString('sv-SE'));
+      $$('[data-earned-bonus]').forEach(el => el.textContent = state.earned.toLocaleString('sv-SE'));
+      localStorage.setItem('aura-paid', state.paid);
+      localStorage.setItem('aura-bonus', state.bonus);
+      localStorage.setItem('aura-earned', state.earned);
+    }
+
+    function showToast(message) {
+      $('#toastText').textContent = message;
+      const toast = $('#toast');
+      toast.classList.add('is-showing');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('is-showing'), 3300);
+    }
+
+    function openModal(modal) {
+      $$('.modal-backdrop').forEach(m => m.classList.remove('is-open'));
+      modal.classList.add('is-open');
+      document.body.classList.add('modal-open');
+      setTimeout(() => $('button, input', modal)?.focus(), 50);
+    }
+
+    function closeModals() {
+      $$('.modal-backdrop').forEach(m => m.classList.remove('is-open'));
+      document.body.classList.remove('modal-open');
+    }
+
+    // Header and mobile menu
+    const siteHeader = $('#siteHeader');
+    function onScroll() {
+      siteHeader.classList.toggle('is-scrolled', window.scrollY > 18);
+      if (window.innerWidth > 820) {
+        $$('[data-parallax]').forEach(el => {
+          const speed = Number(el.dataset.parallax || 0);
+          el.style.translate = `0 ${Math.min(window.scrollY, 700) * speed}px`;
+        });
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    $('#menuBtn').addEventListener('click', () => {
+      const open = $('#mobileMenu').classList.toggle('is-open');
+      $('#menuBtn').setAttribute('aria-expanded', String(open));
+      $('#mobileMenu').setAttribute('aria-hidden', String(!open));
+      document.body.classList.toggle('modal-open', open);
+    });
+    $$('#mobileMenu a, #mobileMenu .js-open-login').forEach(el => el.addEventListener('click', () => {
+      $('#mobileMenu').classList.remove('is-open');
+      $('#menuBtn').setAttribute('aria-expanded', 'false');
+      $('#mobileMenu').setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+    }));
+
+    // Reveal observer
+    document.documentElement.classList.add('reveal-ready');
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .12, rootMargin: '0px 0px -40px' });
+    $$('[data-reveal]').forEach(el => revealObserver.observe(el));
+
+    // Modal controls
+    $$('.js-open-login').forEach(btn => btn.addEventListener('click', () => openModal($('#loginModal'))));
+    $$('.js-open-topup').forEach(btn => btn.addEventListener('click', () => openModal($('#topupModal'))));
+    $$('[data-close-modal]').forEach(btn => btn.addEventListener('click', closeModals));
+    $$('.modal-backdrop').forEach(backdrop => backdrop.addEventListener('mousedown', event => {
+      if (event.target === backdrop) closeModals();
+    }));
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeModals();
+    });
+
+    // Portal navigation
+    const panelTitles = {
+      overview: 'Översikt',
+      wallet: 'Saldo & bonus',
+      visits: 'Mina besök',
+      benefits: 'Förmåner',
+      profile: 'Min profil'
+    };
+
+    function showPanel(name, scroll = true) {
+      $$('[data-panel-content]').forEach(panel => panel.classList.toggle('is-active', panel.dataset.panelContent === name));
+      $$('[data-panel]').forEach(btn => btn.classList.toggle('is-active', btn.dataset.panel === name));
+      $('#panelTitle').textContent = panelTitles[name] || 'Mina sidor';
+      if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    $$('[data-panel]').forEach(btn => btn.addEventListener('click', () => showPanel(btn.dataset.panel)));
+    $$('[data-panel-jump]').forEach(btn => btn.addEventListener('click', () => showPanel(btn.dataset.panelJump)));
+
+    function enterPortal() {
+      closeModals();
+      document.body.dataset.view = 'portal';
+      location.hash = 'portal';
+      showPanel('overview', false);
+      window.scrollTo(0,0);
+      updateBalances();
+      updateScenario();
+    }
+
+    $('#enterPortal').addEventListener('click', enterPortal);
+    $$('[data-site-home]').forEach(el => el.addEventListener('click', event => {
+      event.preventDefault();
+      document.body.dataset.view = 'site';
+      try { history.replaceState(null, '', '#top'); } catch { location.hash = 'top'; }
+      window.scrollTo(0,0);
+    }));
+
+    if (location.hash === '#portal') enterPortal();
+
+    // Visit list
+    $('#toggleHistory').addEventListener('click', () => {
+      const open = $('#historyCard').classList.toggle('show-extra');
+      $('#toggleHistory').textContent = open ? 'Visa färre' : 'Visa fler';
+    });
+
+    // Safety scenario demo
+    function updateScenario() {
+      const safe = state.scenario === 'safe';
+      const card = $('#statusCard');
+      const status = $('#activityStatus');
+      card.classList.toggle('safe-mode', safe);
+      status.classList.toggle('safe', safe);
+      status.classList.toggle('warning', !safe);
+      $('#statusTitle').textContent = safe ? 'Bra avstånd mellan besöken' : 'Lite tätt mellan besöken';
+      $('#statusText').textContent = safe
+        ? 'Senaste registrerade besöket var fyra dagar sedan. Fortsätt följa exponeringsschemat och känn efter hur huden reagerar.'
+        : 'Senaste registrerade besöket var igår. Vänta tills minst två dygn har gått och följ alltid exponeringsschemat.';
+      $('#frequencyLabel').textContent = safe ? '1 besök' : '3 besök';
+      localStorage.setItem('aura-scenario', state.scenario);
+    }
+    $('#scenarioToggle').addEventListener('click', () => {
+      state.scenario = state.scenario === 'warning' ? 'safe' : 'warning';
+      updateScenario();
+      showToast(state.scenario === 'safe' ? 'Grönt demoscenario visas.' : 'Gult demoscenario visas.');
+    });
+
+    // Top-up simulation
+    function updateTopupUI() {
+      const { amount, bonus } = state.selectedTopup;
+      $('#topupTotal').textContent = `${(amount + bonus).toLocaleString('sv-SE')} kr`;
+      $('#topupDetail').textContent = `${amount.toLocaleString('sv-SE')} saldo${bonus ? ` + ${bonus} bonus` : ''}`;
+    }
+    $$('.topup-option').forEach(option => option.addEventListener('click', () => {
+      $$('.topup-option').forEach(o => o.classList.remove('is-selected'));
+      option.classList.add('is-selected');
+      state.selectedTopup = { amount: Number(option.dataset.amount), bonus: Number(option.dataset.bonus) };
+      updateTopupUI();
+    }));
+
+    $('#confirmTopup').addEventListener('click', () => {
+      const { amount, bonus } = state.selectedTopup;
+      state.paid += amount;
+      state.bonus += bonus;
+      state.earned += bonus;
+      updateBalances();
+      const row = document.createElement('div');
+      row.className = 'transaction-row';
+      row.innerHTML = `<span class="tx-icon">${iconUse('i-plus')}</span><div class="tx-copy"><strong>Demoinsättning</strong><span>Simulerad påfyllning${bonus ? ` med ${bonus} kr bonus` : ''}</span></div><div class="tx-amount"><strong class="positive">+${amount.toLocaleString('sv-SE')} kr</strong><span>precis nu</span></div>`;
+      $('#transactionList').prepend(row);
+      if (bonus) {
+        const bonusRow = document.createElement('div');
+        bonusRow.className = 'transaction-row';
+        bonusRow.innerHTML = `<span class="tx-icon bonus">${iconUse('i-gift')}</span><div class="tx-copy"><strong>Påfyllningsbonus</strong><span>Bonus från demoinsättning</span></div><div class="tx-amount"><strong class="positive">+${bonus.toLocaleString('sv-SE')} kr</strong><span>precis nu</span></div>`;
+        $('#transactionList').prepend(bonusRow);
+      }
+      closeModals();
+      showToast(`${(amount + bonus).toLocaleString('sv-SE')} kr har lagts till i demot.`);
+    });
+
+    $$('.js-use-bonus').forEach(btn => btn.addEventListener('click', () => {
+      if (state.bonus < 50) {
+        showToast('Det finns inte 50 kr bonus kvar i demot.');
+        return;
+      }
+      state.bonus -= 50;
+      updateBalances();
+      const row = document.createElement('div');
+      row.className = 'transaction-row';
+      row.innerHTML = `<span class="tx-icon spend">${iconUse('i-gift')}</span><div class="tx-copy"><strong>Använd Aura Bonus</strong><span>Simulerad överföring till befintligt system</span></div><div class="tx-amount"><strong class="negative">−50 kr</strong><span>precis nu</span></div>`;
+      $('#transactionList').prepend(row);
+      showToast('50 kr bonus har använts i demot.');
+    }));
+
+    // Clipboard with fallback
+    async function copyReferral() {
+      const code = 'AURA-MAJA50';
+      try {
+        await navigator.clipboard.writeText(code);
+      } catch {
+        const input = document.createElement('input');
+        input.value = code;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        input.remove();
+      }
+      showToast('Värvningskoden AURA-MAJA50 är kopierad.');
+    }
+    $$('.js-copy-code').forEach(btn => btn.addEventListener('click', copyReferral));
+
+    // Generic demo actions
+    $$('[data-toast]').forEach(btn => btn.addEventListener('click', () => showToast(btn.dataset.toast)));
+    $$('.switch').forEach(toggle => toggle.addEventListener('click', () => {
+      toggle.classList.toggle('is-on');
+      showToast(toggle.classList.contains('is-on') ? 'Inställningen är på i demot.' : 'Inställningen är av i demot.');
+    }));
+    $('#downloadDemo').addEventListener('click', () => {
+      const csv = 'Datum,Typ,Belopp\n14 juli,Värvningsbonus,50\n12 juli,Besök,-48\n5 juli,Insättning,500\n5 juli,Påfyllningsbonus,50\n';
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'studio-aura-demo-transaktioner.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('En liten demo-CSV har skapats.');
+    });
+
+    $('#resetDemo').addEventListener('click', () => {
+      localStorage.removeItem('aura-paid');
+      localStorage.removeItem('aura-bonus');
+      localStorage.removeItem('aura-earned');
+      localStorage.removeItem('aura-scenario');
+      state.paid = 420;
+      state.bonus = 85;
+      state.earned = 185;
+      state.scenario = 'warning';
+      updateBalances();
+      updateScenario();
+      showToast('Demot har återställts.');
+    });
+
+    updateBalances();
+    updateTopupUI();
+    updateScenario();
+  </script>
+</body>
+</html>

@@ -9,10 +9,11 @@ Rebuild and substantially improve the Studio Aura website as a modern, responsiv
 - Public original: https://www.studioaura.se/
 - Original capture: `reference/original-live-2026-08-02.html`
 - Original user-supplied logo: `reference/studio-aura-logo-original.png`
+- User-supplied modern public-site and Mina sidor reference: `reference/user-preview-mina-sidor-2026-08-03.html`
 - Brand spelling: **Studio Aura**
 - Language: Swedish
 
-The user mentioned an HTML mockup named `studio-aura-mockup-preview-v3.html`, but that attachment did not arrive on disk. Do not invent its contents. Use the available live capture and logo.
+The supplied preview is authoritative for the requested **selective modernization** and for the complete clickable **Mina sidor demo contract**. It is not permission to replace Studio Aura's identity, verified public content, or factual safety requirements. Use the original capture for business/content truth and the preview for interaction and visual-language guidance.
 
 ## Preserve
 
@@ -21,6 +22,33 @@ The user mentioned an HTML mockup named `studio-aura-mockup-preview-v3.html`, bu
 - Elegant high-contrast serif typography paired with restrained modern body text.
 - Airy, premium wellness/beauty feeling rather than a generic tech or dark SaaS aesthetic.
 - All verified business content from the original site.
+- The public site's familiar section flow, Studio Aura imagery, and predominantly warm/light appearance.
+
+## Selective modernization contract
+
+- Modernize typography, spacing, image composition, hierarchy, calls to action, and responsive behavior without replacing the whole design language.
+- Use the preview's warm editorial hero and refined ivory/bronze treatment as guidance, adapted to the verified Studio Aura content.
+- A darker Club Aurora or Mina sidor moment may be used as a **bounded accent section**, but the public site must not become globally dark, cinematic, glass-heavy, or template-like.
+- Do not import CodeNest/coding language, generic SaaS patterns, unrelated video, or unverified claims.
+- Before any release, provide desktop and mobile review artifacts. A technically green candidate is not design approval.
+
+## Mina sidor demo contract
+
+Implement the complete clickable demo represented in the supplied preview, reachable through a clear **Mina sidor** action on desktop and mobile:
+
+- truthful demo login modal with no real authentication;
+- responsive portal shell and mobile portal navigation;
+- Overview with paid balance and bonus shown separately, activity status, visit summary, and referral demo;
+- Saldo & bonus with separate balances, top-up simulation, bonus simulation, transaction history, and CSV demo export;
+- Mina besök with visit history, chart/summary, and responsible non-medical activity guidance;
+- Förmåner with top-up bonus, referral, and clearly illustrative benefits;
+- Min profil with demo identity and local-only preference toggles;
+- local browser state/reset behavior for the interactive demo;
+- keyboard operation, visible focus, Escape/modal behavior, reduced motion, and no mobile/page overflow.
+
+The demo must clearly state that it has no real accounts, payments, purchases, bookings, SMS integration, or backend. Example values and people must be labeled as demo data. Do not imply these concepts are active customer benefits or production capabilities.
+
+The separate **Bokningsprogram** prototype is a different Studio Aura surface. Preserve it when it exists on the implementation base, but do not conflate it with Mina sidor.
 
 ## Verified content contract
 
