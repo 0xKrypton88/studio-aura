@@ -22,15 +22,11 @@ npm run lint
 npm run typecheck
 npm run build
 npm run preview
-npx playwright install chromium
-npm run test:e2e
 ```
-
-Browser acceptance (`npm run test:e2e`) builds against the local Vite preview by default (`http://127.0.0.1:4173/studio-aura/`). Set `BASE_URL` to exercise a deployed URL instead. Desktop (1440×900) and mobile (390×844) screenshots are written under `test-results/acceptance-screenshots/`.
 
 ## Design thesis
 
-Dark cinematic wellness foundation (near-black / deep olive), ivory text, muted metallic olive-gold aura accents, and editorial serif display type (Cormorant Garamond) with restrained Figtree body text. Full-bleed atmospheric hero with Studio Aura as the dominant brand signal, liquid-glass feature treatment, clear Swedish content hierarchy, and truthful no-backend membership contact via mailto.
+Warm ivory foundation, muted metallic olive-gold accents, and editorial serif display type (Cormorant Garamond) with restrained Figtree body text. Full-bleed atmospheric hero with Studio Aura as the dominant brand signal, clear Swedish content hierarchy, and truthful no-backend membership contact via mailto.
 
 ## Notes
 
