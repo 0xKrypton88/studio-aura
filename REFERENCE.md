@@ -16,10 +16,10 @@ The user mentioned an HTML mockup named `studio-aura-mockup-preview-v3.html`, bu
 
 ## Preserve
 
-- Warm ivory/off-white foundation.
-- Muted metallic olive-gold brand color.
+- Dark premium cinematic wellness foundation (near-black / deep olive), not a light ivory page and not a tech/SaaS look.
+- Ivory text on dark surfaces with muted metallic olive-gold as the primary aura accent; restrained red/blue light accents only where semantically appropriate.
 - Elegant high-contrast serif typography paired with restrained modern body text.
-- Airy, premium wellness/beauty feeling rather than a generic tech or dark SaaS aesthetic.
+- Full-bleed atmospheric hero using existing Studio Aura imagery, with editorial hierarchy and refined motion that respects `prefers-reduced-motion`.
 - All verified business content from the original site.
 
 ## Verified content contract

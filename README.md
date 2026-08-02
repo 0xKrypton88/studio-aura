@@ -26,7 +26,7 @@ npm run preview
 
 ## Design thesis
 
-Warm ivory foundation, muted metallic olive-gold accents, and editorial serif display type (Cormorant Garamond) with restrained Figtree body text. Full-bleed atmospheric hero with Studio Aura as the dominant brand signal, clear Swedish content hierarchy, and truthful no-backend membership contact via mailto.
+Dark cinematic wellness foundation (near-black / deep olive), ivory text, muted metallic olive-gold aura accents, and editorial serif display type (Cormorant Garamond) with restrained Figtree body text. Full-bleed atmospheric hero with Studio Aura as the dominant brand signal, liquid-glass feature treatment, clear Swedish content hierarchy, and truthful no-backend membership contact via mailto.
 
 ## Notes
 
