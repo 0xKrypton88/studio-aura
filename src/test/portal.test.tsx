@@ -101,16 +101,42 @@ describe('Mina sidor kundportal demo', () => {
     await openLoginAndEnterPortal(user)
 
     const portal = screen.getByTestId('portal-shell')
-    await user.click(within(portal).getAllByRole('button', { name: /fyll på saldo/i })[0])
+    const menu = within(portal).getByRole('navigation', { name: 'Portalmeny' })
+    await user.click(within(menu).getByRole('button', { name: /saldo & bonus/i }))
+
+    await user.click(within(portal).getByRole('button', { name: /fyll på saldo/i }))
 
     const topup = screen.getByRole('dialog', { name: /fyll på saldo/i })
     expect(within(topup).getByText(/inga pengar dras/i)).toBeInTheDocument()
     await user.click(within(topup).getByRole('button', { name: /simulera insättning/i }))
 
     expect(screen.queryByRole('dialog', { name: /fyll på saldo/i })).not.toBeInTheDocument()
-    expect(within(portal).getByTestId('paid-balance')).toHaveTextContent('920')
-    expect(within(portal).getByTestId('bonus-balance')).toHaveTextContent('135')
+    expect(within(portal).getByTestId('wallet-paid')).toHaveTextContent('920')
+    expect(within(portal).getByTestId('wallet-bonus')).toHaveTextContent('135')
     expect(localStorage.getItem('aura-paid')).toBe('920')
+  })
+
+  it('keeps overview and saldo layouts distinct', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await openLoginAndEnterPortal(user)
+
+    const portal = screen.getByTestId('portal-shell')
+    const overview = within(portal).getByTestId('panel-overview')
+    expect(within(overview).getByRole('heading', { name: /din aktivitet/i })).toBeInTheDocument()
+    expect(within(overview).getByRole('heading', { name: /senaste besöken/i })).toBeInTheDocument()
+    expect(within(overview).queryByRole('heading', { name: /transaktioner/i })).not.toBeInTheDocument()
+    expect(within(overview).getByRole('button', { name: /öppna saldo/i })).toBeInTheDocument()
+
+    const menu = within(portal).getByRole('navigation', { name: 'Portalmeny' })
+    await user.click(within(menu).getByRole('button', { name: /saldo & bonus/i }))
+
+    const wallet = within(portal).getByTestId('panel-wallet')
+    expect(within(wallet).getByRole('heading', { name: /transaktioner/i })).toBeInTheDocument()
+    expect(within(wallet).getByText(/insatt saldo/i)).toBeInTheDocument()
+    expect(within(wallet).getByRole('button', { name: /fyll på saldo/i })).toBeInTheDocument()
+    expect(within(wallet).queryByRole('heading', { name: /senaste besöken/i })).not.toBeInTheDocument()
+    expect(within(wallet).queryByRole('heading', { name: /din aktivitet/i })).not.toBeInTheDocument()
   })
 
   it('resets demo state from the portal sidebar', async () => {

@@ -193,51 +193,27 @@ export function PortalView() {
 
           <div className="portal-content">
             {panel === 'overview' ? (
-              <section className="portal-panel is-active" aria-labelledby="overview-title">
+              <section
+                className="portal-panel is-active"
+                aria-labelledby="overview-title"
+                data-testid="panel-overview"
+              >
                 <div className="portal-welcome">
                   <div>
                     <h1 id="overview-title">Hej Maja, välkommen tillbaka.</h1>
-                    <p>Här är din Aura-översikt just nu.</p>
+                    <p>En snabb lägesbild – aktivitet, senaste besök och totalt tillgängligt.</p>
                   </div>
                   <span className="last-sync">Demo uppdaterad precis nu</span>
                 </div>
 
-                <div className="dashboard-grid">
-                  <article className="portal-card balance-card">
-                    <span className="balance-stamp">
-                      <img src={logo} alt="" width={48} height={48} />
-                    </span>
-                    <span className="card-overline">Totalt tillgängligt</span>
-                    <div className="balance-total">
-                      <span data-testid="total-balance">{formatKr(total)}</span>{' '}
-                      <small>kr</small>
-                    </div>
-                    <div className="balance-breakdown">
-                      <div className="balance-line">
-                        <span>Insatt saldo</span>
-                        <strong>
-                          <span data-testid="paid-balance">{formatKr(balances.paid)}</span> kr
-                        </strong>
-                      </div>
-                      <div className="balance-line">
-                        <span>Aura Bonus</span>
-                        <strong>
-                          <span data-testid="bonus-balance">{formatKr(balances.bonus)}</span> kr
-                        </strong>
-                      </div>
-                    </div>
-                    <div className="balance-actions">
-                      <button type="button" className="btn" onClick={openTopup}>
-                        <Icons.plus />
-                        Fyll på saldo
-                      </button>
-                      <button type="button" className="btn btn--ghost" onClick={useBonus}>
-                        Använd bonus
-                      </button>
-                    </div>
-                  </article>
-
-                  <article className={safe ? 'portal-card status-card safe-mode' : 'portal-card status-card'}>
+                <div className="overview-layout">
+                  <article
+                    className={
+                      safe
+                        ? 'portal-card status-card status-card--hero safe-mode'
+                        : 'portal-card status-card status-card--hero'
+                    }
+                  >
                     <div className="card-heading">
                       <h2>Din aktivitet</h2>
                       <Icons.trend />
@@ -269,6 +245,36 @@ export function PortalView() {
                       </div>
                     </div>
                   </article>
+
+                  <aside className="portal-card overview-snapshot" aria-label="Snabb saldoöversikt">
+                    <span className="card-overline">Totalt tillgängligt</span>
+                    <div className="balance-total">
+                      <span data-testid="total-balance">{formatKr(total)}</span> <small>kr</small>
+                    </div>
+                    <dl className="snapshot-split">
+                      <div>
+                        <dt>Insatt</dt>
+                        <dd>
+                          <span data-testid="paid-balance">{formatKr(balances.paid)}</span> kr
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Bonus</dt>
+                        <dd>
+                          <span data-testid="bonus-balance">{formatKr(balances.bonus)}</span> kr
+                        </dd>
+                      </div>
+                    </dl>
+                    <button
+                      type="button"
+                      className="btn btn--ghost btn-block"
+                      onClick={() => setPanel('wallet')}
+                    >
+                      <Icons.wallet />
+                      Öppna saldo &amp; bonus
+                    </button>
+                    <p className="snapshot-note">Påfyllning och bonus hanteras under Saldo.</p>
+                  </aside>
 
                   <div className="stats-row">
                     <article className="portal-card stat-card">
@@ -441,67 +447,72 @@ export function PortalView() {
             ) : null}
 
             {panel === 'wallet' ? (
-              <section className="portal-panel is-active" aria-labelledby="wallet-title">
+              <section
+                className="portal-panel is-active"
+                aria-labelledby="wallet-title"
+                data-testid="panel-wallet"
+              >
                 <div className="panel-header">
                   <div>
                     <h1 id="wallet-title">Saldo &amp; bonus</h1>
-                    <p>En tydlig uppdelning mellan insatta pengar och intjänad Aura Bonus.</p>
+                    <p>Här hanterar du påfyllning, bonus och historik – separat från översikten.</p>
                   </div>
-                  <button type="button" className="btn" onClick={openTopup}>
-                    <Icons.plus />
-                    Fyll på
-                  </button>
                 </div>
-                <div className="wallet-grid">
-                  <article className="portal-card wallet-card">
-                    <div className="card-heading">
-                      <h2>Din plånbok</h2>
-                      <Icons.wallet />
+
+                <div className="wallet-ledger">
+                  <article className="portal-card ledger-column ledger-column--paid">
+                    <span className="card-overline">Insatt saldo</span>
+                    <div className="ledger-amount">
+                      <span data-testid="wallet-paid">{formatKr(balances.paid)}</span>
+                      <small>kr</small>
                     </div>
-                    <div className="wallet-summary">
-                      <div className="wallet-tile">
-                        <span>Insatt saldo</span>
-                        <strong>{formatKr(balances.paid)} kr</strong>
-                      </div>
-                      <div className="wallet-tile">
-                        <span>Aura Bonus</span>
-                        <strong>{formatKr(balances.bonus)} kr</strong>
-                      </div>
+                    <p className="ledger-copy">
+                      Pengar du fyllt på i demot. Används först vid besök i ett skarpt system.
+                    </p>
+                    <button type="button" className="btn btn-block" onClick={openTopup}>
+                      <Icons.plus />
+                      Fyll på saldo
+                    </button>
+                  </article>
+
+                  <article className="portal-card ledger-column ledger-column--bonus">
+                    <span className="card-overline">Aura Bonus</span>
+                    <div className="ledger-amount">
+                      <span data-testid="wallet-bonus">{formatKr(balances.bonus)}</span>
+                      <small>kr</small>
                     </div>
+                    <p className="ledger-copy">
+                      Intjänad bonus i demot. Totalt intjänat:{' '}
+                      <strong>{formatKr(balances.earned)} kr</strong>.
+                    </p>
                     <div className="progress-wrap">
-                      <div className="progress-copy">
-                        <span>Bonus intjänad totalt</span>
-                        <strong>{formatKr(balances.earned)} kr</strong>
-                      </div>
                       <div className="progress-bar">
                         <span />
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      className="btn btn--ghost btn-block"
-                      onClick={useBonus}
-                    >
+                    <button type="button" className="btn btn--ghost btn-block" onClick={useBonus}>
                       Använd 50 kr Aura Bonus
                     </button>
                   </article>
-                  <article className="portal-card topup-promo">
-                    <div>
-                      <span className="card-overline">Medlemsförmån</span>
-                      <div className="promo-number">
-                        500
-                        <br />+ 50
-                      </div>
-                      <p>
-                        Fyll på 500 kr i demoportalen och se hur både saldo, bonus och historik
-                        uppdateras direkt.
-                      </p>
-                    </div>
-                    <button type="button" className="btn btn--ghost" onClick={openTopup}>
-                      Prova påfyllning
-                    </button>
-                  </article>
                 </div>
+
+                <article className="portal-card topup-promo topup-promo--banner">
+                  <div className="topup-promo__copy">
+                    <span className="card-overline">Medlemsförmån i demot</span>
+                    <h2>
+                      Fyll på 500 kr
+                      <span> få 50 kr bonus</span>
+                    </h2>
+                    <p>
+                      Simulera en påfyllning och se hur både saldo, bonus och transaktionslistan
+                      uppdateras direkt. Inga pengar dras.
+                    </p>
+                  </div>
+                  <button type="button" className="btn" onClick={openTopup}>
+                    Prova påfyllning
+                  </button>
+                </article>
+
                 <article className="portal-card transaction-card">
                   <div className="card-heading">
                     <h2>Transaktioner</h2>
@@ -512,7 +523,9 @@ export function PortalView() {
                   <div className="transaction-list">
                     {transactions.map((tx) => (
                       <div className="transaction-row" key={tx.id}>
-                        <span className={`tx-icon ${tx.kind === 'bonus' ? 'bonus' : ''} ${tx.kind === 'spend' ? 'spend' : ''}`}>
+                        <span
+                          className={`tx-icon ${tx.kind === 'bonus' ? 'bonus' : ''} ${tx.kind === 'spend' ? 'spend' : ''}`}
+                        >
                           <TxIcon kind={tx.kind} />
                         </span>
                         <div className="tx-copy">
