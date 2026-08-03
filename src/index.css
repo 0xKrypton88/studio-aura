@@ -5,10 +5,11 @@
   --ink: #1c1a16;
   --ink-soft: #3f3a32;
   --ink-muted: #6a6256;
-  --olive: #8f7c4e;
-  --olive-deep: #6a5a35;
-  --olive-soft: #b7a575;
-  --olive-mist: rgba(143, 124, 78, 0.14);
+  /* Warm metallic bronze/gold — not khaki/military olive */
+  --olive: #c99866;
+  --olive-deep: #9c6847;
+  --olive-soft: #d4b089;
+  --olive-mist: rgba(156, 104, 71, 0.14);
   --line: rgba(28, 26, 22, 0.12);
   --red-glow: rgba(156, 74, 62, 0.14);
   --blue-glow: rgba(70, 98, 122, 0.14);
@@ -42,7 +43,7 @@ body {
   min-width: 320px;
   overflow-x: clip;
   background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(183, 165, 117, 0.18), transparent 55%),
+    radial-gradient(1200px 600px at 10% -10%, rgba(201, 152, 102, 0.18), transparent 55%),
     radial-gradient(900px 500px at 100% 0%, rgba(235, 227, 212, 0.9), transparent 50%),
     linear-gradient(180deg, var(--ivory-soft), var(--ivory) 30%, var(--ivory-deep));
   color: var(--ink);
@@ -105,8 +106,8 @@ a:hover {
 }
 
 .btn:hover {
-  background: var(--ink);
-  border-color: var(--ink);
+  background: #74462f;
+  border-color: #74462f;
   color: var(--ivory-soft);
 }
 
@@ -380,7 +381,7 @@ h3 {
   inset: 0;
   background:
     linear-gradient(180deg, rgba(28, 26, 22, 0.42), rgba(28, 26, 22, 0.58) 55%, rgba(28, 26, 22, 0.72)),
-    radial-gradient(circle at 30% 20%, rgba(183, 165, 117, 0.28), transparent 45%);
+    radial-gradient(circle at 30% 20%, rgba(201, 152, 102, 0.28), transparent 45%);
 }
 
 .hero__content {
@@ -549,7 +550,7 @@ h3 {
 /* Membership */
 .section--membership {
   background:
-    radial-gradient(700px 300px at 0% 0%, rgba(183, 165, 117, 0.16), transparent 60%),
+    radial-gradient(700px 300px at 0% 0%, rgba(201, 152, 102, 0.16), transparent 60%),
     var(--ivory-soft);
 }
 
@@ -712,7 +713,7 @@ h3 {
 /* Booking program (local prototype CTA) */
 .section--booking {
   background:
-    radial-gradient(900px 420px at 8% 0%, rgba(183, 165, 117, 0.14), transparent 55%),
+    radial-gradient(900px 420px at 8% 0%, rgba(201, 152, 102, 0.14), transparent 55%),
     linear-gradient(180deg, var(--ivory-soft), var(--ivory));
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -751,7 +752,7 @@ h3 {
 }
 
 .club-aurora__eyebrow {
-  color: #d8b58a;
+  color: #e4c9aa;
 }
 
 .club-aurora__lede {
@@ -828,7 +829,7 @@ h3 {
 .club-aurora__card-amount span {
   display: block;
   font-size: 0.55em;
-  color: #d8b58a;
+  color: #e4c9aa;
 }
 
 .club-aurora__card p {
