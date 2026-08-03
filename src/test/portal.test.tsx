@@ -56,7 +56,7 @@ describe('Mina sidor kundportal demo', () => {
     expect(screen.queryByTestId('portal-shell')).not.toBeInTheDocument()
   })
 
-  it('enters the portal after demo login and shows overview balances separately', async () => {
+  it('enters the portal after demo login without saldo numbers on overview', async () => {
     const user = userEvent.setup()
     render(<App />)
 
@@ -66,9 +66,11 @@ describe('Mina sidor kundportal demo', () => {
     const portal = screen.getByTestId('portal-shell')
     expect(portal).toBeInTheDocument()
     expect(within(portal).getByRole('heading', { name: /hej maja/i })).toBeInTheDocument()
-    expect(within(portal).getByTestId('paid-balance')).toHaveTextContent('420')
-    expect(within(portal).getByTestId('bonus-balance')).toHaveTextContent('85')
-    expect(within(portal).getByTestId('total-balance')).toHaveTextContent('505')
+    expect(within(portal).getByTestId('panel-overview')).toBeInTheDocument()
+    expect(within(portal).queryByTestId('paid-balance')).not.toBeInTheDocument()
+    expect(within(portal).queryByTestId('bonus-balance')).not.toBeInTheDocument()
+    expect(within(portal).queryByTestId('total-balance')).not.toBeInTheDocument()
+    expect(within(portal).queryByText(/totalt tillgängligt/i)).not.toBeInTheDocument()
     expect(screen.getByText(/interaktiv demo/i)).toBeInTheDocument()
   })
 
@@ -111,12 +113,15 @@ describe('Mina sidor kundportal demo', () => {
     await user.click(within(topup).getByRole('button', { name: /simulera insättning/i }))
 
     expect(screen.queryByRole('dialog', { name: /fyll på saldo/i })).not.toBeInTheDocument()
-    expect(within(portal).getByTestId('wallet-paid')).toHaveTextContent('920')
-    expect(within(portal).getByTestId('wallet-bonus')).toHaveTextContent('135')
+    expect(within(portal).getByTestId('paid-balance')).toHaveTextContent('920')
+    expect(within(portal).getByTestId('bonus-balance')).toHaveTextContent('135')
+    expect(within(portal).getByTestId('total-balance').textContent?.replace(/\s/g, '')).toBe(
+      '1055',
+    )
     expect(localStorage.getItem('aura-paid')).toBe('920')
   })
 
-  it('keeps overview and saldo layouts distinct', async () => {
+  it('keeps all saldo amounts on the saldo panel only', async () => {
     const user = userEvent.setup()
     render(<App />)
     await openLoginAndEnterPortal(user)
@@ -126,14 +131,18 @@ describe('Mina sidor kundportal demo', () => {
     expect(within(overview).getByRole('heading', { name: /din aktivitet/i })).toBeInTheDocument()
     expect(within(overview).getByRole('heading', { name: /senaste besöken/i })).toBeInTheDocument()
     expect(within(overview).queryByRole('heading', { name: /transaktioner/i })).not.toBeInTheDocument()
-    expect(within(overview).getByRole('button', { name: /öppna saldo/i })).toBeInTheDocument()
+    expect(within(overview).queryByText(/insatt/i)).not.toBeInTheDocument()
+    expect(within(overview).queryByText(/aura bonus/i)).not.toBeInTheDocument()
+    expect(within(overview).queryByRole('button', { name: /öppna saldo|fyll på/i })).not.toBeInTheDocument()
 
     const menu = within(portal).getByRole('navigation', { name: 'Portalmeny' })
     await user.click(within(menu).getByRole('button', { name: /saldo & bonus/i }))
 
     const wallet = within(portal).getByTestId('panel-wallet')
+    expect(within(wallet).getByTestId('paid-balance')).toHaveTextContent('420')
+    expect(within(wallet).getByTestId('bonus-balance')).toHaveTextContent('85')
+    expect(within(wallet).getByTestId('total-balance')).toHaveTextContent('505')
     expect(within(wallet).getByRole('heading', { name: /transaktioner/i })).toBeInTheDocument()
-    expect(within(wallet).getByText(/insatt saldo/i)).toBeInTheDocument()
     expect(within(wallet).getByRole('button', { name: /fyll på saldo/i })).toBeInTheDocument()
     expect(within(wallet).queryByRole('heading', { name: /senaste besöken/i })).not.toBeInTheDocument()
     expect(within(wallet).queryByRole('heading', { name: /din aktivitet/i })).not.toBeInTheDocument()
@@ -150,9 +159,12 @@ describe('Mina sidor kundportal demo', () => {
     await openLoginAndEnterPortal(user)
 
     const portal = screen.getByTestId('portal-shell')
+    const menu = within(portal).getByRole('navigation', { name: 'Portalmeny' })
+    await user.click(within(menu).getByRole('button', { name: /saldo & bonus/i }))
     expect(within(portal).getByTestId('paid-balance')).toHaveTextContent('999')
 
     await user.click(within(portal).getByRole('button', { name: /återställ demo/i }))
+    await user.click(within(menu).getByRole('button', { name: /saldo & bonus/i }))
     expect(within(portal).getByTestId('paid-balance')).toHaveTextContent('420')
     expect(within(portal).getByTestId('bonus-balance')).toHaveTextContent('85')
     expect(localStorage.getItem('aura-paid')).toBe('420')

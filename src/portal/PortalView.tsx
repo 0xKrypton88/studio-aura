@@ -201,7 +201,7 @@ export function PortalView() {
                 <div className="portal-welcome">
                   <div>
                     <h1 id="overview-title">Hej Maja, välkommen tillbaka.</h1>
-                    <p>En snabb lägesbild – aktivitet, senaste besök och totalt tillgängligt.</p>
+                    <p>En snabb lägesbild över din aktivitet och senaste besök.</p>
                   </div>
                   <span className="last-sync">Demo uppdaterad precis nu</span>
                 </div>
@@ -246,36 +246,6 @@ export function PortalView() {
                     </div>
                   </article>
 
-                  <aside className="portal-card overview-snapshot" aria-label="Snabb saldoöversikt">
-                    <span className="card-overline">Totalt tillgängligt</span>
-                    <div className="balance-total">
-                      <span data-testid="total-balance">{formatKr(total)}</span> <small>kr</small>
-                    </div>
-                    <dl className="snapshot-split">
-                      <div>
-                        <dt>Insatt</dt>
-                        <dd>
-                          <span data-testid="paid-balance">{formatKr(balances.paid)}</span> kr
-                        </dd>
-                      </div>
-                      <div>
-                        <dt>Bonus</dt>
-                        <dd>
-                          <span data-testid="bonus-balance">{formatKr(balances.bonus)}</span> kr
-                        </dd>
-                      </div>
-                    </dl>
-                    <button
-                      type="button"
-                      className="btn btn--ghost btn-block"
-                      onClick={() => setPanel('wallet')}
-                    >
-                      <Icons.wallet />
-                      Öppna saldo &amp; bonus
-                    </button>
-                    <p className="snapshot-note">Påfyllning och bonus hanteras under Saldo.</p>
-                  </aside>
-
                   <div className="stats-row">
                     <article className="portal-card stat-card">
                       <div className="stat-top">
@@ -303,11 +273,11 @@ export function PortalView() {
                     </article>
                     <article className="portal-card stat-card">
                       <div className="stat-top">
-                        <span>Bonus intjänad</span>
-                        <Icons.gift />
+                        <span>Medlem sedan</span>
+                        <Icons.calendar />
                       </div>
-                      <div className="stat-value">{formatKr(balances.earned)} kr</div>
-                      <div className="stat-caption">som Aura-medlem</div>
+                      <div className="stat-value">8 mån</div>
+                      <div className="stat-caption">demo-medlemskap</div>
                     </article>
                   </div>
 
@@ -455,7 +425,13 @@ export function PortalView() {
                 <div className="panel-header">
                   <div>
                     <h1 id="wallet-title">Saldo &amp; bonus</h1>
-                    <p>Här hanterar du påfyllning, bonus och historik – separat från översikten.</p>
+                    <p>Här samlas allt saldo – påfyllning, bonus och historik.</p>
+                  </div>
+                  <div className="wallet-total-chip" aria-label="Totalt tillgängligt">
+                    <span>Totalt</span>
+                    <strong>
+                      <span data-testid="total-balance">{formatKr(total)}</span> kr
+                    </strong>
                   </div>
                 </div>
 
@@ -463,7 +439,7 @@ export function PortalView() {
                   <article className="portal-card ledger-column ledger-column--paid">
                     <span className="card-overline">Insatt saldo</span>
                     <div className="ledger-amount">
-                      <span data-testid="wallet-paid">{formatKr(balances.paid)}</span>
+                      <span data-testid="paid-balance">{formatKr(balances.paid)}</span>
                       <small>kr</small>
                     </div>
                     <p className="ledger-copy">
@@ -478,12 +454,12 @@ export function PortalView() {
                   <article className="portal-card ledger-column ledger-column--bonus">
                     <span className="card-overline">Aura Bonus</span>
                     <div className="ledger-amount">
-                      <span data-testid="wallet-bonus">{formatKr(balances.bonus)}</span>
+                      <span data-testid="bonus-balance">{formatKr(balances.bonus)}</span>
                       <small>kr</small>
                     </div>
                     <p className="ledger-copy">
                       Intjänad bonus i demot. Totalt intjänat:{' '}
-                      <strong>{formatKr(balances.earned)} kr</strong>.
+                      <strong data-testid="earned-bonus">{formatKr(balances.earned)} kr</strong>.
                     </p>
                     <div className="progress-wrap">
                       <div className="progress-bar">
