@@ -31,5 +31,6 @@ Warm ivory foundation, muted metallic olive-gold accents, and editorial serif di
 ## Notes
 
 - Membership form never pretends server submission succeeded.
+- **Mina sidor** is a truthful clickable kundportal demo (mock login, localStorage only) — no real accounts, payments, or SMS.
 - Social links from the Wix capture pointed at Wix defaults and are omitted as unverified.
 - Google Maps link and embed use the verified address / maps URL from the original site.

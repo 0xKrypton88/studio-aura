@@ -5,15 +5,37 @@ import { Safety } from './components/Safety'
 import { Prices } from './components/Prices'
 import { Membership } from './components/Membership'
 import { Gallery } from './components/Gallery'
+import { ClubAurora } from './components/ClubAurora'
 import { BookingProgram } from './components/BookingProgram'
 import { Contact } from './components/Contact'
 import { Footer } from './components/Footer'
+import {
+  LoginModal,
+  PortalProvider,
+  PortalToast,
+  PortalView,
+  TopupModal,
+  usePortal,
+} from './portal'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
 import { useReveal } from './hooks/useReveal'
+import './portal/portal.css'
 
-export default function App() {
+function SiteShell() {
   const reducedMotion = usePrefersReducedMotion()
   useReveal(!reducedMotion)
+  const { view } = usePortal()
+
+  if (view === 'portal') {
+    return (
+      <>
+        <PortalView />
+        <LoginModal />
+        <TopupModal />
+        <PortalToast />
+      </>
+    )
+  }
 
   return (
     <>
@@ -28,10 +50,22 @@ export default function App() {
         <Prices />
         <Membership />
         <Gallery />
+        <ClubAurora />
         <BookingProgram />
         <Contact />
       </main>
       <Footer />
+      <LoginModal />
+      <TopupModal />
+      <PortalToast />
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <PortalProvider>
+      <SiteShell />
+    </PortalProvider>
   )
 }

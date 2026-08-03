@@ -1,10 +1,12 @@
 import { useEffect, useId, useState } from 'react'
 import { assetPath } from '../assets'
 import { navItems, site } from '../content'
+import { usePortal } from '../portal'
 
 export function Header() {
   const [open, setOpen] = useState(false)
   const navId = useId()
+  const { openLogin } = usePortal()
 
   useEffect(() => {
     if (!open) return
@@ -62,9 +64,22 @@ export function Header() {
               </li>
             ))}
           </ul>
-          <a className="btn btn--small" href="#medlemskap" onClick={() => setOpen(false)}>
-            Börja sola
-          </a>
+          <div className="site-nav__actions">
+            <button
+              type="button"
+              className="btn btn--ghost btn--small"
+              data-testid="open-mina-sidor"
+              onClick={() => {
+                setOpen(false)
+                openLogin()
+              }}
+            >
+              Mina sidor
+            </button>
+            <a className="btn btn--small" href="#medlemskap" onClick={() => setOpen(false)}>
+              Börja sola
+            </a>
+          </div>
         </nav>
       </div>
     </header>

@@ -21,6 +21,7 @@ Object.defineProperty(window, 'matchMedia', {
 })
 
 Element.prototype.scrollIntoView = () => undefined
+window.scrollTo = () => undefined
 
 function createIntersectionObserver(
   callback: IntersectionObserverCallback,

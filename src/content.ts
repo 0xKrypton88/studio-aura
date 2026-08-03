@@ -29,6 +29,7 @@ export const navItems = [
   { href: '#priser', label: 'Priser' },
   { href: '#medlemskap', label: 'Bli medlem' },
   { href: '#galleri', label: 'Galleri' },
+  { href: '#aura-club', label: 'Aura Club' },
   { href: '#bokningsprogram', label: 'Bokning' },
   { href: '#kontakt', label: 'Kontakt' },
 ] as const

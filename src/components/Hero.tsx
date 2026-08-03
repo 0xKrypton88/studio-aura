@@ -1,7 +1,10 @@
 import { assetPath } from '../assets'
 import { site } from '../content'
+import { usePortal } from '../portal'
 
 export function Hero() {
+  const { openLogin } = usePortal()
+
   return (
     <section className="hero" id="top" aria-labelledby="hero-brand">
       <div className="hero__media" aria-hidden="true">
@@ -37,9 +40,9 @@ export function Hero() {
           <a className="btn" href="#medlemskap">
             Börja sola hos oss
           </a>
-          <a className="btn btn--ghost" href="#tjanster">
-            Upptäck solariet
-          </a>
+          <button type="button" className="btn btn--ghost" onClick={openLogin}>
+            Testa kundportalen
+          </button>
         </div>
       </div>
     </section>
