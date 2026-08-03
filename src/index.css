@@ -5,11 +5,11 @@
   --ink: #1c1a16;
   --ink-soft: #3f3a32;
   --ink-muted: #6a6256;
-  /* Warm metallic bronze/gold — not khaki/military olive */
-  --olive: #c99866;
-  --olive-deep: #9c6847;
-  --olive-soft: #d4b089;
-  --olive-mist: rgba(156, 104, 71, 0.14);
+  /* Warm metallic bronze/copper — not khaki/military olive */
+  --olive: #d2a06a;
+  --olive-deep: #b4763f;
+  --olive-soft: #e0bd8f;
+  --olive-mist: rgba(180, 118, 63, 0.15);
   --line: rgba(28, 26, 22, 0.12);
   --red-glow: rgba(156, 74, 62, 0.14);
   --blue-glow: rgba(70, 98, 122, 0.14);
@@ -106,8 +106,8 @@ a:hover {
 }
 
 .btn:hover {
-  background: #74462f;
-  border-color: #74462f;
+  background: #8f5a2e;
+  border-color: #8f5a2e;
   color: var(--ivory-soft);
 }
 
