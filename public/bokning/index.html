@@ -19,10 +19,10 @@
       --soft: #8a8074;
       --line: rgba(28, 26, 22, 0.12);
       --line-strong: rgba(28, 26, 22, 0.18);
-      --accent: #8f7c4e;
-      --accent-dark: #6a5a35;
-      --accent-soft: #b7a575;
-      --accent-pale: rgba(143, 124, 78, 0.14);
+      --accent: #d2a06a;
+      --accent-dark: #b4763f;
+      --accent-soft: #e0bd8f;
+      --accent-pale: rgba(180, 118, 63, 0.15);
       --sand: #f3e8d4;
       --closed: #efeae3;
       --success: #71816f;
@@ -45,7 +45,7 @@
       margin: 0;
       overflow: hidden;
       background:
-        radial-gradient(circle at 12% 8%, rgba(183, 165, 117, .16), transparent 32%),
+        radial-gradient(circle at 12% 8%, rgba(201, 152, 102, .16), transparent 32%),
         radial-gradient(circle at 90% 92%, rgba(235, 227, 212, .55), transparent 36%),
         var(--page);
       overflow-x: clip;
@@ -96,7 +96,7 @@
       padding: 24px 18px 20px;
       overflow: auto;
       background:
-        radial-gradient(circle at 78% 4%, rgba(183, 165, 117, .18), transparent 22%),
+        radial-gradient(circle at 78% 4%, rgba(201, 152, 102, .18), transparent 22%),
         linear-gradient(180deg, #fdfbf8 0%, #f7f3eb 100%);
       border-right: 1px solid var(--line);
     }
@@ -214,7 +214,7 @@
     }
     .sidebar-card.glow {
       background:
-        radial-gradient(circle at 92% 4%, rgba(183, 165, 117, .22), transparent 30%),
+        radial-gradient(circle at 92% 4%, rgba(201, 152, 102, .22), transparent 30%),
         rgba(255,255,255,.88);
     }
     .sidebar-card h3 {
@@ -504,7 +504,7 @@
       font-weight: 700;
     }
     .outside .day-number { color: #c9bcb2; }
-    .today .day-number { background: var(--accent-dark); color: #fff; box-shadow: 0 4px 10px rgba(106,90,53,.22); }
+    .today .day-number { background: var(--accent-dark); color: #fff; box-shadow: 0 4px 10px rgba(180,118,63,.22); }
     .quick-add {
       display: grid;
       width: 27px;
@@ -535,7 +535,7 @@
     .event-chip:hover { transform: translateY(-1px); filter: brightness(.985); }
     .event-chip.booked { border: 1px solid rgba(143, 124, 78, .12); background: #e6ddd0; }
     .event-chip.available { border: 1px dashed #d8cbc1; background: #fff; }
-    .event-chip.pause { border: 1px solid rgba(183, 165, 117, .18); background: #f3e8d4; }
+    .event-chip.pause { border: 1px solid rgba(201, 152, 102, .18); background: #f3e8d4; }
     .event-chip.closed { border: 1px solid #eeeae7; background: var(--closed); color: #756d68; }
     .event-time { display: block; margin-bottom: 2px; font-size: 11px; font-weight: 700; }
     .event-title { display: block; overflow: hidden; font-family: var(--serif); font-size: 12px; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }

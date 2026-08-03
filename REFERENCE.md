@@ -18,7 +18,7 @@ The supplied preview is authoritative for the complete clickable **Mina sidor / 
 ## Preserve
 
 - Warm ivory/off-white foundation.
-- Muted metallic olive-gold brand color.
+- Muted metallic bronze/gold brand color (warm, not khaki/military olive).
 - Elegant high-contrast serif typography paired with restrained modern body text.
 - Airy, premium wellness/beauty feeling rather than a generic tech or dark SaaS aesthetic.
 - All verified business content from the original site.
