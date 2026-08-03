@@ -746,31 +746,59 @@ body[data-view='portal'] {
 }
 
 .bar-chart {
+  height: 14rem;
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 0.55rem;
-  align-items: end;
-  min-height: 12rem;
-  padding-top: 0.5rem;
+  align-items: stretch;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-bottom: 1px solid rgba(28, 26, 22, 0.08);
 }
 
 .bar-wrap {
-  display: grid;
-  gap: 0.45rem;
-  justify-items: center;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.55rem;
 }
 
 .bar {
-  width: 100%;
+  width: min(2.1rem, 75%);
   height: var(--h, 40%);
-  min-height: 1.5rem;
+  min-height: 0.4rem;
   border-radius: 10px 10px 4px 4px;
   background: linear-gradient(180deg, var(--olive-soft), var(--olive-deep));
+  transform-origin: bottom;
+  animation: portal-bar-grow 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
+
+.bar-wrap:nth-child(4) .bar,
+.bar-wrap:nth-child(8) .bar {
+  background: linear-gradient(180deg, #d8b07a, #8f5a2e);
+}
+
+.bar-wrap:nth-child(2) .bar { animation-delay: 60ms; }
+.bar-wrap:nth-child(3) .bar { animation-delay: 120ms; }
+.bar-wrap:nth-child(4) .bar { animation-delay: 180ms; }
+.bar-wrap:nth-child(5) .bar { animation-delay: 240ms; }
+.bar-wrap:nth-child(6) .bar { animation-delay: 300ms; }
+.bar-wrap:nth-child(7) .bar { animation-delay: 360ms; }
+.bar-wrap:nth-child(8) .bar { animation-delay: 420ms; }
 
 .bar-label {
   color: var(--ink-muted);
   font-size: 0.72rem;
+  font-weight: 650;
+}
+
+@keyframes portal-bar-grow {
+  from {
+    transform: scaleY(0);
+  }
 }
 
 .frequency-ring {
@@ -1287,11 +1315,12 @@ body[data-view='portal'] {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion: reduce) {
   .portal-panel,
   .live-dot,
   .portal-toast,
-  .portal-nav-btn {
+  .portal-nav-btn,
+  .bar {
     animation: none !important;
     transition: none !important;
   }
