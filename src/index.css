@@ -725,6 +725,7 @@ h3 {
 
 .club-aurora {
   overflow: clip;
+  isolation: isolate;
   color: #f6ebe2;
   background:
     radial-gradient(circle at 18% 20%, rgba(183, 120, 150, 0.28), transparent 32%),
@@ -734,12 +735,122 @@ h3 {
 
 .club-aurora__glow {
   position: absolute;
-  inset: 10% 20% auto;
-  height: 12rem;
-  background: radial-gradient(circle, rgba(198, 160, 110, 0.22), transparent 70%);
-  filter: blur(20px);
+  inset: 8% 18% auto;
+  height: 14rem;
+  background: radial-gradient(circle, rgba(198, 160, 110, 0.26), transparent 70%);
+  filter: blur(22px);
   pointer-events: none;
+  z-index: 0;
   animation: club-shimmer 8s ease-in-out infinite alternate;
+}
+
+.club-aurora__aurora {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 24% 14%, rgba(147, 212, 255, 0.1), transparent 18%),
+    radial-gradient(circle at 78% 28%, rgba(192, 143, 255, 0.12), transparent 16%),
+    radial-gradient(circle at 56% 72%, rgba(255, 206, 146, 0.08), transparent 20%);
+  filter: blur(12px);
+  animation: club-aurora-shift 16s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+.club-aurora__stars,
+.club-aurora__stars::before,
+.club-aurora__stars::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-repeat: repeat;
+}
+
+.club-aurora__stars {
+  z-index: 0;
+  background-image:
+    radial-gradient(circle, rgba(255, 247, 224, 0.95) 0 1.2px, transparent 1.8px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.72) 0 0.9px, transparent 1.5px),
+    radial-gradient(circle, rgba(203, 227, 255, 0.8) 0 1px, transparent 1.7px);
+  background-size: 110px 90px, 160px 130px, 210px 170px;
+  background-position: 0 0, 40px 55px, 90px 20px;
+  animation: club-star-float 12s ease-in-out infinite;
+  opacity: 0.95;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 45%, #000 35%, transparent 85%);
+}
+
+.club-aurora__stars::before {
+  background-image:
+    radial-gradient(circle, rgba(255, 247, 224, 0.85) 0 1.4px, transparent 2px),
+    radial-gradient(circle, rgba(182, 140, 255, 0.7) 0 1.1px, transparent 1.9px),
+    radial-gradient(circle, rgba(96, 176, 255, 0.65) 0 1.1px, transparent 1.9px),
+    radial-gradient(circle, rgba(255, 220, 170, 0.75) 0 1px, transparent 1.8px);
+  background-size: 180px 150px, 240px 190px, 140px 220px, 200px 160px;
+  background-position: 20px 30px, 100px 10px, 60px 80px, 150px 120px;
+  background-repeat: repeat;
+  animation: club-star-float-slow 18s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+.club-aurora__stars::after {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.9) 0 1.5px, transparent 2.2px),
+    radial-gradient(circle, rgba(255, 247, 224, 0.7) 0 1px, transparent 1.8px),
+    radial-gradient(circle, rgba(190, 210, 255, 0.65) 0 0.9px, transparent 1.6px),
+    radial-gradient(circle, rgba(255, 230, 190, 0.8) 0 1.2px, transparent 2px);
+  background-size: 260px 200px, 130px 110px, 190px 240px, 300px 180px;
+  background-position: 50px 0, 10px 70px, 120px 40px, 80px 140px;
+  background-repeat: repeat;
+  animation: club-star-twinkle 3.8s ease-in-out infinite;
+  opacity: 0.85;
+}
+
+.club-aurora__starfall {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.club-aurora__streak {
+  --streak-length: 2.2rem;
+  position: absolute;
+  top: -12%;
+  width: 2px;
+  height: var(--streak-length);
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 247, 224, 0) 0%,
+    rgba(255, 255, 255, 1) 35%,
+    rgba(255, 230, 180, 0.85) 55%,
+    rgba(198, 170, 255, 0) 100%
+  );
+  box-shadow:
+    0 0 10px rgba(255, 236, 200, 0.7),
+    0 0 18px rgba(200, 170, 255, 0.35);
+  transform: rotate(22deg);
+  opacity: 0;
+  animation-name: club-starfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.club-aurora__watermark {
+  position: absolute;
+  right: -0.4rem;
+  bottom: -3.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 22vw, 18rem);
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: rgba(255, 255, 255, 0.035);
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
 }
 
 .club-aurora__inner {
@@ -796,17 +907,113 @@ h3 {
 
 .club-aurora__card {
   position: relative;
+  overflow: hidden;
+  isolation: isolate;
   padding: 1.6rem;
   border-radius: 1.4rem;
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-    #2a1c28;
+    radial-gradient(circle at 86% 12%, rgba(255, 255, 255, 0.16), transparent 28%),
+    radial-gradient(circle at 12% 88%, rgba(232, 176, 109, 0.16), transparent 28%),
+    linear-gradient(155deg, #1d1423 0%, #30203a 36%, #4a2b52 68%, #5a3868 100%);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.28);
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   display: grid;
   gap: 0.85rem;
   justify-items: start;
   animation: club-card-float 5.5s ease-in-out infinite alternate;
+}
+
+.club-aurora__card::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  background: linear-gradient(
+    115deg,
+    transparent 34%,
+    rgba(255, 255, 255, 0.2) 46%,
+    transparent 56%
+  );
+  transform: translateX(-55%) rotate(8deg);
+  animation: club-card-shimmer 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.club-aurora__card-aurora {
+  position: absolute;
+  inset: auto -10% -20% 10%;
+  height: 10rem;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(162, 112, 255, 0.3), transparent 38%),
+    radial-gradient(circle at 72% 30%, rgba(81, 188, 255, 0.22), transparent 34%),
+    radial-gradient(circle at 48% 68%, rgba(255, 219, 141, 0.14), transparent 32%);
+  filter: blur(20px);
+  animation: club-aurora-wave 11s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.club-aurora__card-pulse {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.6rem;
+  width: 7rem;
+  height: 7rem;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 66%);
+  filter: blur(2px);
+  animation: club-card-pulse 5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.club-aurora__card-orbit {
+  position: absolute;
+  left: 68%;
+  top: 42%;
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.club-aurora__card-orbit::before,
+.club-aurora__card-orbit::after {
+  content: "✦";
+  position: absolute;
+  color: rgba(255, 244, 220, 0.88);
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.club-aurora__card-orbit::before {
+  top: -0.3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-origin: 0 3.9rem;
+  animation: club-orbit-spin 14s linear infinite;
+}
+
+.club-aurora__card-orbit::after {
+  bottom: -0.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(154, 215, 255, 0.82);
+  transform-origin: 0 -3.9rem;
+  animation: club-orbit-spin-reverse 18s linear infinite;
+}
+
+.club-aurora__chip,
+.club-aurora__card-amount,
+.club-aurora__card p,
+.club-aurora__card strong,
+.club-aurora__card > .btn {
+  position: relative;
+  z-index: 1;
 }
 
 .club-aurora__chip {
@@ -853,12 +1060,127 @@ h3 {
   }
 }
 
+@keyframes club-aurora-shift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.8%, -2%, 0) scale(1.08);
+  }
+}
+
+@keyframes club-star-float {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.88;
+  }
+  50% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+@keyframes club-star-float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.72;
+  }
+  50% {
+    transform: translate3d(8px, -10px, 0);
+    opacity: 0.96;
+  }
+}
+
+@keyframes club-star-twinkle {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes club-starfall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(22deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  65% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(5.5rem, 125vh, 0) rotate(22deg);
+    opacity: 0;
+  }
+}
+
 @keyframes club-card-float {
   from {
     transform: translateY(0);
   }
   to {
     transform: translateY(-8px);
+  }
+}
+
+@keyframes club-card-shimmer {
+  0%,
+  100% {
+    transform: translateX(-62%) rotate(8deg);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateX(60%) rotate(8deg);
+    opacity: 1;
+  }
+}
+
+@keyframes club-card-pulse {
+  0%,
+  100% {
+    transform: scale(0.96);
+    opacity: 0.52;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.95;
+  }
+}
+
+@keyframes club-aurora-wave {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.72;
+  }
+  50% {
+    transform: translate3d(-4%, -6%, 0) scale(1.06);
+    opacity: 0.98;
+  }
+}
+
+@keyframes club-orbit-spin {
+  0% {
+    transform: rotate(0deg) translateX(-50%);
+  }
+  100% {
+    transform: rotate(360deg) translateX(-50%);
+  }
+}
+
+@keyframes club-orbit-spin-reverse {
+  0% {
+    transform: rotate(360deg) translateX(-50%);
+  }
+  100% {
+    transform: rotate(0deg) translateX(-50%);
   }
 }
 
@@ -1109,5 +1431,11 @@ h3 {
 
   .hero__image {
     transform: none;
+  }
+
+  .club-aurora__starfall,
+  .club-aurora__card::before,
+  .club-aurora__card-orbit {
+    display: none;
   }
 }

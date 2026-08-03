@@ -1,5 +1,17 @@
 import { usePortal } from '../portal/PortalProvider'
 
+const STARFALL_STREAKS = [
+  { left: '8%', delay: '0s', duration: '6.8s', length: '2.6rem' },
+  { left: '18%', delay: '1.4s', duration: '8.4s', length: '1.9rem' },
+  { left: '31%', delay: '3.2s', duration: '7.2s', length: '2.3rem' },
+  { left: '42%', delay: '0.7s', duration: '9.1s', length: '3rem' },
+  { left: '55%', delay: '4.8s', duration: '7.6s', length: '2.1rem' },
+  { left: '67%', delay: '2.2s', duration: '8.8s', length: '2.7rem' },
+  { left: '79%', delay: '5.5s', duration: '6.9s', length: '2rem' },
+  { left: '88%', delay: '1.8s', duration: '9.6s', length: '1.7rem' },
+  { left: '95%', delay: '3.9s', duration: '7.9s', length: '2.4rem' },
+] as const
+
 export function ClubAurora() {
   const { openLogin } = usePortal()
 
@@ -11,6 +23,38 @@ export function ClubAurora() {
       aria-labelledby="club-title"
     >
       <div className="club-aurora__glow" aria-hidden="true" />
+      <div
+        className="club-aurora__aurora"
+        data-testid="club-aurora-aurora"
+        aria-hidden="true"
+      />
+      <div
+        className="club-aurora__stars"
+        data-testid="club-aurora-stars"
+        aria-hidden="true"
+      />
+      <div
+        className="club-aurora__starfall"
+        data-testid="club-aurora-starfall"
+        aria-hidden="true"
+      >
+        {STARFALL_STREAKS.map((streak) => (
+          <span
+            key={streak.left}
+            className="club-aurora__streak"
+            style={{
+              left: streak.left,
+              animationDelay: streak.delay,
+              animationDuration: streak.duration,
+              ['--streak-length' as string]: streak.length,
+            }}
+          />
+        ))}
+      </div>
+      <span className="club-aurora__watermark" aria-hidden="true">
+        AURORA
+      </span>
+
       <div className="section__inner club-aurora__inner" data-reveal>
         <div className="club-aurora__copy">
           <p className="eyebrow club-aurora__eyebrow">Club Aurora</p>
@@ -40,7 +84,18 @@ export function ClubAurora() {
           </div>
         </div>
 
-        <article className="club-aurora__card">
+        <article className="club-aurora__card" data-testid="club-aurora-card">
+          <span
+            className="club-aurora__card-aurora"
+            data-testid="club-aurora-card-glow"
+            aria-hidden="true"
+          />
+          <span className="club-aurora__card-pulse" aria-hidden="true" />
+          <span
+            className="club-aurora__card-orbit"
+            data-testid="club-aurora-card-orbit"
+            aria-hidden="true"
+          />
           <span className="club-aurora__chip">VIP concept</span>
           <div className="club-aurora__card-amount">
             500
