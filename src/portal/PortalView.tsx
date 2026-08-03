@@ -547,10 +547,15 @@ export function PortalView() {
                       <h2>Besök senaste 8 veckorna</h2>
                       <Icons.trend />
                     </div>
-                    <div className="bar-chart" aria-label="Stapeldiagram över besök per vecka">
+                    <div className="bar-chart" aria-label="Stapeldiagram över besök per vecka" data-testid="visit-bar-chart">
                       {[34, 52, 31, 68, 42, 50, 38, 72].map((height, index) => (
-                        <div className="bar-wrap" key={height + index}>
-                          <div className="bar" style={{ ['--h' as string]: `${height}%` }} />
+                        <div className="bar-wrap" key={`week-${21 + index}`}>
+                          <div
+                            className="bar"
+                            data-testid="visit-bar"
+                            data-height={height}
+                            style={{ ['--h' as string]: `${height}%` }}
+                          />
                           <span className="bar-label">v.{21 + index}</span>
                         </div>
                       ))}

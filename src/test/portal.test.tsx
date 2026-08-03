@@ -144,6 +144,31 @@ describe('Mina sidor kundportal demo', () => {
     expect(screen.getByRole('heading', { level: 1, name: /studio aura/i })).toBeInTheDocument()
   })
 
+  it('renders visit chart bars with distinct heights instead of identical stubs', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await openLoginAndEnterPortal(user)
+
+    const portal = screen.getByTestId('portal-shell')
+    const menu = within(portal).getByRole('navigation', { name: 'Portalmeny' })
+    await user.click(within(menu).getByRole('button', { name: /mina besök/i }))
+
+    const chart = within(portal).getByTestId('visit-bar-chart')
+    const bars = within(chart).getAllByTestId('visit-bar')
+    expect(bars).toHaveLength(8)
+
+    const heights = bars.map((bar) => Number(bar.getAttribute('data-height')))
+    expect(heights).toEqual([34, 52, 31, 68, 42, 50, 38, 72])
+    expect(new Set(heights).size).toBeGreaterThan(1)
+
+    for (const bar of bars) {
+      expect(bar.style.getPropertyValue('--h')).toBe(`${bar.getAttribute('data-height')}%`)
+    }
+
+    const chartStyles = getComputedStyle(chart)
+    expect(chartStyles.height).toMatch(/14rem|224px|[1-9]\d{2,}px/)
+  })
+
   it('keeps Club Aurora as a bounded public accent with portal entry', async () => {
     const user = userEvent.setup()
     render(<App />)
