@@ -1,12 +1,15 @@
 import { usePortal } from '../portal/PortalProvider'
 
 const STARFALL_STREAKS = [
-  { left: '12%', delay: '0s', duration: '7.5s', length: '2.4rem' },
-  { left: '28%', delay: '2.1s', duration: '9s', length: '1.8rem' },
-  { left: '47%', delay: '4.4s', duration: '8.2s', length: '2.8rem' },
-  { left: '63%', delay: '1.2s', duration: '10s', length: '2rem' },
-  { left: '78%', delay: '5.6s', duration: '7.8s', length: '2.6rem' },
-  { left: '91%', delay: '3.3s', duration: '9.4s', length: '1.6rem' },
+  { left: '8%', delay: '0s', duration: '6.8s', length: '2.6rem' },
+  { left: '18%', delay: '1.4s', duration: '8.4s', length: '1.9rem' },
+  { left: '31%', delay: '3.2s', duration: '7.2s', length: '2.3rem' },
+  { left: '42%', delay: '0.7s', duration: '9.1s', length: '3rem' },
+  { left: '55%', delay: '4.8s', duration: '7.6s', length: '2.1rem' },
+  { left: '67%', delay: '2.2s', duration: '8.8s', length: '2.7rem' },
+  { left: '79%', delay: '5.5s', duration: '6.9s', length: '2rem' },
+  { left: '88%', delay: '1.8s', duration: '9.6s', length: '1.7rem' },
+  { left: '95%', delay: '3.9s', duration: '7.9s', length: '2.4rem' },
 ] as const
 
 export function ClubAurora() {
