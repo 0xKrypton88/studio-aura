@@ -206,4 +206,17 @@ describe('Mina sidor kundportal demo', () => {
     await user.click(within(club).getByRole('button', { name: /^gå in$/i }))
     expect(screen.getByRole('dialog', { name: /testa mina sidor/i })).toBeVisible()
   })
+
+  it('renders exclusive Club Aurora atmosphere with starfall and VIP card glow', () => {
+    render(<App />)
+
+    const club = screen.getByTestId('club-aurora')
+    expect(within(club).getByTestId('club-aurora-stars')).toBeInTheDocument()
+    expect(within(club).getByTestId('club-aurora-starfall')).toBeInTheDocument()
+    expect(within(club).getByTestId('club-aurora-aurora')).toBeInTheDocument()
+
+    const card = within(club).getByTestId('club-aurora-card')
+    expect(within(card).getByTestId('club-aurora-card-glow')).toBeInTheDocument()
+    expect(within(card).getByTestId('club-aurora-card-orbit')).toBeInTheDocument()
+  })
 })
