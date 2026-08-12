@@ -5,8 +5,19 @@ import { usePortal } from '../portal'
 
 export function Header() {
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const navId = useId()
   const { openLogin } = usePortal()
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24)
+    }
+
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
     if (!open) return
@@ -23,8 +34,16 @@ export function Header() {
     }
   }, [open])
 
+  const headerClass = [
+    'site-header',
+    scrolled || open ? 'is-scrolled' : '',
+    open ? 'is-nav-open' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   return (
-    <header className="site-header">
+    <header className={headerClass}>
       <div className="site-header__inner">
         <a className="brand-mark" href="#top" aria-label={`${site.name} – till toppen`}>
           <img

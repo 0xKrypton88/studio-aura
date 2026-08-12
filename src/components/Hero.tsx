@@ -20,6 +20,7 @@ export function Hero() {
           decoding="async"
         />
         <div className="hero__wash" />
+        <div className="hero__glow" />
       </div>
 
       <div className="hero__content">
@@ -31,7 +32,6 @@ export function Hero() {
           alt=""
           decoding="async"
         />
-        <p className="hero__eyebrow">Solarium i Strömsnäsbruk</p>
         <h1 id="hero-brand" className="hero__brand">
           {site.name}
         </h1>
@@ -41,10 +41,15 @@ export function Hero() {
             Börja sola hos oss
           </a>
           <button type="button" className="btn btn--ghost" onClick={openLogin}>
-            Testa kundportalen
+            Mina sidor
           </button>
         </div>
       </div>
+
+      <a className="hero__scroll" href="#tjanster">
+        <span className="hero__scroll-label">Utforska</span>
+        <span className="hero__scroll-line" aria-hidden="true" />
+      </a>
     </section>
   )
 }
