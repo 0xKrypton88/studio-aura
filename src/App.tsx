@@ -1,5 +1,7 @@
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
+import { IntroStrip } from './components/IntroStrip'
+import { HomeBlend } from './components/HomeBlend'
 import { Services } from './components/Services'
 import { Safety } from './components/Safety'
 import { Prices } from './components/Prices'
@@ -45,6 +47,8 @@ function SiteShell() {
       <Header />
       <main id="main">
         <Hero />
+        <IntroStrip />
+        <HomeBlend />
         <Services />
         <Safety />
         <Prices />

@@ -6,7 +6,7 @@ export function Gallery() {
       <div className="section__inner" data-reveal>
         <p className="eyebrow">Galleri</p>
         <h2 id="gallery-title">Känslan i studion</h2>
-        <p className="lede">En glimt av miljön hos Studio Aura.</p>
+        <p className="lede">En glimt av hemmet och ljuset hos Studio Aura.</p>
 
         <ul className="gallery-mosaic">
           {galleryImages.map((image) => (
