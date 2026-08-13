@@ -147,4 +147,17 @@ export const Icons = {
       <path d="M12 3.5 13.6 9.2 19 12l-5.4 2.8L12 20.5l-1.6-5.7L5 12l5.4-2.8L12 3.5Z" />
     </Base>
   ),
+  scissors: (props: IconProps) => (
+    <Base {...props}>
+      <circle cx="6" cy="7" r="2.4" />
+      <circle cx="6" cy="17" r="2.4" />
+      <path d="M8 8.2 20 18M8 15.8 20 6" />
+    </Base>
+  ),
+  sun: (props: IconProps) => (
+    <Base {...props}>
+      <circle cx="12" cy="12" r="3.2" />
+      <path d="M12 3.6v1.8M12 18.6v1.8M3.6 12h1.8M18.6 12h1.8M6.2 6.2l1.3 1.3M16.5 16.5l1.3 1.3M6.2 17.8l1.3-1.3M16.5 7.5l1.3-1.3" />
+    </Base>
+  ),
 }

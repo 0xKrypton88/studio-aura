@@ -3,17 +3,32 @@ import { assetPath } from '../assets'
 import { Icons } from './icons'
 import { usePortal } from './PortalProvider'
 import {
+  DEMO_VISITS,
   PANEL_TITLES,
   REFERRAL_CODE,
+  VISIT_CHART_HEIGHTS,
   formatKr,
+  type DemoVisit,
   type PortalPanel,
   type Transaction,
 } from './state'
 
 function TxIcon({ kind }: { kind: Transaction['kind'] }) {
   if (kind === 'bonus') return <Icons.gift />
-  if (kind === 'spend') return <Icons.visit />
+  if (kind === 'spend') return <Icons.scissors />
   return <Icons.plus />
+}
+
+function VisitChip({ visit }: { visit: DemoVisit }) {
+  if (visit.kind === 'solar') {
+    return (
+      <span className="visit-chip visit-chip--solar" data-testid="visit-chip-solar">
+        {visit.service}
+      </span>
+    )
+  }
+
+  return <span className="visit-chip visit-chip--salon">{visit.service}</span>
 }
 
 function NavButton({
@@ -81,6 +96,7 @@ export function PortalView() {
   const total = balances.paid + balances.bonus
   const safe = balances.scenario === 'safe'
   const logo = assetPath('brand/logo-64.png')
+  const visibleVisits = DEMO_VISITS.filter((visit) => showExtraVisits || !visit.extra)
 
   return (
     <div className="portal-view" aria-label="Demo av kundportal" data-testid="portal-shell">
@@ -159,15 +175,6 @@ export function PortalView() {
         </aside>
 
         <main className="portal-main">
-          <div className="portal-atmosphere" aria-hidden="true">
-            <img
-              src={assetPath('gallery/studio-07.jpg')}
-              alt=""
-              width={800}
-              height={800}
-              decoding="async"
-            />
-          </div>
           <header className="portal-topbar">
             <button
               type="button"
@@ -194,6 +201,10 @@ export function PortalView() {
               >
                 Byt demoscenario
               </button>
+              <div className="portal-user-meta">
+                <strong>Maja</strong>
+                <span>Medlem</span>
+              </div>
               <span className="portal-avatar" aria-label="Testanvändare Maja">
                 MS
               </span>
@@ -209,53 +220,14 @@ export function PortalView() {
               >
                 <div className="portal-welcome">
                   <div>
-                    <p className="portal-kicker">Välkommen hem</p>
+                    <p className="portal-kicker">Ditt konto</p>
                     <h1 id="overview-title">Hej Maja, välkommen tillbaka.</h1>
-                    <p>En snabb lägesbild – aktivitet, senaste besök och totalt tillgängligt.</p>
+                    <p>Tider, saldo och dina senaste behandlingar – utan kampanjytor.</p>
                   </div>
                   <span className="last-sync">Demo uppdaterad precis nu</span>
                 </div>
 
                 <div className="overview-layout">
-                  <article
-                    className={
-                      safe
-                        ? 'portal-card status-card status-card--hero safe-mode'
-                        : 'portal-card status-card status-card--hero'
-                    }
-                  >
-                    <div className="card-heading">
-                      <h2>Din aktivitet</h2>
-                      <Icons.trend />
-                    </div>
-                    <div className={safe ? 'activity-status safe' : 'activity-status warning'}>
-                      <span className="status-icon">
-                        {safe ? <Icons.check /> : <Icons.alert />}
-                      </span>
-                      <div>
-                        <strong>
-                          {safe
-                            ? 'Bra avstånd mellan besöken'
-                            : 'Lite tätt mellan besöken'}
-                        </strong>
-                        <p>
-                          {safe
-                            ? 'Senaste registrerade besöket var fyra dagar sedan. Fortsätt följa exponeringsschemat och känn efter hur huden reagerar.'
-                            : 'Senaste registrerade besöket var igår. Vänta tills minst två dygn har gått och följ alltid exponeringsschemat.'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="status-meter">
-                      <div className="status-meter-label">
-                        <span>Besöksfrekvens senaste 7 dagarna</span>
-                        <strong>{safe ? '1 besök' : '3 besök'}</strong>
-                      </div>
-                      <div className={safe ? 'meter meter--safe' : 'meter'}>
-                        <span />
-                      </div>
-                    </div>
-                  </article>
-
                   <aside className="portal-card overview-snapshot" aria-label="Snabb saldoöversikt">
                     <span className="card-overline">Totalt tillgängligt</span>
                     <div className="balance-total">
@@ -286,6 +258,45 @@ export function PortalView() {
                     <p className="snapshot-note">Påfyllning och bonus hanteras under Saldo.</p>
                   </aside>
 
+                  <article
+                    className={
+                      safe
+                        ? 'portal-card status-card status-card--hero safe-mode'
+                        : 'portal-card status-card status-card--hero'
+                    }
+                  >
+                    <div className="card-heading">
+                      <h2>Din aktivitet</h2>
+                      <span className="quiet-tag">Solarium · sekundärt</span>
+                    </div>
+                    <div className={safe ? 'activity-status safe' : 'activity-status warning'}>
+                      <span className="status-icon">
+                        {safe ? <Icons.check /> : <Icons.alert />}
+                      </span>
+                      <div>
+                        <strong>
+                          {safe
+                            ? 'Bra avstånd mellan besöken'
+                            : 'Lite tätt mellan besöken'}
+                        </strong>
+                        <p>
+                          {safe
+                            ? 'Senaste solariumbesöket var fyra dagar sedan. Fortsätt följa exponeringsschemat och känn efter hur huden reagerar.'
+                            : 'Senaste solariumbesöket var igår. Vänta tills minst två dygn har gått och följ alltid exponeringsschemat.'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="status-meter">
+                      <div className="status-meter-label">
+                        <span>Solarium senaste 7 dagarna</span>
+                        <strong>{safe ? '1 besök' : '3 besök'}</strong>
+                      </div>
+                      <div className={safe ? 'meter meter--safe' : 'meter'}>
+                        <span />
+                      </div>
+                    </div>
+                  </article>
+
                   <div className="stats-row">
                     <article className="portal-card stat-card">
                       <div className="stat-top">
@@ -297,19 +308,26 @@ export function PortalView() {
                     </article>
                     <article className="portal-card stat-card">
                       <div className="stat-top">
-                        <span>Total soltid</span>
-                        <Icons.clock />
+                        <span>Salong</span>
+                        <Icons.scissors />
                       </div>
-                      <div className="stat-value">3 h 42 m</div>
-                      <div className="stat-caption">registrerad tid</div>
+                      <div className="stat-value" data-testid="salon-visit-count">
+                        14
+                      </div>
+                      <div className="stat-caption">klipp, färg och vård</div>
                     </article>
-                    <article className="portal-card stat-card">
+                    <article
+                      className="portal-card stat-card stat-card--secondary"
+                      data-testid="solar-stat"
+                    >
                       <div className="stat-top">
-                        <span>Genomsnitt</span>
-                        <Icons.trend />
+                        <span>Solarium</span>
+                        <Icons.sun />
                       </div>
-                      <div className="stat-value">12 min</div>
-                      <div className="stat-caption">per besök</div>
+                      <div className="stat-value" data-testid="solar-visit-count">
+                        4
+                      </div>
+                      <div className="stat-caption">3 h 42 m · sidoverksamhet</div>
                     </article>
                     <article className="portal-card stat-card">
                       <div className="stat-top">
@@ -340,95 +358,33 @@ export function PortalView() {
                         </button>
                       </div>
                       <div className="visit-list">
-                        <div className="visit-row">
-                          <div className="visit-date">
-                            <strong>Igår · 19.42</strong>
-                            <span>Besök registrerat</span>
+                        {visibleVisits.map((visit) => (
+                          <div
+                            className={visit.extra ? 'visit-row extra-row' : 'visit-row'}
+                            key={visit.id}
+                          >
+                            <div className="visit-date">
+                              <strong>{visit.when}</strong>
+                              <VisitChip visit={visit} />
+                            </div>
+                            <div className="visit-cell">
+                              <span>Tid</span>
+                              <strong>{visit.duration}</strong>
+                            </div>
+                            <div className="visit-cell">
+                              <span>Kostnad</span>
+                              <strong>{visit.cost}</strong>
+                            </div>
+                            <span className="visit-status">
+                              <Icons.check />
+                            </span>
                           </div>
-                          <div className="visit-cell">
-                            <span>Tid</span>
-                            <strong>12 min</strong>
-                          </div>
-                          <div className="visit-cell">
-                            <span>Kostnad</span>
-                            <strong>48 kr</strong>
-                          </div>
-                          <span className="visit-status">
-                            <Icons.check />
-                          </span>
-                        </div>
-                        <div className="visit-row">
-                          <div className="visit-date">
-                            <strong>3 dagar sedan · 18.05</strong>
-                            <span>Besök registrerat</span>
-                          </div>
-                          <div className="visit-cell">
-                            <span>Tid</span>
-                            <strong>10 min</strong>
-                          </div>
-                          <div className="visit-cell">
-                            <span>Kostnad</span>
-                            <strong>40 kr</strong>
-                          </div>
-                          <span className="visit-status">
-                            <Icons.check />
-                          </span>
-                        </div>
-                        <div className="visit-row">
-                          <div className="visit-date">
-                            <strong>6 dagar sedan · 20.14</strong>
-                            <span>Besök registrerat</span>
-                          </div>
-                          <div className="visit-cell">
-                            <span>Tid</span>
-                            <strong>15 min</strong>
-                          </div>
-                          <div className="visit-cell">
-                            <span>Kostnad</span>
-                            <strong>60 kr</strong>
-                          </div>
-                          <span className="visit-status">
-                            <Icons.check />
-                          </span>
-                        </div>
-                        <div className="visit-row extra-row">
-                          <div className="visit-date">
-                            <strong>12 dagar sedan · 17.32</strong>
-                            <span>Besök registrerat</span>
-                          </div>
-                          <div className="visit-cell">
-                            <span>Tid</span>
-                            <strong>12 min</strong>
-                          </div>
-                          <div className="visit-cell">
-                            <span>Kostnad</span>
-                            <strong>48 kr</strong>
-                          </div>
-                          <span className="visit-status">
-                            <Icons.check />
-                          </span>
-                        </div>
-                        <div className="visit-row extra-row">
-                          <div className="visit-date">
-                            <strong>18 dagar sedan · 19.06</strong>
-                            <span>Besök registrerat</span>
-                          </div>
-                          <div className="visit-cell">
-                            <span>Tid</span>
-                            <strong>11 min</strong>
-                          </div>
-                          <div className="visit-cell">
-                            <span>Kostnad</span>
-                            <strong>44 kr</strong>
-                          </div>
-                          <span className="visit-status">
-                            <Icons.check />
-                          </span>
-                        </div>
+                        ))}
                       </div>
                     </article>
 
                     <article className="portal-card referral-card">
+                      <p className="card-overline">Värvning i demot</p>
                       <h3>
                         50 kr till dig.
                         <br />
@@ -561,7 +517,7 @@ export function PortalView() {
                 <div className="panel-header">
                   <div>
                     <h1 id="visits-title">Mina besök</h1>
-                    <p>Översikt över registrerad tid, historik och en lugn aktivitetsöversyn.</p>
+                    <p>Salongen först. Solarium syns som ett tyst tillägg när det finns.</p>
                   </div>
                 </div>
                 <div className="visit-page-grid">
@@ -570,8 +526,12 @@ export function PortalView() {
                       <h2>Besök senaste 8 veckorna</h2>
                       <Icons.trend />
                     </div>
-                    <div className="bar-chart" aria-label="Stapeldiagram över besök per vecka" data-testid="visit-bar-chart">
-                      {[34, 52, 31, 68, 42, 50, 38, 72].map((height, index) => (
+                    <div
+                      className="bar-chart"
+                      aria-label="Stapeldiagram över besök per vecka"
+                      data-testid="visit-bar-chart"
+                    >
+                      {VISIT_CHART_HEIGHTS.map((height, index) => (
                         <div className="bar-wrap" key={`week-${21 + index}`}>
                           <div
                             className="bar"
@@ -587,7 +547,7 @@ export function PortalView() {
                   <article className="portal-card insight-card">
                     <div className="card-heading">
                       <h2>Aktivitetsnivå</h2>
-                      <Icons.info />
+                      <span className="quiet-tag">Solarium · sekundärt</span>
                     </div>
                     <div className="frequency-ring">
                       <div className="ring-copy">
@@ -623,21 +583,17 @@ export function PortalView() {
                     </div>
                     <div className="full-visit-row header">
                       <span>Datum</span>
-                      <span>Soltid</span>
+                      <span>Tjänst</span>
+                      <span>Tid</span>
                       <span>Kostnad</span>
                       <span>Status</span>
                     </div>
-                    {[
-                      ['Igår, 19.42', '12 min', '48 kr'],
-                      ['3 dagar sedan, 18.05', '10 min', '40 kr'],
-                      ['6 dagar sedan, 20.14', '15 min', '60 kr'],
-                      ['12 dagar sedan, 17.32', '12 min', '48 kr'],
-                      ['18 dagar sedan, 19.06', '11 min', '44 kr'],
-                    ].map(([date, time, cost]) => (
-                      <div className="full-visit-row" key={date}>
-                        <strong>{date}</strong>
-                        <span>{time}</span>
-                        <span>{cost}</span>
+                    {DEMO_VISITS.map((visit) => (
+                      <div className="full-visit-row" key={visit.id}>
+                        <strong>{visit.whenTable}</strong>
+                        <VisitChip visit={visit} />
+                        <span>{visit.duration}</span>
+                        <span>{visit.cost}</span>
                         <span className="positive">Registrerat</span>
                       </div>
                     ))}
@@ -727,10 +683,7 @@ export function PortalView() {
                       <Icons.spark />
                     </span>
                     <h3>Medlemsjubileum</h3>
-                    <p>
-                      En mindre bonus när du varit medlem ett år – utan att kopplas till tätare
-                      solning.
-                    </p>
+                    <p>En mindre bonus när du varit medlem ett år – utan att kopplas till tätare besök.</p>
                     <button
                       type="button"
                       className="small-link"
@@ -796,7 +749,7 @@ export function PortalView() {
                           [
                             'activity',
                             'Aktivitetsvarning',
-                            'Visa en lugn varning vid täta registrerade besök',
+                            'Visa en lugn varning vid täta registrerade solariumbesök',
                           ],
                         ] as const
                       ).map(([key, title, detail]) => (
