@@ -34,7 +34,7 @@ export function TopupModal() {
       }}
     >
       <div
-        className="portal-modal"
+        className="portal-modal portal-modal--topup"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

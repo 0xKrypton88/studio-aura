@@ -26,7 +26,7 @@ export function LoginModal() {
       }}
     >
       <div
-        className="portal-modal"
+        className="portal-modal portal-modal--login"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -34,6 +34,7 @@ export function LoginModal() {
       >
         <div className="portal-modal__head">
           <div>
+            <p className="portal-modal__kicker">Studio Aura</p>
             <h2 id={titleId}>Testa Mina sidor</h2>
             <p>En klickbar demo – ingen riktig inloggning sker.</p>
           </div>

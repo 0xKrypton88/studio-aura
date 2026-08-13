@@ -56,6 +56,36 @@ describe('Mina sidor kundportal demo', () => {
     expect(screen.queryByTestId('portal-shell')).not.toBeInTheDocument()
   })
 
+  it('keeps login and portal free of marketing photography', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByTestId('open-mina-sidor'))
+    const dialog = screen.getByRole('dialog', { name: /testa mina sidor/i })
+    expect(dialog.querySelector('img')).toBeNull()
+    expect(dialog.querySelector('.portal-modal__visual')).toBeNull()
+
+    await user.click(within(dialog).getByRole('button', { name: /fortsätt till demo/i }))
+
+    const portal = screen.getByTestId('portal-shell')
+    expect(portal.querySelector('.portal-atmosphere')).toBeNull()
+    expect(within(portal).queryByText(/välkommen hem/i)).not.toBeInTheDocument()
+  })
+
+  it('shows salon visits first and solarium as a secondary service', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await openLoginAndEnterPortal(user)
+
+    const portal = screen.getByTestId('portal-shell')
+    const overview = within(portal).getByTestId('panel-overview')
+    expect(within(overview).getByTestId('salon-visit-count')).toHaveTextContent('14')
+    expect(within(overview).getByTestId('solar-visit-count')).toHaveTextContent('4')
+    expect(within(overview).getByTestId('solar-stat')).toHaveClass('stat-card--secondary')
+    expect(within(overview).getAllByText(/klippning/i).length).toBeGreaterThan(0)
+    expect(within(overview).getAllByTestId('visit-chip-solar').length).toBeGreaterThan(0)
+  })
+
   it('enters the portal after demo login and shows overview balances separately', async () => {
     const user = userEvent.setup()
     render(<App />)

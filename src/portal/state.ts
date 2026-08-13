@@ -52,6 +52,71 @@ export const TOPUP_OPTIONS: TopupOption[] = [
   { amount: 1000, bonus: 150 },
 ]
 
+export type DemoVisitKind = 'salon' | 'solar'
+
+export type DemoVisit = {
+  id: string
+  when: string
+  whenTable: string
+  service: string
+  kind: DemoVisitKind
+  duration: string
+  cost: string
+  extra?: boolean
+}
+
+export const DEMO_VISITS: DemoVisit[] = [
+  {
+    id: 'v1',
+    when: 'Igår · 19.42',
+    whenTable: 'Igår, 19.42',
+    service: 'Solarium',
+    kind: 'solar',
+    duration: '12 min',
+    cost: '48 kr',
+  },
+  {
+    id: 'v2',
+    when: '3 dagar sedan · 18.05',
+    whenTable: '3 dagar sedan, 18.05',
+    service: 'Klippning',
+    kind: 'salon',
+    duration: '50 min',
+    cost: '495 kr',
+  },
+  {
+    id: 'v3',
+    when: '6 dagar sedan · 20.14',
+    whenTable: '6 dagar sedan, 20.14',
+    service: 'Färg',
+    kind: 'salon',
+    duration: '1 h 45 m',
+    cost: '1 250 kr',
+  },
+  {
+    id: 'v4',
+    when: '12 dagar sedan · 17.32',
+    whenTable: '12 dagar sedan, 17.32',
+    service: 'Solarium',
+    kind: 'solar',
+    duration: '12 min',
+    cost: '48 kr',
+    extra: true,
+  },
+  {
+    id: 'v5',
+    when: '18 dagar sedan · 19.06',
+    whenTable: '18 dagar sedan, 19.06',
+    service: 'Klippning',
+    kind: 'salon',
+    duration: '45 min',
+    cost: '450 kr',
+    extra: true,
+  },
+]
+
+export const VISIT_CHART_HEIGHTS = [34, 52, 31, 68, 42, 50, 38, 72] as const
+
 export const SEED_TRANSACTIONS: Transaction[] = [
   {
     id: 'tx-1',
@@ -64,9 +129,9 @@ export const SEED_TRANSACTIONS: Transaction[] = [
   {
     id: 'tx-2',
     kind: 'spend',
-    title: 'Besök',
-    detail: '12 minuter',
-    amount: -48,
+    title: 'Klippning',
+    detail: 'Dam, 50 minuter',
+    amount: -495,
     dateLabel: '12 juli',
   },
   {
