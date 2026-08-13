@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from 'react'
+import { assetPath } from '../assets'
 import { Icons } from './icons'
 import { usePortal } from './PortalProvider'
 
@@ -26,12 +27,21 @@ export function LoginModal() {
       }}
     >
       <div
-        className="portal-modal"
+        className="portal-modal portal-modal--login"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         data-testid="login-modal"
       >
+        <div className="portal-modal__visual" aria-hidden="true">
+          <img
+            src={assetPath('gallery/studio-02.jpg')}
+            alt=""
+            width={800}
+            height={800}
+            decoding="async"
+          />
+        </div>
         <div className="portal-modal__head">
           <div>
             <h2 id={titleId}>Testa Mina sidor</h2>

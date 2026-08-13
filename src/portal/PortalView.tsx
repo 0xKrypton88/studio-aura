@@ -159,6 +159,15 @@ export function PortalView() {
         </aside>
 
         <main className="portal-main">
+          <div className="portal-atmosphere" aria-hidden="true">
+            <img
+              src={assetPath('gallery/studio-07.jpg')}
+              alt=""
+              width={800}
+              height={800}
+              decoding="async"
+            />
+          </div>
           <header className="portal-topbar">
             <button
               type="button"
@@ -200,6 +209,7 @@ export function PortalView() {
               >
                 <div className="portal-welcome">
                   <div>
+                    <p className="portal-kicker">Välkommen hem</p>
                     <h1 id="overview-title">Hej Maja, välkommen tillbaka.</h1>
                     <p>En snabb lägesbild – aktivitet, senaste besök och totalt tillgängligt.</p>
                   </div>
