@@ -10,14 +10,16 @@ export function BookingProgram() {
       data-testid="bokningsprogram"
       aria-labelledby="booking-title"
     >
-      <div className="section__inner section__inner--narrow" data-reveal>
-        <p className="eyebrow">För studion</p>
-        <h2 id="booking-title">Bokningsprogram</h2>
-        <p className="lede">
-          Utforska Studio Auras bokningskalender – en fristående lokal prototyp för översikt,
-          tider och kundflöde. Data sparas i localStorage i din webbläsare; ingen server eller
-          backend är inkopplad.
-        </p>
+      <div className="section__inner booking-layout" data-reveal>
+        <div>
+          <p className="eyebrow">För studion</p>
+          <h2 id="booking-title">Bokningsprogram</h2>
+          <p className="lede">
+            Utforska Studio Auras bokningskalender – en fristående lokal prototyp för översikt,
+            tider och kundflöde. Data sparas i localStorage i din webbläsare; ingen server eller
+            backend är inkopplad.
+          </p>
+        </div>
         <a className="btn" href={bookingHref}>
           Öppna bokningsprogram
         </a>

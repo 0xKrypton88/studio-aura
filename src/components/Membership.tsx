@@ -60,13 +60,13 @@ export function Membership() {
       aria-labelledby="membership-title"
     >
       <div className="section__inner" data-reveal>
-        <p className="eyebrow">Bli medlem</p>
-        <h2 id="membership-title">Så blir du medlem</h2>
-        <p className="lede">
-          Tre tydliga steg till egen tillgång – utan krångel.
-        </p>
+        <div className="membership-layout">
+          <div className="membership-layout__intro">
+            <p className="eyebrow">Bli medlem</p>
+            <h2 id="membership-title">Så blir du medlem</h2>
+            <p className="lede">Tre tydliga steg till egen tillgång – utan krångel.</p>
 
-        <ol className="steps">
+            <ol className="steps">
           <li>
             <span className="steps__index">1</span>
             <div>
@@ -95,7 +95,9 @@ export function Membership() {
           {site.guestFee}. Alla som ska sola behöver vara registrerade medlemmar och fylla
           18 år.
         </aside>
+          </div>
 
+          <div className="membership-layout__panel">
         {!ready ? (
           <form
             className="membership-form"
@@ -209,6 +211,8 @@ export function Membership() {
             </div>
           </div>
         )}
+          </div>
+        </div>
       </div>
     </section>
   )

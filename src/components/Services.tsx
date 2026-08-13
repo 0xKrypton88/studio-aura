@@ -1,3 +1,5 @@
+import { assetPath } from '../assets'
+
 export function Services() {
   return (
     <section className="section section--services" id="tjanster" aria-labelledby="services-title">
@@ -11,7 +13,17 @@ export function Services() {
 
         <div className="light-split">
           <article className="light-panel light-panel--red">
-            <span className="light-panel__orb" aria-hidden="true" />
+            <div className="light-panel__media">
+              <img
+                src={assetPath('gallery/studio-06.jpg')}
+                alt=""
+                width={600}
+                height={600}
+                loading="lazy"
+                decoding="async"
+              />
+              <span className="light-panel__orb" aria-hidden="true" />
+            </div>
             <h3>Röda lampor</h3>
             <p>
               Rött ljus används ofta för att stödja hudens upplevda spänst och glöd genom att
@@ -20,7 +32,17 @@ export function Services() {
             </p>
           </article>
           <article className="light-panel light-panel--blue">
-            <span className="light-panel__orb" aria-hidden="true" />
+            <div className="light-panel__media">
+              <img
+                src={assetPath('gallery/studio-01.jpg')}
+                alt=""
+                width={600}
+                height={600}
+                loading="lazy"
+                decoding="async"
+              />
+              <span className="light-panel__orb" aria-hidden="true" />
+            </div>
             <h3>Blå lampor</h3>
             <p>
               Blått ljus förknippas med mer jämn hudton och kan bidra till en renare känsla i
