@@ -228,6 +228,48 @@ export function PortalView() {
                 </div>
 
                 <div className="overview-layout">
+                  <div className="stats-row">
+                    <article className="portal-card stat-card">
+                      <div className="stat-top">
+                        <span>Totalt antal besök</span>
+                        <Icons.visit />
+                      </div>
+                      <div className="stat-value">18</div>
+                      <div className="stat-caption">sedan januari</div>
+                    </article>
+                    <article className="portal-card stat-card">
+                      <div className="stat-top">
+                        <span>Salong</span>
+                        <Icons.scissors />
+                      </div>
+                      <div className="stat-value" data-testid="salon-visit-count">
+                        14
+                      </div>
+                      <div className="stat-caption">klipp, färg och vård</div>
+                    </article>
+                    <article
+                      className="portal-card stat-card stat-card--secondary"
+                      data-testid="solar-stat"
+                    >
+                      <div className="stat-top">
+                        <span>Solarium</span>
+                        <Icons.sun />
+                      </div>
+                      <div className="stat-value" data-testid="solar-visit-count">
+                        4
+                      </div>
+                      <div className="stat-caption">3 h 42 m · sidoverksamhet</div>
+                    </article>
+                    <article className="portal-card stat-card">
+                      <div className="stat-top">
+                        <span>Bonus intjänad</span>
+                        <Icons.gift />
+                      </div>
+                      <div className="stat-value">{formatKr(balances.earned)} kr</div>
+                      <div className="stat-caption">som Aura-medlem</div>
+                    </article>
+                  </div>
+
                   <aside className="portal-card overview-snapshot" aria-label="Snabb saldoöversikt">
                     <span className="card-overline">Totalt tillgängligt</span>
                     <div className="balance-total">
@@ -297,49 +339,6 @@ export function PortalView() {
                     </div>
                   </article>
 
-                  <div className="stats-row">
-                    <article className="portal-card stat-card">
-                      <div className="stat-top">
-                        <span>Totalt antal besök</span>
-                        <Icons.visit />
-                      </div>
-                      <div className="stat-value">18</div>
-                      <div className="stat-caption">sedan januari</div>
-                    </article>
-                    <article className="portal-card stat-card">
-                      <div className="stat-top">
-                        <span>Salong</span>
-                        <Icons.scissors />
-                      </div>
-                      <div className="stat-value" data-testid="salon-visit-count">
-                        14
-                      </div>
-                      <div className="stat-caption">klipp, färg och vård</div>
-                    </article>
-                    <article
-                      className="portal-card stat-card stat-card--secondary"
-                      data-testid="solar-stat"
-                    >
-                      <div className="stat-top">
-                        <span>Solarium</span>
-                        <Icons.sun />
-                      </div>
-                      <div className="stat-value" data-testid="solar-visit-count">
-                        4
-                      </div>
-                      <div className="stat-caption">3 h 42 m · sidoverksamhet</div>
-                    </article>
-                    <article className="portal-card stat-card">
-                      <div className="stat-top">
-                        <span>Bonus intjänad</span>
-                        <Icons.gift />
-                      </div>
-                      <div className="stat-value">{formatKr(balances.earned)} kr</div>
-                      <div className="stat-caption">som Aura-medlem</div>
-                    </article>
-                  </div>
-
-                  <div className="dashboard-lower">
                     <article
                       className={
                         showExtraVisits
@@ -407,7 +406,6 @@ export function PortalView() {
                       </div>
                       <div className="referral-foot">Demo av möjlig värvningsfunktion.</div>
                     </article>
-                  </div>
                 </div>
               </section>
             ) : null}

@@ -370,16 +370,15 @@ body[data-view='portal'] {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(16.5rem, 0.82fr);
   grid-template-areas:
-    'activity snapshot'
     'stats stats'
-    'lower lower';
+    'history snapshot'
+    'activity referral';
   gap: 0.95rem;
   align-items: start;
 }
 
 .status-card--hero {
   grid-area: activity;
-  min-height: 100%;
 }
 
 .overview-snapshot {
@@ -416,10 +415,15 @@ body[data-view='portal'] {
 }
 
 .dashboard-lower {
-  grid-area: lower;
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-  gap: 0.95rem;
+  display: contents;
+}
+
+.history-card {
+  grid-area: history;
+}
+
+.referral-card {
+  grid-area: referral;
 }
 
 .overview-snapshot .balance-total {
@@ -1455,9 +1459,10 @@ body[data-view='portal'] {
   .overview-layout {
     grid-template-areas:
       'snapshot'
-      'activity'
       'stats'
-      'lower';
+      'history'
+      'activity'
+      'referral';
   }
 }
 
